@@ -3,3 +3,4 @@
   - [Quick start](intro.md)
   - [Scalability](scale.md)
   - [System requirements](pilot.md)
+  - [Информационная безопасность](security.md)
