@@ -177,7 +177,7 @@ services:
 
 7. Запросить у команды GMonit архив со схемой для Clickhouse и в файле `application.sql` указать актуальные логин и пароль для доступа к Clickhouse, созданные на шаге 5. А именно, в коде ниже заменить заглушки вида `<<SOME_VALUE>>` на актуальные значения:
 
-```sql
+```
 source(clickhouse(table 'applications'
                   db 'default'
                   user <<SOME_CLICKHOUSE_USER>>
