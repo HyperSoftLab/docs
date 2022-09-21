@@ -34,6 +34,8 @@ gmonit-collector.example.ru {
 
 > если удалить строчки с подключением сертификатов, [Caddy сгенерирует их черех Let's encrypt](https://caddyserver.com/docs/automatic-https).
 
+>Все URL вида `*.example.ru` заменить на реальные адреса для Grafana и коллектора
+
 5. Создать файл `docker-compose.yml`:
 
 ```yaml
@@ -118,7 +120,7 @@ services:
       NEW_RELIC_CA_BUNDLE_PATH: /gmonit/ssl/rootCA.crt
       NEW_RELIC_APP_NAME: "[GMonit] Collector"
 
-      LICENSE_KEY: xyz
+      LICENSE_KEY: <<YOUR_LICENSE_KEY>>  # указать актуальный ключ лицензии GMonit
 
       PORT:               8080
       CLICKHOUSE_URL:     http://clickhouse:8123
@@ -130,7 +132,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
 
-      SECRET_TOKEN:       Sasyn23rjkd7mrz4vBnVSHLYGUGRDHNPjtcTzcmPNrEACXR3vQfHkbC9Qy7banyGgcB3JVvRDJeQUbAjhhth3Rznrfr3vUJh7SkPCLREvUa7WfZ5hHgrsGRLwp3nQcJK
+      SECRET_TOKEN: <<SOME_SECRET_TOKEN>>  # случайная последовательность из 128 символов (цифры и латинские буквы)
     healthcheck:
       test: curl -f localhost:8080/health
       interval: 10s
@@ -173,13 +175,19 @@ services:
 
 >Все URL вида `*.example.ru` заменить на реальные адреса для Grafana и коллектора
 
+Список монтируемых директорий:
+
+- ./schema - схема данных для Clickhouse
+- ./ssl - сертификаты для выделенных доменов
+- Caddyfile - файл с настройками для Caddy
+
 6. Запросить у команды GMonit актуальный `лицензионный колюч`.
 
-7. Запросить у команды GMonit архив со схемой для Clickhouse и в файле `application.sql` указать актуальные логин и пароль для доступа к Clickhouse, созданные на шаге 5. А именно, в коде ниже заменить заглушки вида `<<SOME_VALUE>>` на актуальные значения:
+7. Запросить у команды GMonit архив со схемой для Clickhouse и в файле `schema/application.sql` указать актуальные логин и пароль для доступа к Clickhouse, созданные на шаге 5. А именно, в коде ниже заменить заглушки вида `<<SOME_VALUE>>` на актуальные значения:
 
 ```
 source(clickhouse(table 'applications'
                   db 'default'
-                  user <<SOME_CLICKHOUSE_USER>>
-                  password <<SOME_CLICKHOUSE_PASSWORD>>))
+                  user '<<SOME_CLICKHOUSE_USER>>'
+                  password '<<SOME_CLICKHOUSE_PASSWORD>>'))
 ```
