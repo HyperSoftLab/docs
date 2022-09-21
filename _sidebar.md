@@ -1,6 +1,6 @@
 - Getting started
-
-  - [Quick start](intro.md)
-  - [Scalability](scale.md)
-  - [System requirements](pilot.md)
+  - [Быстрый старт](intro.md)
+  - [Минимальные системные требования](system_requirements.md)
+  - [Масштабирование системы](scale.md)
+  - [Пилотное внедрение](pilot.md)
   - [Инструкция по разворачиванию GMonit](install.md)
