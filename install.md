@@ -157,8 +157,8 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ./ssl:/gmonit/ssl
     ports:
-      - 980:80
-      - 9443:443
+      - 80:80
+      - 443:443
     networks:
       default:
         aliases:
