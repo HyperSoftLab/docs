@@ -156,6 +156,8 @@ services:
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ./ssl:/gmonit/ssl
+      - caddy_data:/data
+      - caddy_config:/config
     ports:
       - 80:80
       - 443:443
@@ -169,9 +171,16 @@ services:
         condition: service_healthy
       collector:
         condition: service_healthy
+
+# docker volume create gmonit_caddy_data
+volumes:
+  caddy_data:
+    external: true
+    name: gmonit_caddy_data
+  caddy_config:
 ```
 
->Для всех заглушек вида `<<SOME_VALUE>>` нужно задать конкретные значения. 
+>Для всех заглушек вида `<<SOME_VALUE>>` нужно задать конкретные значения.
 
 >Все URL вида `*.example.ru` заменить на реальные адреса для Grafana и коллектора
 
@@ -180,6 +189,10 @@ services:
 - ./schema - схема данных для Clickhouse
 - ./ssl - сертификаты для выделенных доменов
 - Caddyfile - файл с настройками для Caddy
+
+Нужно создать внешние вольюмы:
+
+- `docker volume create gmonit_caddy_data`
 
 6. Запросить у команды GMonit актуальный `лицензионный колюч`.
 
