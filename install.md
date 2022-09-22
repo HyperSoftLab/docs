@@ -157,7 +157,6 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ./ssl:/gmonit/ssl
       - caddy_data:/data
-      - caddy_config:/config
     ports:
       - 80:80
       - 443:443
@@ -177,7 +176,6 @@ volumes:
   caddy_data:
     external: true
     name: gmonit_caddy_data
-  caddy_config:
 ```
 
 >Для всех заглушек вида `<<SOME_VALUE>>` нужно задать конкретные значения.
