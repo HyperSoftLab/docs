@@ -51,8 +51,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-    volumes:
-      - ./schema:/docker-entrypoint-initdb.d
 
   postgres:
     restart: unless-stopped
@@ -133,6 +131,14 @@ services:
       REDIS_PORT: 6379
 
       SECRET_TOKEN: <<SOME_SECRET_TOKEN>>  # случайная последовательность из 128 символов (цифры и латинские буквы)
+
+      # METRIC_DATA_TTL_DAY: 30
+      # ANALYTIC_EVENT_DATA_TTL_DAY: 30
+      # ERROR_DATA_TTL_DAY: 30
+      # AGENTS_TTL_DAY: 30
+
+      # SPAN_EVENT_DATA_TTL_DAY: 8
+      # TRANSACTION_SAMPLE_DATA_TTL_DAY: 8
     healthcheck:
       test: curl -f localhost:8080/health
       interval: 10s
@@ -184,7 +190,6 @@ volumes:
 
 Список монтируемых директорий:
 
-- ./schema - схема данных для Clickhouse
 - ./ssl - сертификаты для выделенных доменов
 - Caddyfile - файл с настройками для Caddy
 
@@ -193,12 +198,3 @@ volumes:
 - `docker volume create gmonit_caddy_data`
 
 6. Запросить у команды GMonit актуальный `лицензионный колюч`.
-
-7. Запросить у команды GMonit архив со схемой для Clickhouse и в файле `schema/application.sql` указать актуальные логин и пароль для доступа к Clickhouse, созданные на шаге 5. А именно, в коде ниже заменить заглушки вида `<<SOME_VALUE>>` на актуальные значения:
-
-```
-source(clickhouse(table 'applications'
-                  db 'default'
-                  user '<<SOME_CLICKHOUSE_USER>>'
-                  password '<<SOME_CLICKHOUSE_PASSWORD>>'))
-```
