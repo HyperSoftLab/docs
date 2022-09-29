@@ -126,7 +126,6 @@ services:
       CLICKHOUSE_KEY:     <<SOME_CLICKHOUSE_PASSWORD>>
       CLICKHOUSE_DB:      default
 
-      SPAN_EVENT_DATA_ENABLED: 'true'
       REDIS_HOST: redis
       REDIS_PORT: 6379
 
