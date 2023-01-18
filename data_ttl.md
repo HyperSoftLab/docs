@@ -10,22 +10,24 @@
 * `TRANSACTION_SAMPLE_DATA_TTL_DAY` (8) -  хранение трейсов медленных транзакций;
 * `INFRA_METRICS_EVENTS_TTL_DAY` (30) - хранение инфраструктурных метрик и событий.
 
-> В параметрах выше, в скобках приведены значения по умолчанию. 
+> В параметрах выше, в скобках приведены значения по умолчанию.
 
-!> При уменьшении TTL старые данные удаляются асинхронно, в течении нескольких часов. 
+!> При уменьшении TTL старые данные удаляются асинхронно, в течении нескольких часов.
 
 __Например (compose.yaml):__
+
 ```yaml
 collector:
-    image: gmonit/collector:master
-    ...
-    environment:
-        ...
-        METRIC_DATA_TTL_DAY: 30 
-        ANALYTIC_EVENT_DATA_TTL_DAY: 30 
-        ERROR_DATA_TTL_DAY: 30 
-        AGENTS_TTL_DAY: 30 
-        SPAN_EVENT_DATA_TTL_DAY: 8 
-        TRANSACTION_SAMPLE_DATA_TTL_DAY: 8
-        ...
+  image: gmonit/collector:master
+  # ...
+  environment:
+    #...
+    METRIC_DATA_TTL_DAY: 30
+    ANALYTIC_EVENT_DATA_TTL_DAY: 30
+    ERROR_DATA_TTL_DAY: 30
+    AGENTS_TTL_DAY: 30
+    SPAN_EVENT_DATA_TTL_DAY: 8
+    TRANSACTION_SAMPLE_DATA_TTL_DAY: 8
+    INFRA_METRICS_EVENTS_TTL_DAY: 30
+    # ...
 ```
