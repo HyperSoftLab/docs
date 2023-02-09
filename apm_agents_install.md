@@ -14,7 +14,7 @@
 
 1. Установить APM-агент NewRelic для PHP по официальной [инструкции](https://docs.newrelic.com/docs/apm/agents/php-agent/installation/php-agent-installation-overview).
 
-> Для установки агента под `Alpine Linux`, необходимо скачать и установить актуальную версию агента с Musl по [ссылке](https://download.newrelic.com/php_agent/release/). 
+> Если вы используете вместо `glibc` библиотеку `musl libc`, например в `Alpine Linux`, необходимо скачать и установить актуальную версию агента с Musl по [ссылке](https://download.newrelic.com/php_agent/release/). 
 
 2. Изменить настройки в конфигурационном файле `newrelic.ini` 
 ```ini
