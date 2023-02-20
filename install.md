@@ -113,7 +113,7 @@ services:
     image: cr.yandex/crpih7d63vpcj5dfn8jj/collector:master
     environment:
       NEW_RELIC_LOG: stdout
-      NEW_RELIC_LICENSE_KEY: 0123456789012345678901234567890123456789
+      NEW_RELIC_LICENSE_KEY: 0123456789-123456789-123456789-123456789
       NEW_RELIC_HOST: gmonit-collector.example.ru
       NEW_RELIC_CA_BUNDLE_PATH: /gmonit/ssl/rootCA.crt
       NEW_RELIC_APP_NAME: "[GMonit] Collector"
