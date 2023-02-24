@@ -26,4 +26,4 @@ newrelic.daemon.collector_host = ${NEW_RELIC_HOST} // gmonit-collector.<<DOMAIN>
     * если он запущен в докере, то добавить ключ к команде запуска  `--cafile /etc/ssl/certs/ca-certificates.crt`;
     * или в newrelic.cfg указать путь к сертификату в параметре `ssl_ca_bundle`. 
 
-> Подробнее об этом можно узнать по [ссылке](пhttps://docs.newrelic.com/docs/apm/agents/php-agent/configuration/proxy-daemon-newreliccfg-settings/#proxy-settings)
+> Подробнее об этом можно узнать по [ссылке](https://docs.newrelic.com/docs/apm/agents/php-agent/configuration/proxy-daemon-newreliccfg-settings/#proxy-settings)
