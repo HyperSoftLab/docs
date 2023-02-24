@@ -18,7 +18,7 @@
 
 2. Изменить настройки в конфигурационном файле `newrelic.ini` 
 ```ini
-new_relic_license_key =  0123456789-123456789-123456789-123456789
+newrelic.license = 0123456789-123456789-123456789-123456789
 newrelic.daemon.collector_host = ${NEW_RELIC_HOST} // gmonit-collector.<<DOMAIN>>.ru
 ```
 
