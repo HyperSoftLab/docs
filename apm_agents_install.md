@@ -19,11 +19,32 @@
 2. Изменить настройки в конфигурационном файле `newrelic.ini`
 ```ini
 newrelic.license = 0123456789-123456789-123456789-123456789
-newrelic.daemon.collector_host = ${NEW_RELIC_HOST} // gmonit-collector.<<DOMAIN>>.ru
+newrelic.daemon.collector_host = gmonit-collector.<<DOMAIN>>.ru // домен коллектора
 ```
 
-3. Если используются самоподписные сертификаты или Let's encript, нужно явно указать это в настройках проксти-демона (`newrelic-daemon`):
+3. Если используются самоподписанные сертификаты или Let's encript, нужно явно указать это в настройках проксти-демона (`newrelic-daemon`):
     * если он запущен в докере, то добавить ключ к команде запуска  `--cafile /etc/ssl/certs/ca-certificates.crt`;
     * или в newrelic.cfg указать путь к сертификату в параметре `ssl_ca_bundle`.
 
 > Подробнее об этом можно узнать по [ссылке](https://docs.newrelic.com/docs/apm/agents/php-agent/configuration/proxy-daemon-newreliccfg-settings/#proxy-settings)
+
+## Установка APM-агента для Java (NewRelic)
+Для установки и настройки агента, необходимо выполнить следующий набор шагов:
+
+1. Установить APM-агент NewRelic для Java по официальной [инструкции](https://docs.newrelic.com/install/java/).
+
+2. Изменить настройки агента в конфигурационном файле `newrelic.yml` или через переменные окружения: 
+```yaml
+NEW_RELIC_LOG: stdout
+NEW_RELIC_LICENSE_KEY: 0123456789-123456789-123456789-123456789
+NEW_RELIC_HOST: gmonit-collector.<<DOMAIN>>.ru # домен коллектора
+NEW_RELIC_APP_NAME: "MY_AWESOME_APP" # название приложения, которое будете мониторить
+```
+
+3. Если используются самоподписанные сертификаты, то нужно явно указать это в настройках агента (`ca_bundle_path`) или в переменных окружения (`NEW_RELIC_CA_BUNDLE_PATH`). Например:
+```yaml
+NEW_RELIC_CA_BUNDLE_PATH: /gmonit/ssl/rootCA.crt #  путь до бандла сертификатов
+```
+
+> Подробнее о конфигурации агента можно узнать по [ссылке](https://docs.newrelic.com/docs/apm/agents/java-agent/configuration/java-agent-configuration-config-file/).
+
