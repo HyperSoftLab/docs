@@ -1,4 +1,4 @@
-- Getting started
+- [Первоначальная настройка](README.md)
   - [Минимальные системные требования](system_requirements.md)
   - [Масштабирование системы](scale.md)
   - [Инструкция по разворачиванию GMonit](install.md)
