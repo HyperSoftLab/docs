@@ -29,6 +29,9 @@ command_channel_url: https://gmonit-collector.<<DOMAIN>>.com/infra/command-api
 
 self_instrumentation: newrelic
 self_instrumentation_apm_host: gmonit-collector.<<DOMAIN>>.com
+
+# указать путь к сертефикатам SSL
+ca_bundle_file: %path_to_ssl%
 ```
 
 3. Выключить сбор системных логов. Для этого, в директории `C:\%ProgramData%\New Relic\newrelic-infra\logging.d\` для __Windows__ или `/etc/newrelic-infra/logging.d/` для __Linux__ добавить всем файлам `*.yml` расширение `.disabled`. Например: `foo.yml.disabled`.
