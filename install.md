@@ -42,7 +42,7 @@ gmonit-collector.example.ru {
 services:
   clickhouse:
     restart: unless-stopped
-    image: clickhouse/clickhouse-server:22.4
+    image: clickhouse/clickhouse-server:23.3
     environment:
       CLICKHOUSE_USER: <<SOME_CLICKHOUSE_USER>>
       CLICKHOUSE_PASSWORD: <<SOME_CLICKHOUSE_PASSWORD>>
