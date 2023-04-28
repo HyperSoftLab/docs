@@ -35,10 +35,9 @@ newrelic.daemon.collector_host = gmonit-collector.<<DOMAIN>>.ru // домен к
 
 2. Изменить настройки агента в конфигурационном файле `newrelic.yml` или через переменные окружения: 
 ```yaml
-NEW_RELIC_LOG: stdout
-NEW_RELIC_LICENSE_KEY: 0123456789-123456789-123456789-123456789
-NEW_RELIC_HOST: gmonit-collector.<<DOMAIN>>.ru # домен коллектора
-NEW_RELIC_APP_NAME: "MY_AWESOME_APP" # название приложения, которое будете мониторить
+license_key: 0123456789-123456789-123456789-123456789
+host: gmonit-collector.<<DOMAIN>>.ru # домен коллектора. По дефолту отсутствует, необходимо добавить вручную(недокументированная функция).
+app_name: "MY_AWESOME_APP" # название приложения, которое будете мониторить
 ```
 
 3. Если используются самоподписанные сертификаты, то нужно явно указать это в настройках агента (`ca_bundle_path`) или в переменных окружения (`NEW_RELIC_CA_BUNDLE_PATH`). Например:
