@@ -74,7 +74,7 @@ services:
 
   grafana:
     restart: unless-stopped
-    image: cr.yandex/crpih7d63vpcj5dfn8jj/grafana:master
+    image: cr.yandex/crpih7d63vpcj5dfn8jj/grafana:v2
     environment:
       GF_SERVER_ROOT_URL: https://gmonit.example.ru
 
@@ -110,7 +110,7 @@ services:
 
   collector:
     restart: unless-stopped
-    image: cr.yandex/crpih7d63vpcj5dfn8jj/collector:master
+    image: cr.yandex/crpih7d63vpcj5dfn8jj/collector:v2
     environment:
       NEW_RELIC_LOG: stdout
       NEW_RELIC_LICENSE_KEY: 0123456789-123456789-123456789-123456789
