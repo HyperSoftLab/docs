@@ -92,6 +92,7 @@ services:
       GF_DATABASE_NAME: postgres
       GF_DATABASE_USER: postgres
       GF_DATABASE_PASSWORD: <<SOME_POSTGRES_PASSWORD>>
+      # GF_DATABASE_MAX_OPEN_CONN: 5
 
     healthcheck:
       test: wget --spider -q localhost:3000/api/health
