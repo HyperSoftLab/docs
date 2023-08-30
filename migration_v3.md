@@ -84,3 +84,5 @@ image: cr.yandex/crpih7d63vpcj5dfn8jj/collector:v3
 # с шага №1.
 DATOMIC_URI: "datomic:sql://base?jdbc:postgresql://$PG_HOST:5432/datomic?user=$PG_USER&password=$PG_USER"
 ```
+9. Увеличить на 1 значениние переменой коллектора `AGENT_ID_VERSION`. Если переменная не задана,
+то установить `AGENT_ID_VERSION: 1`.
