@@ -1,0 +1,12 @@
+# нужно прописывать fullchain.pem в качестве сертификата
+# https://caddy.community/t/ssl-configuration-in-caddy/15535#custom-ssl-configuration-3
+
+{$GRAFANA_DOMAIN} {
+  reverse_proxy grafana:3000
+  tls {$CERT_FILE} {$KEY_FILE}
+}
+
+{$COLLECTOR_DOMAIN} {
+  reverse_proxy collector:8080
+  tls {$CERT_FILE} {$KEY_FILE}
+}

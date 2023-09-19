@@ -1,0 +1,7 @@
+{$GRAFANA_DOMAIN} {
+  reverse_proxy grafana:3000
+}
+
+{$COLLECTOR_DOMAIN} {
+  reverse_proxy collector:8080
+}
