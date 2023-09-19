@@ -1,0 +1,222 @@
+services:
+  clickhouse:
+    restart: unless-stopped
+    image: clickhouse/clickhouse-server:23.3
+    environment:
+      CLICKHOUSE_USER: gmonit
+      CLICKHOUSE_PASSWORD: CWAqVvK7rwfaW826
+    healthcheck:
+      test: wget --spider -q localhost:8123/ping
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  postgres:
+    restart: unless-stopped
+    image: postgres:13.1
+    environment:
+      - POSTGRES_PASSWORD=hVUDY2TYfZFw8CQg
+    healthcheck:
+      test: pg_isready -U postgres
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+
+  redis:
+    restart: unless-stopped
+    image: redis:6
+    healthcheck:
+      test: redis-cli ping
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  transactor:
+    restart: unless-stopped
+    image: cr.yandex/crpih7d63vpcj5dfn8jj/transactor:1.0.6735
+    environment:
+      HOST: transactor
+      PORT: 4334
+
+      SQL_URL: "jdbc:postgresql://postgres:5432/datomic?user=postgres&password=hVUDY2TYfZFw8CQg"
+
+      NEW_RELIC_LICENSE_KEY: 0123456789-123456789-123456789-123456789
+      NEW_RELIC_HOST: ${COLLECTOR_DOMAIN}
+      NEW_RELIC_CA_BUNDLE_PATH: ${CA_FILE}
+      NEW_RELIC_LOG: stdout
+      NEW_RELIC_APP_NAME: "[GMonit] Transactor"
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: 5
+    healthcheck:
+      test: curl -f localhost:9999/health
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - ./ssl:/gmonit/ssl
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  grafana:
+    restart: unless-stopped
+    image: cr.yandex/crpih7d63vpcj5dfn8jj/grafana:v3
+    environment:
+      GF_SERVER_ROOT_URL: https://${GRAFANA_DOMAIN}
+
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+      GMONIT_GRAFANA_TEMPO_URL: https://${COLLECTOR_DOMAIN}/tempo
+      GMONIT_GRAFANA_TEMPO_CA_CERT__FILE: ${CA_FILE}
+
+      GMONIT_GRAFANA_CLICKHOUSE_DATASOURCE_URL: http://clickhouse:8123
+      GMONIT_GRAFANA_CLICKHOUSE_DATABASE: default
+      GMONIT_GRAFANA_CLICKHOUSE_USER: gmonit
+      GMONIT_GRAFANA_CLICKHOUSE_PASSWORD: CWAqVvK7rwfaW826
+      # GMONIT_GRAFANA_CLICKHOUSE_CA_CERT__FILE: /gmonit/ssl/...
+
+      GF_DATABASE_TYPE: postgres
+      GF_DATABASE_HOST: postgres:5432
+      GF_DATABASE_NAME: postgres
+      GF_DATABASE_USER: postgres
+      GF_DATABASE_PASSWORD: hVUDY2TYfZFw8CQg
+      # GF_DATABASE_MAX_OPEN_CONN: 5
+
+      # GF_DATABASE_CA_CERT_PATH: /gmonit/ssl/...
+      # GF_DATABASE_SSL_MODE: verify-full
+    healthcheck:
+      test: wget --spider -q localhost:3000/api/health
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./ssl:/gmonit/ssl
+
+  collector:
+    env_file:
+      - ttl.env
+    restart: unless-stopped
+    image: cr.yandex/crpih7d63vpcj5dfn8jj/collector:v3
+    environment:
+      NEW_RELIC_LOG: stdout
+      # NEW_RELIC_LOG_LEVEL: debug
+      NEW_RELIC_LICENSE_KEY: 0123456789-123456789-123456789-123456789
+      NEW_RELIC_HOST: ${COLLECTOR_DOMAIN}
+      NEW_RELIC_CA_BUNDLE_PATH: ${CA_FILE}
+      NEW_RELIC_APP_NAME: "[GMonit] Collector"
+
+      LICENSE_KEY: ${LICENSE_KEY}
+
+      PORT:               8080
+      CLICKHOUSE_URL:     http://clickhouse:8123
+      CLICKHOUSE_USER:    gmonit
+      CLICKHOUSE_KEY:     CWAqVvK7rwfaW826
+      CLICKHOUSE_DB:      default
+      # CLICKHOUSE_CA_PATH: /gmonit/ssl/...
+
+      DATOMIC_URI: "datomic:sql://base?jdbc:postgresql://postgres:5432/datomic?user=postgres&password=hVUDY2TYfZFw8CQg"
+
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      # REDIS_PASSWORD:    # optional
+      # REDIS_CA_PATH:     # absolute path
+      # REDIS_SSL_ENABLED: # true, yes, 1. true, когда задано REDIS_CA_PATH
+
+      SECRET_TOKEN:       ${SECRET_TOKEN}
+    healthcheck:
+      test: curl -f localhost:8080/health
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      transactor:
+        condition: service_healthy
+    volumes:
+      - ./ssl:/gmonit/ssl
+
+  caddy:
+    restart: unless-stopped
+    image: caddy:2.5.0
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./ssl:/gmonit/ssl
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      default:
+        aliases:
+          - ${GRAFANA_DOMAIN}
+          - ${COLLECTOR_DOMAIN}
+    environment:
+      GRAFANA_DOMAIN:   ${GRAFANA_DOMAIN}
+      COLLECTOR_DOMAIN: ${COLLECTOR_DOMAIN}
+      CA_FILE:   ${CA_FILE}
+      CERT_FILE: ${CERT_FILE}
+      KEY_FILE:  ${KEY_FILE}
+
+  infra_host:
+    restart: unless-stopped
+    container_name: newrelic-infra
+    image: newrelic/infrastructure-bundle:latest
+    cap_add:
+      - SYS_PTRACE
+
+    # https://github.com/newrelic/nri-docker/issues/131
+    # cgroups v2
+    cgroup: host
+
+    network_mode: host
+    pid: host
+    privileged: true
+    volumes:
+      - "/:/host:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - ./infra_host:/etc/newrelic-infra/integrations.d
+      - ./ssl:/gmonit/ssl
+    environment:
+      # NRIA_LOG_LEVEL: debug
+      NRIA_ENABLE_PROCESS_METRICS: 'true'
+
+      NRIA_LICENSE_KEY: "0123456789012345678901234567890123456789"
+      NRIA_COLLECTOR_URL: https://${COLLECTOR_DOMAIN}/infra/infra-api
+      NRIA_COMMAND_CHANNEL_URL: https://${COLLECTOR_DOMAIN}/infra/command-api
+      NRIA_IDENTITY_URL: https://${COLLECTOR_DOMAIN}/infra/identity-api
+      NRIA_CA_BUNDLE_FILE: ${CA_FILE}
+
+      # не работает на самоподписанных сертификатах
+      # NRIA_SELF_INSTRUMENTATION: newrelic
+      # NRIA_SELF_INSTRUMENTATION_APM_HOST: ${COLLECTOR_DOMAIN}
+
+  infra_services:
+    restart: unless-stopped
+    image: newrelic/infrastructure-bundle:latest
+    volumes:
+      - ./infra_services:/etc/newrelic-infra/integrations.d
+      - ./ssl:/gmonit/ssl
+    environment:
+      # NRIA_LOG_LEVEL: debug
+      NRIA_IS_FORWARD_ONLY: 'true'
+
+      NRIA_LICENSE_KEY: "0123456789012345678901234567890123456789"
+      NRIA_COLLECTOR_URL: https://${COLLECTOR_DOMAIN}/infra/infra-api
+      NRIA_COMMAND_CHANNEL_URL: https://${COLLECTOR_DOMAIN}/infra/command-api
+      NRIA_IDENTITY_URL: https://${COLLECTOR_DOMAIN}/infra/identity-api
+      NRIA_CA_BUNDLE_FILE: ${CA_FILE}
+
+      # не работает на самоподписанных сертификатах
+      # NRIA_SELF_INSTRUMENTATION: newrelic
+      # NRIA_SELF_INSTRUMENTATION_APM_HOST: ${COLLECTOR_DOMAIN}
