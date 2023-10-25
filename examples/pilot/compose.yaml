@@ -65,7 +65,7 @@ services:
 
   grafana:
     restart: unless-stopped
-    image: cr.yandex/crpih7d63vpcj5dfn8jj/grafana:v3
+    image: cr.yandex/crpih7d63vpcj5dfn8jj/grafana:${TAG:-v3}
     environment:
       GF_SERVER_ROOT_URL: https://${GRAFANA_DOMAIN}
 
@@ -105,7 +105,7 @@ services:
     env_file:
       - ttl.env
     restart: unless-stopped
-    image: cr.yandex/crpih7d63vpcj5dfn8jj/collector:v3
+    image: cr.yandex/crpih7d63vpcj5dfn8jj/collector:${TAG:-v3}
     environment:
       NEW_RELIC_LOG: stdout
       # NEW_RELIC_LOG_LEVEL: debug
