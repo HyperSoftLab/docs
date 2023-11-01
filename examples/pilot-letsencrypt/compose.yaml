@@ -38,7 +38,7 @@ services:
 
   transactor:
     restart: unless-stopped
-    image: cr.yandex/crpih7d63vpcj5dfn8jj/transactor:1.0.6735
+    image: cr.yandex/crpih7d63vpcj5dfn8jj/transactor:1.0.7021-8
     environment:
       HOST: transactor
       PORT: 4334
