@@ -33,6 +33,7 @@ self_instrumentation_apm_host: gmonit-collector.<<DOMAIN>>.com
 # указать путь к сертефикатам SSL
 ca_bundle_file: %path_to_ssl%
 ```
+> Если включаем сертификаты добавлением `ca_bundle_file`, то инструментацию инфраструктурного агента агентом APM нужно отключить.
 
 3. Выключить сбор системных логов. Для этого, в директории `C:\%ProgramData%\New Relic\newrelic-infra\logging.d\` для __Windows__ или `/etc/newrelic-infra/logging.d/` для __Linux__ добавить всем файлам `*.yml` расширение `.disabled`. Например: `foo.yml.disabled`.
 

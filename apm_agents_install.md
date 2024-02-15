@@ -35,6 +35,12 @@ newrelic.daemon.collector_host = gmonit-collector.<<DOMAIN>>.ru // домен к
 
 2. Изменить настройки агента в конфигурационном файле `newrelic.yml` или через переменные окружения: 
 ```yaml
+license_key: 0123456789-123456789-123456789-123456789
+host: gmonit-collector.<<DOMAIN>>.ru # домен коллектора. По дефолту отсутствует, необходимо добавить вручную(недокументированная функция).
+app_name: "MY_AWESOME_APP" # название приложения, которое будете мониторить
+```
+docker-compose.yml
+```yaml
 NEW_RELIC_LOG: stdout
 NEW_RELIC_LICENSE_KEY: 0123456789-123456789-123456789-123456789
 NEW_RELIC_HOST: gmonit-collector.<<DOMAIN>>.ru # домен коллектора
