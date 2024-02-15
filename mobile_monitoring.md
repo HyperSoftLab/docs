@@ -45,7 +45,7 @@
 
 В зависимости от того какой менеджер пакета вы используете для описания сборки - выберете пункт 1.1,1.2 или  1.3 соответственно
 ### 1.1 CocoaPods
-#### Обновление podspec
+*Обновление podspec*
 
 1. Добавьте следующую строку в ваш `Podfile`:
 ```ruby
@@ -61,12 +61,12 @@ open App.xcworkspace
 ```
 ### 1.2 Xcode
 
-#### Загрузка и Распаковка XCFramework SDK
+*Загрузка и Распаковка XCFramework SDK*
 
 1. Перейдите на [страницу с заметками](https://docs.newrelic.com/docs/release-notes/mobile-release-notes/ios-release-notes/) о выпуске iOS агента, чтобы скачать последнюю версию.
 2. Загрузите SDK и сохраните файл на ваш компьютер.
 
-#### Добавление XCFramework в Ваш Проект Xcode
+*Добавление XCFramework в Ваш Проект Xcode*
 
 1. Распакуйте скачанный SDK.
 2. Откройте Finder и найдите папку `NewRelicAgent.xcframework`, которую вы только что распаковали.
@@ -76,7 +76,7 @@ open App.xcworkspace
 Примечание: Убедитесь, что вы используете последнюю версию Xcode и ваш проект настроен для работы с XCFramework.
 
 ### 1.3 Swift Packages Manage
-#### Добавление Package.manifest
+*Добавление Package.manifest*
 
 1. Для добавления зависимости через Swift Package Manager выполните следующие шаги:
 2. В Xcode перейдите в меню `File` > `Swift Packages` > `Add Package Dependency`.
@@ -88,7 +88,7 @@ https://github.com/newrelic/newrelic-ios-agent-spm
 ## 2. Конфигурация SDK
 
 ### 2.1 Конфигурация на Objective - c
-### Обновление файла `AppDelegate.m`
+*Обновление файла `AppDelegate.m`*
 
 Для интеграции агента необходимо внести изменения в файл `AppDelegate.m` вашего мобильного приложения.
 
@@ -101,7 +101,7 @@ https://github.com/newrelic/newrelic-ios-agent-spm
 [NewRelic startWithApplicationToken:@"<your_token>-NRMA"];
 ```
 ### 2.2 Конфигурация на Swift
-### Обновление файла `AppDelegate.swift`
+*Обновление файла `AppDelegate.swift`*
 
 Для интеграции агента необходимо внести изменения в файл `AppDelegate.swift` вашего мобильного приложения.
 1. В начале файла `AppDelegate.swift` добавьте следующий код для импорта необходимой библиотеки:
@@ -112,12 +112,13 @@ import NewRelic/NewRelic
 ```swift
 NewRelic.start(withApplicationToken:"<your_token>-NRMA")
 ```
-### 3. Автоматическая загрузка вашего файла dSYM
 
+### 3. Автоматическая загрузка вашего файла dSYM
 1. В навигаторе XCode выберите ваш проект, затем кликните на целевое приложение (application target).
 2. Выберите вкладку "Build Phases" и добавьте новую фазу сборки скриптов ("New Run Script Build Phase").
 3. В текстовом поле скрипта (под строкой Shell) введите следующий скрипт:
-```shell
+
+```bash
 #import <NewRelic/NewRelic.h>
 
 SCRIPT=`/usr/bin/find "${SRCROOT}" -name newrelic_postbuild.sh | head -n 1`
@@ -125,8 +126,9 @@ if [ -z "${SCRIPT}"]; then
 ARTIFACT_DIR="${BUILD_DIR%Build/*}SourcePackages/artifacts"
 SCRIPT=`/usr/bin/find "${ARTIFACT_DIR}" -name newrelic_postbuild.sh | head -n 1`
 fi
-/bin/sh "${SCRIPT}" "<your_tokken>-NRMA" ```
+/bin/sh "${SCRIPT}" "<your_tokken>-NRMA"
 ```
+
 ### 4. Инициализиция агента в приложении
 Для инициализации New Relic добавьте следующий фрагмент кода в метод `application()`
 ```java
@@ -153,8 +155,6 @@ andCrashCollectorAddress: "<your_crash_coollector_adress>"
 
 # Установка мобильного агента для Android
 
-## 1. Установка SDK
-
 - Установите последнюю версию [SDK](https://developer.android.com/tools/releases/platform-tools)
 
 - Для ознакомления с подробностями, пожалуйста, просмотрите примечания к релизу:
@@ -166,7 +166,7 @@ andCrashCollectorAddress: "<your_crash_coollector_adress>"
 ## 1. Установка SDK через gradle
 В зависимости от того какой язык вы используете (groovy или kotlin) для описания сборки - выберете пункт 1.1 или 1.2 соответственно
 ### 1.1 Groovy
-#### Обновление файла build.gradle на уровне проекта 
+*Обновление файла `build.gradle`*
 
 1. Следующие изменения необходимо внести в файл `build.gradle` на уровне вашего проекта до применения плагинов:
 
@@ -185,6 +185,7 @@ buildscript {
 ```
 
 2. Добавьте или дополните следующие строки в файл build.gradle вашего модуля:
+
 ```groovy
 plugins {
   id 'newrelic'
@@ -194,8 +195,10 @@ dependencies {
   implementation 'com.newrelic.agent.android:android-agent:7.2.0'
 }
 ```
+
 ### 1.2 Kotlin
-#### Обновление файла build.gradle.kts на уровне проекта 
+*Обновление файла `build.gradle.kts`*
+
 1. Добавьте или дополните следующие строки в файл `build.gradle.kts` на уровне вашего проекта перед применением плагинов:
 
 ```kotlin
@@ -209,7 +212,9 @@ buildscript {
   }
 }
 ```
+
 2. Добавьте или дополните следующие строки в файл build.gradle.kts вашего модуля:
+
 ```kotlin
 plugins {
   id("newrelic")
@@ -238,7 +243,9 @@ dependencies {
 ```java
 import com.newrelic.agent.android.NewRelic;
 ```
+
 2. Для инициализации New Relic добавьте следующий фрагмент кода в метод `onCreate()`
+
 ```java
 NewRelic.withApplicationToken(
     "<your_token>-NRMA"
@@ -247,6 +254,7 @@ NewRelic.withApplicationToken(
 .usingCrashCollectorAddress("<your_crash_collector_adress>")
 .start(this.getApplicationContext());
 ```
+
 ### 3.2 Конфигурация на Kotlin
 
 1. Импортируйте класс NewRelic в ваш основной Activity :
@@ -254,7 +262,9 @@ NewRelic.withApplicationToken(
 ```kotlin
 import com.newrelic.agent.android.NewRelic;
 ```
+
 2. Для инициализации New Relic добавьте следующий фрагмент кода в метод `onCreate()`
+
 ```kotlin
 NewRelic.withApplicationToken(
     "<your_token>-NRMA"
