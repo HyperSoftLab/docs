@@ -179,7 +179,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.newrelic.agent.android:agent-gradle-plugin:7.0.0'
+    classpath 'com.newrelic.agent.android:agent-gradle-plugin:7.2.0'
   }
 }
 ```
@@ -191,7 +191,7 @@ plugins {
 }
 
 dependencies {
-  implementation 'com.newrelic.agent.android:android-agent:6.10.0'
+  implementation 'com.newrelic.agent.android:android-agent:7.2.0'
 }
 ```
 ### 1.2 Kotlin
@@ -242,8 +242,8 @@ import com.newrelic.agent.android.NewRelic;
 NewRelic.withApplicationToken(
     "<your_token>-NRMA"
 )
-.usingCollectorAddress(collector)
-.usingCrashCollectorAddress(collector)
+.usingCollectorAddress("<your_collector_adress>")
+.usingCrashCollectorAddress("<your_crash_collector_adress>")
 .start(this.getApplicationContext());
 ```
 ### 3.2 Конфигурация на Kotlin
@@ -258,8 +258,8 @@ import com.newrelic.agent.android.NewRelic;
 NewRelic.withApplicationToken(
     "<your_token>-NRMA"
 )
-.usingCollectorAddress(collector)
-.usingCrashCollectorAddress(collector)
+.usingCollectorAddress("<your_collector_adress>")
+.usingCrashCollectorAddress("<your_crash_collector_adress>")
 .start(this.applicationContext);
 ```
 
