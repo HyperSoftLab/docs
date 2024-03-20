@@ -148,7 +148,7 @@ services:
 
   caddy:
     restart: unless-stopped
-    image: caddy:2.7.0
+    image: caddy:2.7
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ./ssl:/gmonit/ssl
