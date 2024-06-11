@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<clickhouse>
+
+    <metric_log>
+        <database>system</database>
+        <table>metric_log</table>
+        <ttl>event_date + INTERVAL 30 DAY DELETE</ttl>
+    </metric_log>
+
+    <asynchronous_metric_log>
+        <database>system</database>
+        <table>asynchronous_metric_log</table>
+        <ttl>event_date + INTERVAL 30 DAY DELETE</ttl>
+    </asynchronous_metric_log>
+
+    <query_log>
+        <database>system</database>
+        <table>query_log</table>
+        <ttl>event_date + INTERVAL 30 DAY DELETE</ttl>
+    </query_log>
+
+    <trace_log>
+        <database>system</database>
+        <table>trace_log</table>
+        <ttl>event_date + INTERVAL 30 DAY DELETE</ttl>
+    </trace_log>
+
+    <text_log>
+        <database>system</database>
+        <table>text_log</table>
+        <ttl>event_date + INTERVAL 30 DAY DELETE</ttl>
+    </text_log>
+
+    <query_thread_log>
+        <database>system</database>
+        <table>query_thread_log</table>
+        <ttl>event_date + INTERVAL 30 DAY DELETE</ttl>
+    </query_thread_log>
+
+    <part_log>
+        <database>system</database>
+        <table>part_log</table>
+        <ttl>event_date + INTERVAL 30 DAY DELETE</ttl>
+    </part_log>
+
+    <crash_log>
+        <database>system</database>
+        <table>crash_log</table>
+        <ttl>event_date + INTERVAL 30 DAY DELETE</ttl>
+    </crash_log>
+
+</clickhouse>
