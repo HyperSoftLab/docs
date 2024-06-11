@@ -10,6 +10,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    volumes:
+       - ./clickhouse/:/etc/clickhouse-server/config.d/
 
   postgres:
     restart: unless-stopped
