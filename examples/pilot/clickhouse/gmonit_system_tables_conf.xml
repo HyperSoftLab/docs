@@ -4,49 +4,49 @@
     <metric_log>
         <database>system</database>
         <table>metric_log</table>
-        <ttl>event_date + INTERVAL 30 DAY DELETE</ttl>
+        <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
     </metric_log>
 
     <asynchronous_metric_log>
         <database>system</database>
         <table>asynchronous_metric_log</table>
-        <ttl>event_date + INTERVAL 30 DAY DELETE</ttl>
+        <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
     </asynchronous_metric_log>
 
     <query_log>
         <database>system</database>
         <table>query_log</table>
-        <ttl>event_date + INTERVAL 30 DAY DELETE</ttl>
+        <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
     </query_log>
 
     <trace_log>
         <database>system</database>
         <table>trace_log</table>
-        <ttl>event_date + INTERVAL 30 DAY DELETE</ttl>
+        <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
     </trace_log>
 
     <text_log>
         <database>system</database>
         <table>text_log</table>
-        <ttl>event_date + INTERVAL 30 DAY DELETE</ttl>
+        <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
     </text_log>
 
     <query_thread_log>
         <database>system</database>
         <table>query_thread_log</table>
-        <ttl>event_date + INTERVAL 30 DAY DELETE</ttl>
+        <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
     </query_thread_log>
 
     <part_log>
         <database>system</database>
         <table>part_log</table>
-        <ttl>event_date + INTERVAL 30 DAY DELETE</ttl>
+        <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
     </part_log>
 
     <crash_log>
         <database>system</database>
         <table>crash_log</table>
-        <ttl>event_date + INTERVAL 30 DAY DELETE</ttl>
+        <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
     </crash_log>
 
     <opentelemetry_span_log>
@@ -56,7 +56,7 @@
             engine MergeTree
             partition by toYYYYMM(finish_date)
             order by (finish_date, finish_time_us, trace_id)
-            ttl finish_date + INTERVAL 30 DAY DELETE
+            ttl finish_date + INTERVAL 7 DAY DELETE
         </engine>
     </opentelemetry_span_log>
 
