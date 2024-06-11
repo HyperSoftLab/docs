@@ -15,6 +15,7 @@ services:
       retries: 10
     volumes:
        - ./clickhouse/gmonit.xml:/etc/clickhouse-server/config.d/gmonit.xml
+       - ./clickhouse/gmonit_system_tables_conf.xml:/etc/clickhouse-server/config.d/gmonit_system_tables_conf.xml
 
   postgres:
     restart: unless-stopped
