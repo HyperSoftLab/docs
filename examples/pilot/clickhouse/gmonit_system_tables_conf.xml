@@ -49,4 +49,15 @@
         <ttl>event_date + INTERVAL 30 DAY DELETE</ttl>
     </crash_log>
 
+    <opentelemetry_span_log>
+        <database>system</database>
+        <table>opentelemetry_span_log</table>
+        <engine>
+            engine MergeTree
+            partition by toYYYYMM(finish_date)
+            order by (finish_date, finish_time_us, trace_id)
+            ttl finish_date + INTERVAL 30 DAY DELETE
+        </engine>
+    </opentelemetry_span_log>
+
 </clickhouse>
