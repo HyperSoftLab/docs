@@ -13,6 +13,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    volumes:
+       - ./clickhouse/gmonit.xml:/etc/clickhouse-server/config.d/gmonit.xml
 
   postgres:
     restart: unless-stopped
