@@ -32,6 +32,10 @@ cr.yandex/c...j/grafana:v3-1740
 - Поддержан сбор метрик по протоколу OpenTelemetry:
   - GMonit можно указать в `exporters` otelcol-config.yml
     ```
+    receivers: ...
+    processors:
+      cumulativetodelta:
+      batch:
     exporters:
       otlphttp/gmonit:
         endpoint: https://gmonit-collector-url/otlp
@@ -42,7 +46,7 @@ cr.yandex/c...j/grafana:v3-1740
         processors: [cumulativetodelta, batch]
         exporters: [otlphttp/gmonit]
     ```
-    Или отправлять данные на прямую
+    Или отправлять данные по http напрямую в коллектор GMonit с адресом API `/otlp`
   - Поддержана delta temporality, поэтому рекомендуется использование cumulativetodelta процессора
   - Поддержано сохранение всех основных типов метрик: gauge, counter, histogram, exponential histogram
 - Поддержан мониторинг мобильных приложений на iOS и Android:
