@@ -53,7 +53,8 @@ cr.yandex/c...j/grafana:v3-1740
   - Мобильные метрики собираемые `newrelic-ios-agent` и `newrelic-android-agent`
   - Дебофускация обработанных ошибок и сбоев в Android
   - Символикация обработанных ошибок и сбоев в iOS
-- Добавлены метрики медленных SQL в APM
+- Добавлены метрики медленных SQL в APM. Они представлены на страницах transaction и database item
 - Поддержаны пользовательские события из APM SDK:
   - https://docs.newrelic.com/docs/data-apis/custom-data/custom-events/apm-report-custom-events-attributes/
+  - Ваши данные будут находиться в таблице `nr_custom_event_data`
 - Исправления работы с RUM (браузерными) агентами
