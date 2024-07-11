@@ -29,14 +29,27 @@ cr.yandex/c...j/grafana:v3-1740
 
 ### `v3-1740` 11 июля 2024
 
-#### Основные изменения
 - Поддержан сбор метрик по протоколу OpenTelemetry:
-  - Delta temporality
-  - Gauge, Counter, Histogram, Exponential histogram
+  - GMonit можно указать в `exporters` otelcol-config.yml
+    ```
+    exporters:
+      otlphttp/gmonit:
+        endpoint: https://gmonit-collector-url/otlp
+        encoding: json
+    service:
+      pipelines:
+        receivers: ...
+        processors: [cumulativetodelta, batch]
+        exporters: [otlphttp/gmonit]
+    ```
+    Или отправлять данные на прямую
+  - Поддержана delta темпоральность, поэтому рекомендуется использование cumulativetodelta процессора
+  - Поддержано сохранение всех основных типов метрик: gauge, counter, histogram, exponential histogram
 - Поддержан мониторинг мобильных приложений на iOS и Android:
-  - Мобильные метрики
+  - Мобильные метрики собираемые `newrelic-ios-agent` и `newrelic-android-agent`
   - Дебофускация обработанных ошибок и сбоев в Android
   - Символикация обработанных ошибок и сбоев в iOS
-- Добавлены новые метрики медленных SQL в APM
+- Добавлены метрики медленных SQL в APM
 - Поддержаны пользовательские события из APM SDK:
   - https://docs.newrelic.com/docs/data-apis/custom-data/custom-events/apm-report-custom-events-attributes/
+- Исправления работы с RUM (браузерными) агентами
