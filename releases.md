@@ -27,6 +27,18 @@ cr.yandex/c...j/grafana:v3-1740
 
 ## Release notes
 
+### TODO
+
+- Обновлен Datomic
+  Замените образ сервиса `transactor`
+  ```yaml
+  transactor:
+    # ...
+    #было  cr.yandex/crpih7d63vpcj5dfn8jj/transactor:1.0.7021-8
+    image: cr.yandex/crpih7d63vpcj5dfn8jj/transactor:1.0.7180-11
+    # ...
+  ```
+
 ### `v3-1740` 11 июля 2024
 
 - Поддержан сбор метрик по протоколу OpenTelemetry:
