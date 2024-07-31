@@ -5,9 +5,6 @@ x-loggin: &logging
       max-size: 100m
       max-file: 5
 
-volumes:
-  caddy_data:
-
 services:
   clickhouse:
     restart: unless-stopped
@@ -174,25 +171,28 @@ services:
       - ./***.mmdb:/gmonit/geoip.mmdb
     <<: *logging
 
-  caddy:
-    restart: unless-stopped
-    image: caddy:2.7
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - ./ssl:/gmonit/ssl
-      - caddy_data:/data
-    ports:
-      - 80:80
-      - 443:443
-    networks:
-      default:
-        aliases:
-          - ${GRAFANA_DOMAIN}
-          - ${COLLECTOR_DOMAIN}
-    environment:
-      GRAFANA_DOMAIN:   ${GRAFANA_DOMAIN}
-      COLLECTOR_DOMAIN: ${COLLECTOR_DOMAIN}
-    <<: *logging
+    nginx:
+      restart: unless-stopped
+      image: umputun/nginx-le:v1.5.0
+      volumes:
+        - ./ssl:/etc/nginx/ssl
+        - ./nginx_templates:/etc/nginx/templates
+      ports:
+        - 80:80
+        - 443:443
+      environment:
+        GRAFANA_DOMAIN: ${GRAFANA_DOMAIN}
+        COLLECTOR_DOMAIN: ${COLLECTOR_DOMAIN}
+        TZ: UTC
+        LETSENCRYPT: true
+        LE_EMAIL: mikhail.kuzmin@hypersoftlab.ru
+        LE_FQDN: ${GRAFANA_DOMAIN},${COLLECTOR_DOMAIN}
+      networks:
+        default:
+          aliases:
+            - ${GRAFANA_DOMAIN}
+            - ${COLLECTOR_DOMAIN}
+      <<: *logging
 
   infra_host:
     restart: unless-stopped
