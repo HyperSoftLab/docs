@@ -39,6 +39,15 @@ cr.yandex/c...j/grafana:v3-1740
     # ...
   ```
 
+- В Grafana добавлен браузерный мониторинг.
+  Включается так:
+  ```yaml
+  grafana:
+    environment:
+    # ...
+    GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR: gmonit-collector.%COMPANY%.ru
+  ```
+
 ### `v3-1740` 11 июля 2024
 
 - Поддержан сбор метрик по протоколу OpenTelemetry:
