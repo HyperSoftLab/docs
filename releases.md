@@ -45,7 +45,7 @@ cr.yandex/c...j/grafana:v3-1740
   grafana:
     environment:
     # ...
-    GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR: gmonit-collector.%COMPANY%.ru
+    GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL: https://gmonit-collector.%COMPANY%.ru
   ```
 
 ### `v3-1740` 11 июля 2024
