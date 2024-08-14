@@ -47,6 +47,23 @@ cr.yandex/c...j/grafana:v3-1740
     # ...
     GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL: https://gmonit-collector.%COMPANY%.ru
   ```
+- В Grafana добавлен
+  [Infinity](https://grafana.com/grafana/plugins/yesoreyeram-infinity-datasource/)
+  datasource.
+  Для корректной работы нужно указать:
+  1. Для коллектора:
+  ```yaml
+  environment:
+      BASIC_AUTH_NAME: grafana-http-user # default is 'admin'
+      BASIC_AUTH_PASS: verystrongandsecurepassword
+  ```
+  2. для графаны:
+  ```yaml
+  environment:
+      GMONIT_GRAFANA_COLLECTOR_URL: ${COLLECTOR_DOMAIN}/grafana
+      GMONIT_GRAFANA_COLLECTOR_USER: grafana-http-user
+      GMONIT_GRAFANA_COLLECTOR_PASSWORD: verystrongandsecurepassword
+  ```
 
 ### `v3-1740` 11 июля 2024
 
