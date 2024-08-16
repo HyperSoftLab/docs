@@ -92,7 +92,7 @@ cr.yandex/c...j/grafana:v3-1740
   ```
   `SOURCE_MAP_PATH` – соответствует пути до source-map на файловой системе
   `JS_URL` – соответствует аттрибуту `src` в HTML теге `script`.
-- Браузерный мониторинг включен для веб-интерфейса GMonit. Для настройки необходимо добавить переменную окружения GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL для Grafana. Например:
+- Браузерный мониторинг включен для веб-интерфейса GMonit. Для настройки необходимо добавить переменную окружения `GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL` для Grafana. Например:
   ```yaml
   grafana:
     environment:
