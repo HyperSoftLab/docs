@@ -64,10 +64,12 @@ cr.yandex/c...j/grafana:v3-1740
         exporters:
           - otlphttp/gmonit
   ```
-- Добавлен мониторинг AJAX запросов браузерных приложений.
+- Добавлен мониторинг AJAX запросов браузерных приложений. Новые дашборды доступны на экранах приложений во вкладке Browser.
 - Добавлена обработка User-Agent браузерных приложений, сбор статистики по использованию различных браузеров, их версий и операционных систем.
+- Поддержан браузерный SDK. [Документация NewRelic](https://docs.newrelic.com/docs/browser/new-relic-browser/browser-apis/using-browser-apis/). Позволяет расширять мониторинг браузерных приложений произвольными событиями и метриками.
 - Добавлена символикация ошибок минифицированных браузерных приложений.
-  [Документация NewRelic](https://docs.newrelic.com/docs/browser/new-relic-browser/browser-pro-features/upload-source-maps-api/#questions)
+
+  [Документация NewRelic](https://docs.newrelic.com/docs/browser/new-relic-browser/browser-pro-features/upload-source-maps-api/#questions).
   Для использования необходима настройка переменных окружения а также загрузка source-map вашего приложения:
   1. Для GMonit Collector:
   ```yaml
@@ -88,7 +90,8 @@ cr.yandex/c...j/grafana:v3-1740
        -F "javascriptUrl=JS_URL" \
        https://gmonit-collector.%COMPANY%.ru/v2/applications/YOUR_APP_ID/sourcemaps
   ```
-- Поддержан браузерный SDK. [Документация NewRelic](https://docs.newrelic.com/docs/browser/new-relic-browser/browser-apis/using-browser-apis/).
+  `SOURCE_MAP_PATH` – соответствует пути до source-map на файловой системе
+  `JS_URL` – соответствует аттрибуту `src` в HTML теге `script`.
 - Браузерный мониторинг включен для веб-интерфейса GMonit. Для настройки необходимо добавить переменную окружения GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL для Grafana. Например:
   ```yaml
   grafana:
