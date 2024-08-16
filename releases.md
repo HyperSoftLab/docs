@@ -37,7 +37,7 @@ cr.yandex/c...j/grafana:v3-1740
     image: cr.yandex/crpih7d63vpcj5dfn8jj/transactor:1.0.7180-11
     # ...
   ```
-- Добавлена поддержка распределенной трассировки по протоколу OpenTelemetry. Настройте отправку трейсов по http в формате json в Collector GMonit:
+- Добавлена поддержка распределенной трассировки по протоколу OpenTelemetry. Бесшовная интеграция с существующими инструментами мониторинга распределенной трассировки. Приложения OpenTelemetry отображаются на экране Traces, а также внутри трейсов наравне с данными NewRelic. Настройте отправку трейсов по http в формате json в Collector GMonit:
   ```yaml
   receivers:
     otlp:
