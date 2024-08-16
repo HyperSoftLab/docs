@@ -27,10 +27,9 @@ cr.yandex/c...j/grafana:v3-1740
 
 ## Release notes
 
-### TODO
+### `v3-xxxx` 16 августа 2024
 
-- Обновлен Datomic
-  Замените образ сервиса `transactor`
+- Обновлен Datomic. Замените образ сервиса `transactor`
   ```yaml
   transactor:
     # ...
@@ -38,31 +37,63 @@ cr.yandex/c...j/grafana:v3-1740
     image: cr.yandex/crpih7d63vpcj5dfn8jj/transactor:1.0.7180-11
     # ...
   ```
-
-- В Grafana добавлен браузерный мониторинг.
-  Включается так:
+- Добавлена поддержка распределенной трассировки по протоколу OpenTelemetry. Настройте отправку трейсов по http в формате json в Collector GMonit:
   ```yaml
-  grafana:
-    environment:
-    # ...
-    GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL: https://gmonit-collector.%COMPANY%.ru
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+          include_metadata: true
+
+  processors:
+    batch:
+
+  exporters:
+    otlphttp/gmonit:
+      endpoint: https://gmonit-collector-url/otlp
+      encoding: json
+    debug:
+
+  service:
+    pipelines:
+      traces:
+        receivers: [otlp]
+        processors:
+          - batch
+        exporters:
+          - otlphttp/gmonit
   ```
-- В Grafana добавлен
-  [Infinity](https://grafana.com/grafana/plugins/yesoreyeram-infinity-datasource/)
-  datasource.
-  Для корректной работы нужно указать:
-  1. Для коллектора:
+- Добавлен мониторинг AJAX запросов браузерных приложений.
+- Добавлена обработка User-Agent браузерных приложений, сбор статистики по использованию различных браузеров, их версий и операционных систем.
+- Добавлена символикация ошибок минифицированных браузерных приложений.
+  [Документация NewRelic](https://docs.newrelic.com/docs/browser/new-relic-browser/browser-pro-features/upload-source-maps-api/#questions)
+  Для использования необходима настройка переменных окружения а также загрузка source-map вашего приложения:
+  1. Для GMonit Collector:
   ```yaml
   environment:
       BASIC_AUTH_NAME: grafana-http-user # default is 'admin'
-      BASIC_AUTH_PASS: verystrongandsecurepassword
+      BASIC_AUTH_PASS: пароль
   ```
-  2. для графаны:
+  2. Для Grafana:
   ```yaml
   environment:
       GMONIT_GRAFANA_COLLECTOR_URL: http:/collector:8080/grafana
       GMONIT_GRAFANA_COLLECTOR_USER: grafana-http-user
-      GMONIT_GRAFANA_COLLECTOR_PASSWORD: verystrongandsecurepassword
+      GMONIT_GRAFANA_COLLECTOR_PASSWORD: пароль
+  ```
+  3. Для каждой сборки вашего приложения отправлять source-map через POST запрос в Collector GMonit. Пример на `curl`:
+  ```bash
+  curl -F "sourcemap=%SOURCE_MAP_PATH%" \
+       -F "javascriptUrl=JS_URL" \
+       https://gmonit-collector.%COMPANY%.ru/v2/applications/YOUR_APP_ID/sourcemaps
+  ```
+- Поддержан браузерный SDK. [Документация NewRelic](https://docs.newrelic.com/docs/browser/new-relic-browser/browser-apis/using-browser-apis/).
+- Браузерный мониторинг включен для веб-интерфейса GMonit. Для настройки необходимо добавить переменную окружения GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL для Grafana. Например:
+  ```yaml
+  grafana:
+    environment:
+      GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL: https://gmonit-collector.%COMPANY%.ru
   ```
 
 ### `v3-1740` 11 июля 2024
