@@ -89,7 +89,7 @@ cr.yandex/c...j/grafana:v3-1740
   ```bash
   curl -F "sourcemap=%SOURCE_MAP_PATH%" \
        -F "javascriptUrl=JS_URL" \
-       https://gmonit-collector.%COMPANY%.ru/v2/applications/YOUR_APP_ID/sourcemaps
+       https://gmonit-collector/sourcemaps-service/v2/applications/app/sourcemaps
   ```
   `SOURCE_MAP_PATH` – соответствует пути до source-map на файловой системе
   `JS_URL` – соответствует аттрибуту `src` в HTML теге `script`.
