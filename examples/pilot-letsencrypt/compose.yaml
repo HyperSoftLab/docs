@@ -93,6 +93,9 @@ services:
       GF_DATABASE_NAME: postgres
       GF_DATABASE_USER: postgres
       GF_DATABASE_PASSWORD: hVUDY2TYfZFw8CQg
+      GMONIT_GRAFANA_COLLECTOR_URL: http:/collector:8080/grafana
+      GMONIT_GRAFANA_COLLECTOR_USER: admin
+      GMONIT_GRAFANA_COLLECTOR_PASSWORD: ${BASIC_AUTH_PASS}
       # GF_DATABASE_MAX_OPEN_CONN: 5
 
       # GF_DATABASE_CA_CERT_PATH: /gmonit/ssl/...
@@ -141,6 +144,7 @@ services:
       # REDIS_SSL_ENABLED: # true, yes, 1. true, когда задано REDIS_CA_PATH
 
       SECRET_TOKEN:       ${SECRET_TOKEN}
+      BASIC_AUTH_PASS: ${BASIC_AUTH_PASS}
     healthcheck:
       test: curl -f localhost:8080/health
       interval: 10s
