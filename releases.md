@@ -27,7 +27,7 @@ cr.yandex/c...j/grafana:v3-1740
 
 ## Release notes
 
-### `v3-xxxx` 20 августа 2024
+### `v3-2205` 23 августа 2024
 
 - Обновлен Datomic. Замените образ сервиса `transactor`
   ```yaml
