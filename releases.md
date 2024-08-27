@@ -81,7 +81,7 @@ cr.yandex/c...j/grafana:v3-1740
   2. Для Grafana:
   ```yaml
   environment:
-      GMONIT_GRAFANA_COLLECTOR_URL: http:/collector:8080/grafana
+      GMONIT_GRAFANA_COLLECTOR_URL: http://collector:8080/grafana
       GMONIT_GRAFANA_COLLECTOR_USER: grafana-http-user
       GMONIT_GRAFANA_COLLECTOR_PASSWORD: пароль
   ```
