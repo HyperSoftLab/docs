@@ -78,7 +78,7 @@ cr.yandex/c...j/grafana:v3-1740
       BASIC_AUTH_NAME: grafana-http-user # default is 'admin'
       BASIC_AUTH_PASS: пароль
   ```
-  2. Для Grafana:
+  2. Для Grafana. `GMONIT_GRAFANA_COLLECTOR_URL` может быть внутренний URL:
   ```yaml
   environment:
       GMONIT_GRAFANA_COLLECTOR_URL: http://collector:8080/grafana
@@ -93,7 +93,7 @@ cr.yandex/c...j/grafana:v3-1740
   ```
   `SOURCE_MAP_PATH` – соответствует пути до source-map на файловой системе
   `JS_URL` – соответствует аттрибуту `src` в HTML теге `script`.
-- Браузерный мониторинг включен для веб-интерфейса GMonit. Для настройки необходимо добавить переменную окружения `GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL` для Grafana. Например:
+- Браузерный мониторинг включен для веб-интерфейса GMonit. Для настройки необходимо добавить переменную окружения `GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL` для Grafana. Это должен быть внешний URL. Например:
   ```yaml
   grafana:
     environment:
