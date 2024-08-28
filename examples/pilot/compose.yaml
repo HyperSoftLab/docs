@@ -91,13 +91,22 @@ services:
       GF_DATABASE_NAME: postgres
       GF_DATABASE_USER: postgres
       GF_DATABASE_PASSWORD: hVUDY2TYfZFw8CQg
-      GMONIT_GRAFANA_COLLECTOR_URL: http:/collector:8080/grafana
-      GMONIT_GRAFANA_COLLECTOR_USER: admin
-      GMONIT_GRAFANA_COLLECTOR_PASSWORD: ${BASIC_AUTH_PASS}
       # GF_DATABASE_MAX_OPEN_CONN: 5
-
       # GF_DATABASE_CA_CERT_PATH: /gmonit/ssl/...
       # GF_DATABASE_SSL_MODE: verify-full
+      GMONIT_GRAFANA_COLLECTOR_URL: http://collector:8080/grafana
+      GMONIT_GRAFANA_COLLECTOR_USER: grafana-http-user
+      GMONIT_GRAFANA_COLLECTOR_PASSWORD: cAoV*mgXidGL4-YGL3sN
+
+      #Браузерный мониторинг включен для веб-интерфейса GMonit. Это должен быть внешний URL.
+      GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL: https://${COLLECTOR_DOMAIN}/
+
+      #Collector использует прогрев пулов с обновления v3-2205. Ниже приведен минимальный пример для 2х ядер.
+      #Как считать еще решаем тут https://app.asana.com/0/1198866161029603/1208160372077942/f . предположительно: Для CPU-интенсивных задач: Макс. потоки = Кол-во ядер + 1.
+      #Рекомендуется не менять, если нет проблем с производительностью.
+      USER_AGENT_PARSER_POOL_MAX_TOTAL: 3
+      USER_AGENT_PARSER_POOL_MIN_IDLE: 1
+
     healthcheck:
       test: wget --spider -q localhost:3000/api/health
       interval: 10s
@@ -143,7 +152,8 @@ services:
       # REDIS_SSL_ENABLED: # true, yes, 1. true, когда задано REDIS_CA_PATH
 
       SECRET_TOKEN:       ${SECRET_TOKEN}
-      BASIC_AUTH_PASS: ${BASIC_AUTH_PASS}
+      BASIC_AUTH_NAME: grafana-http-user
+      BASIC_AUTH_PASS: cAoV*mgXidGL4-YGL3sN
     healthcheck:
       test: curl -f localhost:8080/health
       interval: 10s
