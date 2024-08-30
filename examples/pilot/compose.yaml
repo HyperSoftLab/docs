@@ -11,7 +11,7 @@ services:
     image: clickhouse/clickhouse-server:23.3
     environment:
       CLICKHOUSE_USER: gmonit
-      CLICKHOUSE_PASSWORD: CWAqVvK7rwfaW826
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
     healthcheck:
       test: wget --spider -q localhost:8123/ping
       interval: 10s
@@ -26,7 +26,7 @@ services:
     restart: unless-stopped
     image: postgres:13.1
     environment:
-      - POSTGRES_PASSWORD=hVUDY2TYfZFw8CQg
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     healthcheck:
       test: pg_isready -U postgres
       interval: 10s
@@ -53,7 +53,7 @@ services:
       HOST: transactor
       PORT: 4334
 
-      SQL_URL: "jdbc:postgresql://postgres:5432/datomic?user=postgres&password=hVUDY2TYfZFw8CQg"
+      SQL_URL: "jdbc:postgresql://postgres:5432/datomic?user=postgres&password=${POSTGRES_PASSWORD}"
 
       NEW_RELIC_LICENSE_KEY: 0123456789-123456789-123456789-123456789
       NEW_RELIC_HOST: ${COLLECTOR_DOMAIN}
@@ -83,29 +83,27 @@ services:
       GMONIT_GRAFANA_CLICKHOUSE_DATASOURCE_URL: http://clickhouse:8123
       GMONIT_GRAFANA_CLICKHOUSE_DATABASE: default
       GMONIT_GRAFANA_CLICKHOUSE_USER: gmonit
-      GMONIT_GRAFANA_CLICKHOUSE_PASSWORD: CWAqVvK7rwfaW826
+      GMONIT_GRAFANA_CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
       # GMONIT_GRAFANA_CLICKHOUSE_CA_CERT__FILE: /gmonit/ssl/...
 
       GF_DATABASE_TYPE: postgres
       GF_DATABASE_HOST: postgres:5432
       GF_DATABASE_NAME: postgres
       GF_DATABASE_USER: postgres
-      GF_DATABASE_PASSWORD: hVUDY2TYfZFw8CQg
+      GF_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
       # GF_DATABASE_MAX_OPEN_CONN: 5
       # GF_DATABASE_CA_CERT_PATH: /gmonit/ssl/...
       # GF_DATABASE_SSL_MODE: verify-full
       GMONIT_GRAFANA_COLLECTOR_URL: http://collector:8080/grafana
       GMONIT_GRAFANA_COLLECTOR_USER: grafana-http-user
-      GMONIT_GRAFANA_COLLECTOR_PASSWORD: cAoV*mgXidGL4-YGL3sN
+      GMONIT_GRAFANA_COLLECTOR_PASSWORD: ${COLLECTOR_DATASOURCE_PASSWORD}
 
       #Браузерный мониторинг включен для веб-интерфейса GMonit. Это должен быть внешний URL.
       GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL: https://${COLLECTOR_DOMAIN}/
 
-      #Collector использует прогрев пулов с обновления v3-2205. Ниже приведен минимальный пример для 2х ядер.
-      #Как считать еще решаем тут https://app.asana.com/0/1198866161029603/1208160372077942/f . предположительно: Для CPU-интенсивных задач: Макс. потоки = Кол-во ядер + 1.
-      #Рекомендуется не менять, если нет проблем с производительностью.
-      USER_AGENT_PARSER_POOL_MAX_TOTAL: 3
-      USER_AGENT_PARSER_POOL_MIN_IDLE: 1
+      #Collector использует прогрев пулов с обновления v3-2205. Рекомендуется не менять, если нет проблем с производительностью.
+      # USER_AGENT_PARSER_POOL_MAX_TOTAL: 3
+      # USER_AGENT_PARSER_POOL_MIN_IDLE: 1
 
     healthcheck:
       test: wget --spider -q localhost:3000/api/health
@@ -139,11 +137,11 @@ services:
       PORT:               8080
       CLICKHOUSE_URL:     http://clickhouse:8123
       CLICKHOUSE_USER:    gmonit
-      CLICKHOUSE_KEY:     CWAqVvK7rwfaW826
+      CLICKHOUSE_KEY:     ${CLICKHOUSE_PASSWORD}
       CLICKHOUSE_DB:      default
       # CLICKHOUSE_CA_PATH: /gmonit/ssl/...
 
-      DATOMIC_URI: "datomic:sql://base?jdbc:postgresql://postgres:5432/datomic?user=postgres&password=hVUDY2TYfZFw8CQg"
+      DATOMIC_URI: "datomic:sql://base?jdbc:postgresql://postgres:5432/datomic?user=postgres&password=${POSTGRES_PASSWORD}"
 
       REDIS_HOST: redis
       REDIS_PORT: 6379
@@ -153,7 +151,7 @@ services:
 
       SECRET_TOKEN:       ${SECRET_TOKEN}
       BASIC_AUTH_NAME: grafana-http-user
-      BASIC_AUTH_PASS: cAoV*mgXidGL4-YGL3sN
+      BASIC_AUTH_PASS: ${COLLECTOR_DATASOURCE_PASSWORD}
     healthcheck:
       test: curl -f localhost:8080/health
       interval: 10s
