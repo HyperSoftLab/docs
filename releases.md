@@ -51,7 +51,7 @@ cr.yandex/c...j/grafana:v3-1740
     environment:
       GEOIP_DB_PATH: '/gmonit/geoip.mmdb'
     volumes:
-      './***.mmdb' : '/gmonit/geoip.mmdb'
+      - './***.mmdb' : '/gmonit/geoip.mmdb'
   ```
   Для проверки мы рекомендуем использовать базу [db-ip "IP to City lite"](https://db-ip.com/db/lite.php). Эта бесплатная база имеет довольно точную выборку для российских IP
 - Внесен ряд правок и оптимизаций в UI/UX:
