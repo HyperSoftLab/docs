@@ -171,7 +171,7 @@ services:
         condition: service_healthy
     volumes:
       - ./ssl:/gmonit/ssl
-      - './***.mmdb' : '/gmonit/geoip.mmdb'
+      - ./***.mmdb:/gmonit/geoip.mmdb
     <<: *logging
 
   caddy:
