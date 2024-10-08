@@ -155,6 +155,8 @@ services:
       SECRET_TOKEN:       ${SECRET_TOKEN}
       BASIC_AUTH_NAME: grafana-http-user
       BASIC_AUTH_PASS: ${COLLECTOR_DATASOURCE_PASSWORD}
+
+      GEOIP_DB_PATH: '/gmonit/geoip.mmdb'
     healthcheck:
       test: curl -f localhost:8080/health
       interval: 10s
@@ -169,6 +171,7 @@ services:
         condition: service_healthy
     volumes:
       - ./ssl:/gmonit/ssl
+      - ./***.mmdb:/gmonit/geoip.mmdb
     <<: *logging
 
   caddy:
