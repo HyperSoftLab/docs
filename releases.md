@@ -28,6 +28,10 @@ cr.yandex/c...j/grafana:v3-1740
 ## Release notes
 
 ### `v3-хххх` 07 октября 2024
+- Обновлена версия Grafana. Сделайте резервную копию базы данных кастомных дашбордов перед обновлением:
+  ```
+  docker compose exec postgres pg_dump -U postgres | gzip > postgres.sql.gz
+  ```
 - Добавлена новая карта сервисов. Теперь доступно: 
   - Отображение внешних (External) HTTP взаимодействий
   - Отображение обращений к базам данных (Datastore)
