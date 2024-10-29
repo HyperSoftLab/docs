@@ -30,7 +30,7 @@
     - [Ошибки](modules/mobile/errors.md)
     - [HTTP запросы](modules/mobile/http.md)
   - [Инфраструктурный мониторинг](modules/infra.md)
-- [Сценарии использования]
+- Сценарии использования
     - [Настройка уведомлений об отказе](use_cases/alerts.md)
     - [Поиск и анализ первопричин ошибки](use_cases/root_cause_analysis.md)
     - [Отладка проблем с производительностью](use_cases/performance_troubleshooting.md)
