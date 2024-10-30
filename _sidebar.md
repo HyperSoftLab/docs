@@ -30,6 +30,9 @@
     - [Ошибки](modules/mobile/errors.md)
     - [HTTP запросы](modules/mobile/http.md)
   - [Инфраструктурный мониторинг](modules/infra.md)
+  - [Мониторинг 1С](modules/1s.md)
+  - [SAP](modules/sap.md)
+  - [Siebel](modules/siebel.md)
 - Сценарии использования
     - [Настройка уведомлений об отказе](use_cases/alerts.md)
     - [Поиск и анализ первопричин ошибки](use_cases/root_cause_analysis.md)
