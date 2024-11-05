@@ -42,7 +42,7 @@ cr.yandex/c...j/grafana:v3-1740
     - Исходящие AJAX запросы
     - Частота ошибок
 - В распределенную трассировку добавлена фильтрация по user id. Для получения данных user id на стороне приложений (как браузерных, так и APM) необходимо передать user id с помощью SDK. Инструкции:
-  - Для APM.
+  - Для APM:
     - [На примере Java](https://docs.newrelic.com/docs/apm/agents/java-agent/attributes/java-agent-attributes/#user-attributes)
     - [На примере Python](https://docs.newrelic.com/docs/apm/agents/python-agent/python-agent-api/setuserid-python-agent-api/)
     - [На примере PHP](https://docs.newrelic.com/docs/apm/agents/php-agent/php-agent-api/newrelic_set_user_id/)
