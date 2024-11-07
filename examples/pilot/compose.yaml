@@ -170,26 +170,28 @@ services:
       - ./ssl:/gmonit/ssl
     <<: *logging
 
-  caddy:
+  nginx:
     restart: unless-stopped
-    image: caddy:2.7
+    image: umputun/nginx-le:v1.7.0
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - ./ssl:/gmonit/ssl
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/conf.d-le:/etc/nginx/conf.d-le
+      - ./nginx/templates:/etc/nginx/templates
     ports:
       - 80:80
       - 443:443
+    environment:
+      GRAFANA_DOMAIN: ${GRAFANA_DOMAIN}
+      COLLECTOR_DOMAIN: ${COLLECTOR_DOMAIN}
+      TZ: UTC
+      SSL_CERT: ${CERT_FILE}
+      SSL_KEY: ${KEY_FILE}
+      SSL_CHAIN_CERT: ${CA_FILE}
     networks:
       default:
         aliases:
           - ${GRAFANA_DOMAIN}
           - ${COLLECTOR_DOMAIN}
-    environment:
-      GRAFANA_DOMAIN:   ${GRAFANA_DOMAIN}
-      COLLECTOR_DOMAIN: ${COLLECTOR_DOMAIN}
-      CA_FILE:   ${CA_FILE}
-      CERT_FILE: ${CERT_FILE}
-      KEY_FILE:  ${KEY_FILE}
     <<: *logging
 
   infra_host:

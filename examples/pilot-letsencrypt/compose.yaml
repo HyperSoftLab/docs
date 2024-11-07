@@ -5,9 +5,6 @@ x-loggin: &logging
       max-size: 100m
       max-file: 5
 
-volumes:
-  caddy_data:
-
 services:
   clickhouse:
     restart: unless-stopped
@@ -174,24 +171,28 @@ services:
       - ./***.mmdb:/gmonit/geoip.mmdb
     <<: *logging
 
-  caddy:
+  nginx:
     restart: unless-stopped
-    image: caddy:2.7
+    image: umputun/nginx-le:v1.7.0
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - ./ssl:/gmonit/ssl
-      - caddy_data:/data
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/conf.d-le:/etc/nginx/conf.d-le
+      - ./nginx/templates:/etc/nginx/templates
     ports:
       - 80:80
       - 443:443
+    environment:
+      GRAFANA_DOMAIN: ${GRAFANA_DOMAIN}
+      COLLECTOR_DOMAIN: ${COLLECTOR_DOMAIN}
+      TZ: UTC
+      LETSENCRYPT: true
+      LE_EMAIL: ${LETSENCRYPT_EMAIL}
+      LE_FQDN: ${GRAFANA_DOMAIN},${COLLECTOR_DOMAIN}
     networks:
       default:
         aliases:
           - ${GRAFANA_DOMAIN}
           - ${COLLECTOR_DOMAIN}
-    environment:
-      GRAFANA_DOMAIN:   ${GRAFANA_DOMAIN}
-      COLLECTOR_DOMAIN: ${COLLECTOR_DOMAIN}
     <<: *logging
 
   infra_host:
