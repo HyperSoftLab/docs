@@ -173,10 +173,11 @@ services:
 
   nginx:
     restart: unless-stopped
-    image: umputun/nginx-le:v1.5.0
+    image: umputun/nginx-le:v1.7.0
     volumes:
-      - ./ssl:/etc/nginx/ssl
-      - ./nginx_templates:/etc/nginx/templates
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/conf.d-le:/etc/nginx/conf.d-le
+      - ./nginx/templates:/etc/nginx/templates
     ports:
       - 80:80
       - 443:443
@@ -185,7 +186,7 @@ services:
       COLLECTOR_DOMAIN: ${COLLECTOR_DOMAIN}
       TZ: UTC
       LETSENCRYPT: true
-      LE_EMAIL: mikhail.kuzmin@hypersoftlab.ru
+      LE_EMAIL: ${LETSENCRYPT_EMAIL}
       LE_FQDN: ${GRAFANA_DOMAIN},${COLLECTOR_DOMAIN}
     networks:
       default:
