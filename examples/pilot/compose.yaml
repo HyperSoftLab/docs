@@ -174,8 +174,9 @@ services:
     restart: unless-stopped
     image: umputun/nginx-le:v1.5.0
     volumes:
-      - ./ssl:/etc/nginx/ssl
-      - ./nginx_templates:/etc/nginx/templates
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/conf.d-le:/etc/nginx/conf.d-le
+      - ./nginx/templates:/etc/nginx/templates
     ports:
       - 80:80
       - 443:443
