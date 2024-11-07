@@ -172,7 +172,7 @@ services:
 
   nginx:
     restart: unless-stopped
-    image: umputun/nginx-le:v1.5.0
+    image: umputun/nginx-le:v1.7.0
     volumes:
       - ./nginx/ssl:/etc/nginx/ssl
       - ./nginx/conf.d-le:/etc/nginx/conf.d-le
