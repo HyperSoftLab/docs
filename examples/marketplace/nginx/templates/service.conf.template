@@ -1,0 +1,35 @@
+map $host $backend {
+    ${GRAFANA_DOMAIN} grafana:3000;
+    ${COLLECTOR_DOMAIN} collector:8080;
+}
+
+server {
+    server_name reverseproxy;
+
+    listen 443 ssl;
+
+    # Docker embedded DNS is used by default. It's guaranteed to remain constant and won’t change.
+    # https://serverfault.com/a/593003
+    # https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_pass
+    resolver 127.0.0.11;
+
+    ssl_certificate         SSL_CERT;
+    ssl_certificate_key     SSL_KEY;
+    ssl_trusted_certificate SSL_CHAIN_CERT;
+
+    # in caddy it's also unlimited, leaving it as is for now
+    client_max_body_size 0;
+
+    location / {
+         # websocket support
+         proxy_http_version 1.1;
+         proxy_set_header   Upgrade $http_upgrade;
+         proxy_set_header   Connection "upgrade";
+
+         proxy_redirect     off;
+         proxy_set_header   X-Real-IP $remote_addr;
+         proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+         proxy_set_header   Host $host;
+         proxy_pass         http://$backend;
+     }
+}

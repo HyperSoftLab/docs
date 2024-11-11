@@ -1,0 +1,124 @@
+x-loggin: &logging
+  logging:
+    driver: json-file
+    options:
+      max-size: 100m
+      max-file: 5
+
+services:
+  clickhouse:
+    restart: unless-stopped
+    image: clickhouse/clickhouse-server:24.8
+    environment:
+      CLICKHOUSE_USER: gmonit
+      CLICKHOUSE_PASSWORD: password
+    healthcheck:
+      test: wget --spider -q localhost:8123/ping
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+       - ./clickhouse/gmonit.xml:/etc/clickhouse-server/config.d/gmonit.xml
+       - ./clickhouse/gmonit_system_tables_conf.xml:/etc/clickhouse-server/config.d/gmonit_system_tables_conf.xml
+    cap_add:
+      - CAP_SYS_NICE # https://github.com/ClickHouse/ClickHouse/issues/68747
+    <<: *logging
+
+  postgres:
+    restart: unless-stopped
+    image: postgres:17
+    environment:
+      - POSTGRES_PASSWORD=password
+    healthcheck:
+      test: pg_isready -U postgres
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  grafana:
+    restart: unless-stopped
+    image: cr.yandex/crpih7d63vpcj5dfn8jj/grafana:${TAG:?no_tag}
+    environment:
+      GF_SERVER_ROOT_URL: https://${GRAFANA_DOMAIN}
+
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+
+      GMONIT_LICENSE: ${LICENSE_KEY}
+
+      GMONIT_GRAFANA_CLICKHOUSE_DATASOURCE_URL: http://clickhouse:8123
+      GMONIT_GRAFANA_CLICKHOUSE_DATABASE:       default
+      GMONIT_GRAFANA_CLICKHOUSE_USER:           gmonit
+      GMONIT_GRAFANA_CLICKHOUSE_PASSWORD:       password
+
+      GF_DATABASE_TYPE:          postgres
+      GF_DATABASE_HOST:          postgres:5432
+      GF_DATABASE_NAME:          postgres
+      GF_DATABASE_USER:          postgres
+      GF_DATABASE_PASSWORD:      password
+      GF_DATABASE_MAX_OPEN_CONN: 5
+
+      GMONIT_GRAFANA_COLLECTOR_URL: https://${COLLECTOR_DOMAIN}/grafana
+      GMONIT_GRAFANA_COLLECTOR_USER: admin
+      GMONIT_GRAFANA_COLLECTOR_PASSWORD: ${BASIC_AUTH_PASS}
+    healthcheck:
+      test: wget --spider -q localhost:3000/api/health
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      postgres:
+        condition: service_healthy
+    <<: *logging
+
+  collector:
+    restart: unless-stopped
+    image: cr.yandex/crpih7d63vpcj5dfn8jj/collector:${TAG:?no_tag}
+    environment:
+      NEW_RELIC_LOG:         stdout
+      NEW_RELIC_LICENSE_KEY: 0123456789-123456789-123456789-123456789
+      NEW_RELIC_HOST:        ${COLLECTOR_DOMAIN}
+      NEW_RELIC_APP_NAME:    "[GMonit] Collector"
+
+      LICENSE_KEY: ${LICENSE_KEY}
+
+      PORT:            8080
+      CLICKHOUSE_URL:  http://clickhouse
+      CLICKHOUSE_USER: gmonit
+      CLICKHOUSE_KEY:  password
+      CLICKHOUSE_DB:   default
+
+      SECRET_TOKEN:    ${SECRET_TOKEN}
+      BASIC_AUTH_PASS: ${BASIC_AUTH_PASS}
+    healthcheck:
+      test: curl -f localhost:8080/health
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    <<: *logging
+
+  nginx:
+    restart: unless-stopped
+    image: umputun/nginx-le:v1.7.0
+    volumes:
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/conf.d-le:/etc/nginx/conf.d-le
+      - ./nginx/templates:/etc/nginx/templates
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      GRAFANA_DOMAIN:   ${GRAFANA_DOMAIN}
+      COLLECTOR_DOMAIN: ${COLLECTOR_DOMAIN}
+      TZ:               UTC
+      LETSENCRYPT:      true
+      LE_EMAIL:         ${LETSENCRYPT_EMAIL}
+      LE_FQDN:          ${GRAFANA_DOMAIN},${COLLECTOR_DOMAIN}
+    networks:
+      default:
+        aliases:
+          - ${GRAFANA_DOMAIN}
+          - ${COLLECTOR_DOMAIN}
+    <<: *logging
