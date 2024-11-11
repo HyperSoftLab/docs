@@ -7,6 +7,7 @@ x-loggin: &logging
 
 services:
   clickhouse:
+    <<: *logging
     restart: unless-stopped
     image: clickhouse/clickhouse-server:24.8
     environment:
@@ -22,9 +23,9 @@ services:
        - ./clickhouse/gmonit_system_tables_conf.xml:/etc/clickhouse-server/config.d/gmonit_system_tables_conf.xml
     cap_add:
       - CAP_SYS_NICE # https://github.com/ClickHouse/ClickHouse/issues/68747
-    <<: *logging
 
   grafana:
+    <<: *logging
     restart: unless-stopped
     image: cr.yandex/crpih7d63vpcj5dfn8jj/grafana:${TAG:?no_tag}
     environment:
@@ -39,7 +40,7 @@ services:
       GMONIT_GRAFANA_CLICKHOUSE_USER:           gmonit
       GMONIT_GRAFANA_CLICKHOUSE_PASSWORD:       password
 
-      GMONIT_GRAFANA_COLLECTOR_URL: https://${COLLECTOR_DOMAIN}/grafana
+      GMONIT_GRAFANA_COLLECTOR_URL: http://collector:8080/grafana
       GMONIT_GRAFANA_COLLECTOR_USER: admin
       GMONIT_GRAFANA_COLLECTOR_PASSWORD: ${BASIC_AUTH_PASS}
     healthcheck:
@@ -47,9 +48,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-    <<: *logging
 
   collector:
+    <<: *logging
     restart: unless-stopped
     image: cr.yandex/crpih7d63vpcj5dfn8jj/collector:${TAG:?no_tag}
     environment:
@@ -76,9 +77,9 @@ services:
     depends_on:
       clickhouse:
         condition: service_healthy
-    <<: *logging
 
   nginx:
+    <<: *logging
     restart: unless-stopped
     image: umputun/nginx-le:v1.7.0
     volumes:
@@ -100,4 +101,3 @@ services:
         aliases:
           - ${GRAFANA_DOMAIN}
           - ${COLLECTOR_DOMAIN}
-    <<: *logging
