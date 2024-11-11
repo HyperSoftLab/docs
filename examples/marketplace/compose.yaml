@@ -61,7 +61,7 @@ services:
       LICENSE_KEY: ${LICENSE_KEY}
 
       PORT:            8080
-      CLICKHOUSE_URL:  http://clickhouse
+      CLICKHOUSE_URL:  http://clickhouse:8123
       CLICKHOUSE_USER: gmonit
       CLICKHOUSE_KEY:  password
       CLICKHOUSE_DB:   default
