@@ -5,6 +5,9 @@ x-loggin: &logging
       max-size: 100m
       max-file: 5
 
+volumes:
+  grafana_data:
+
 services:
   clickhouse:
     <<: *logging
@@ -48,6 +51,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    volumes:
+      - grafana_data:/var/lib/grafana
 
   collector:
     <<: *logging
