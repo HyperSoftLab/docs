@@ -1,7 +1,14 @@
 # Инструкция по разворачиванию GMonit-Lite в Yandex.Cloud
 ## Перед установкой
 1. Добавить 2 DNS записи на 2 под-домена (1 для графаны, 1 для
-   коллектора)
+   коллектора).
+
+   Пример:
+   A - [Address Record](https://en.wikipedia.org/wiki/List_of_DNS_record_types)
+   ```
+   gmonit.your-company.ru IN A <vm-ip-address>
+   gmonit-collector.your-company.ru IN А <vm-ip-address>
+   ```
 
 ## Установка
 1. Залогиниться по SSH в виртуальную машину
