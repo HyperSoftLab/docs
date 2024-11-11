@@ -8,16 +8,24 @@
 ```sh
 ssh gmonit@<vm-ip-address>
 ```
-2. Зайти в каталог с GMonit
+2. Запросить у команды GMonit `ключ` для доступа к `docker-репозиторию`
+и залогититься выполнив на хосте команду:
+```sh
+cat </path/to/key.json> | docker login \
+  --username json_key \
+  --password-stdin \
+  cr.yandex
+```
+3. Зайти в каталог с GMonit
 ```sh
 cd ~/gmonit-lite
 ```
-3. Скопировать `.env.example` как `.env`
+4. Скопировать `.env.example` как `.env`
 ```sh
 cp .env.example .env
 ```
-4. Заполнить .env
-5. Запустить GMonit
+5. Заполнить .env
+6. Запустить GMonit
 ```sh
 docker compose up -d
 ```
