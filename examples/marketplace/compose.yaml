@@ -24,17 +24,6 @@ services:
       - CAP_SYS_NICE # https://github.com/ClickHouse/ClickHouse/issues/68747
     <<: *logging
 
-  postgres:
-    restart: unless-stopped
-    image: postgres:17
-    environment:
-      - POSTGRES_PASSWORD=password
-    healthcheck:
-      test: pg_isready -U postgres
-      interval: 10s
-      timeout: 5s
-      retries: 10
-
   grafana:
     restart: unless-stopped
     image: cr.yandex/crpih7d63vpcj5dfn8jj/grafana:${TAG:?no_tag}
@@ -50,13 +39,6 @@ services:
       GMONIT_GRAFANA_CLICKHOUSE_USER:           gmonit
       GMONIT_GRAFANA_CLICKHOUSE_PASSWORD:       password
 
-      GF_DATABASE_TYPE:          postgres
-      GF_DATABASE_HOST:          postgres:5432
-      GF_DATABASE_NAME:          postgres
-      GF_DATABASE_USER:          postgres
-      GF_DATABASE_PASSWORD:      password
-      GF_DATABASE_MAX_OPEN_CONN: 5
-
       GMONIT_GRAFANA_COLLECTOR_URL: https://${COLLECTOR_DOMAIN}/grafana
       GMONIT_GRAFANA_COLLECTOR_USER: admin
       GMONIT_GRAFANA_COLLECTOR_PASSWORD: ${BASIC_AUTH_PASS}
@@ -65,9 +47,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-    depends_on:
-      postgres:
-        condition: service_healthy
     <<: *logging
 
   collector:
