@@ -14,6 +14,6 @@
  - [Python](https://github.com/newrelic/newrelic-python-agent/tree/main/newrelic/hooks)
  - [PHP](https://github.com/newrelic/newrelic-php-agent/tree/main/agent)
  - [Go](https://github.com/newrelic/go-agent/tree/master/v3/integrations)
- - [.NET](https://github.com/newrelic/newrelic-dotnet-agent/tree/main/src/Agent/NewRelic/Agent/Extensions/NewRelic.Agent.Extensions)
+ - [.NET](https://github.com/newrelic/newrelic-dotnet-agent/blob/main/src/Agent/NewRelic/Agent/Extensions/NewRelic.Agent.Extensions/Logging/LogProviders.cs#L15)
  - [Ruby](https://github.com/newrelic/newrelic-ruby-agent/tree/dev/lib/new_relic/agent/instrumentation)
  - [NodeJS](https://github.com/newrelic/node-newrelic/tree/main/lib/instrumentation)
