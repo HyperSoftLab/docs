@@ -12,7 +12,7 @@ services:
   clickhouse:
     <<: *logging
     restart: unless-stopped
-    image: clickhouse/clickhouse-server:24.8
+    image: clickhouse/clickhouse-server:23.8
     environment:
       CLICKHOUSE_USER: gmonit
       CLICKHOUSE_PASSWORD: password
@@ -24,8 +24,9 @@ services:
     volumes:
        - ./clickhouse/gmonit.xml:/etc/clickhouse-server/config.d/gmonit.xml
        - ./clickhouse/gmonit_system_tables_conf.xml:/etc/clickhouse-server/config.d/gmonit_system_tables_conf.xml
-    cap_add:
-      - CAP_SYS_NICE # https://github.com/ClickHouse/ClickHouse/issues/68747
+    # FIXME: it's not needed in 23.8, uncomment after upgrading to 24.8
+    # cap_add:
+    #   - CAP_SYS_NICE # https://github.com/ClickHouse/ClickHouse/issues/68747
 
   grafana:
     <<: *logging
