@@ -6,17 +6,14 @@
 
 ## Поддерживаемые библиотеки логирования
 
-Библиотеки зависят от языка программирования тк там разные агенты
+Библиотеки зависят от языка программирования, так как в каждом языке существуют различные агенты. Самый надежный способ определить, поддерживается ли ваша библиотека автоинструментацией, — это проверить репозиторий агента на наличие вашей библиотеки в списке поддерживаемых.
 
-И самый веарный вариант это пискать покрыта ли ваша библиотека автоинструментацией в репе агента. Имейте ввиду, что там также покрытие не только про логирование, но в целом, если библиотека логирования есть в списке автоинструментации, то скорее всего она покрыта автоинструментацией логировния
+Важно отметить, что покрытие автоинструментацией может быть не только в отношении логирования. Тем не менее, если библиотека логирования присутствует в списке автоинструментированных библиотек, то, вероятнее всего, она поддерживает и автоинструментацию логирования:
  
-java https://github.com/newrelic/newrelic-java-agent/tree/main/instrumentation
-python https://github.com/newrelic/newrelic-python-agent/tree/main/newrelic/hooks
-php https://github.com/newrelic/newrelic-php-agent/tree/main/agent
-go https://github.com/newrelic/go-agent/tree/master/v3/integrations
-
-dot net core dot net framework 
-
-
-в node js надо убедиться https://github.com/newrelic/node-newrelic/tree/main/lib
-и в руби чото удивительное, похоже по какой-то крутой другой схеме работает https://github.com/newrelic/newrelic-ruby-agent/tree/dev/lib/new_relic/agent
+ - [Java](https://github.com/newrelic/newrelic-java-agent/tree/main/instrumentation)
+ - [Python](https://github.com/newrelic/newrelic-python-agent/tree/main/newrelic/hooks)
+ - [PHP](https://github.com/newrelic/newrelic-php-agent/tree/main/agent)
+ - [Go](https://github.com/newrelic/go-agent/tree/master/v3/integrations)
+ - [.NET](https://github.com/newrelic/newrelic-dotnet-agent/tree/main/src/Agent/NewRelic/Agent/Extensions/NewRelic.Agent.Extensions)
+ - [Ruby](https://github.com/newrelic/newrelic-ruby-agent/tree/dev/lib/new_relic/agent/instrumentation)
+ - [NodeJS](https://github.com/newrelic/node-newrelic/tree/main/lib/instrumentation)
