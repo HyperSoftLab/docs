@@ -3,26 +3,31 @@
 ## Описание проблемы
 
 - **Данные за последние 7 дней** были отобраны для анализа.
-!-- Добавьте скриншот файл screenshots/Screenshot_1_1.png -->
+![1_1.png](./screenshots/Screenshot_1_1.png)
 
 
 - В разделе **Datastore** обнаружено, что запрос к таблице `likeit_cdn_content_location/select` используется в большом количестве различных транзакций.
-!-- Добавьте скриншот файл screenshots/Screenshot_1_2.png -->
+![1_2.png](./screenshots/Screenshot_1_2.png)
 
 - Произведён отбор верхнеуровневых транзакций, которые стали доступны после доразметки транзакции `Uri/bitrix/urlrewrite.php`.
-!-- Добавьте скриншот файл screenshots/Screenshot_1_3.png -->
+![1_3.png](./screenshots/Screenshot_1_3.png)
 
 - **Длительное время выполнения** запроса `Datastore/statement/MySQL/likeit_cdn_content_location/select` заметно влияет на производительность.
-!-- Добавьте скриншот файл screenshots/Screenshot_1_4.png -->
+![1_4.png](./screenshots/Screenshot_1_4.png)
 
 - При анализе медленных транзакций
-!-- Добавьте скриншот файл screenshots/Screenshot_1_5.png -->
+![1_5.png](./screenshots/Screenshot_1_5.png)
 
 подтверждено, что основной проблемой является именно этот запрос.
-!-- Добавьте скриншоты  screenshots/Screenshot_1_6_1.png screenshots/Screenshot_1_6_2.png и screenshots/Screenshot_1_6_3.png -->
+
+![1_6_1.png](./screenshots/Screenshot_1_6_1.png)
+![1_6_2.png](./screenshots/Screenshot_1_6_2.png)
+![1_6_3.png](./screenshots/Screenshot_1_6_3.png)
 
 - Проблема наблюдается также при других запросах.
-!-- Добавьте скриншоты  screenshots/Screenshot_1_7_1.png screenshots/Screenshot_1_7_2.png и screenshots/Screenshot_1_7_3.png -->
+![1_7_1.png](./screenshots/Screenshot_1_7_1.png)
+![1_7_2.png](./screenshots/Screenshot_1_7_2.png)
+![1_7_3.png](./screenshots/Screenshot_1_7_3.png)
 
 ## Потенциальная проблема
 
