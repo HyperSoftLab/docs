@@ -10,7 +10,7 @@
   - [Мобильный мониторинг](mobile_monitoring.md)
   - [Хранение данных](data_ttl.md)
   - [Информационная безопасность](security.md)
-- [Модули GMonit](modules/index.md)
+- Модули GMonit
   - [APM](modules/APM.md)
   - [Карта сервисов](modules/service_map.md)
   - [Распределенная трассировка](modules/distributed_tracing.md)
