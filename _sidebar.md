@@ -1,4 +1,4 @@
-- [Быстрый старт](quick_start.md)
+- Быстрый старт
 - [Релизы GMonit](releases.md)
 - [Первоначальная настройка](README.md)
   - [Минимальные системные требования](system_requirements.md)
