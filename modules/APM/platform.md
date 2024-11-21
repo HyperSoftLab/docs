@@ -9,7 +9,7 @@
 
 ## Примеры
 ### Метрики GMonit Collector (java)
-![java](./screenshots/platform-java.png)
+![java](./../screenshots/platform-java.png)
 
 ### Метрики go приложения
-![go](./screenshots/platform-go.png)
+![go](./../screenshots/platform-go.png)
