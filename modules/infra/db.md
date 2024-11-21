@@ -14,6 +14,6 @@
 
 На дашбордах Summary и Extended выведены эти основные метрики, а так же специфичные для перечисленных СУБД. Они позволяют отслеживать общую производительность, диагностику узких мест и выявление потенциальных проблем с ресурсами.
 
-- [Мониторинг PostgreSQL](modules/infra/postgres.md)
-- [Мониторинг Redis](modules/infra/redis.md)
-- [Мониторинг Elasticsearch](modules/infra/es.md)
+- [Мониторинг PostgreSQL](./postgres.md)
+- [Мониторинг Redis](./redis.md)
+- [Мониторинг Elasticsearch](./es.md)

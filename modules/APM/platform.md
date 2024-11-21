@@ -11,5 +11,5 @@
 ### Метрики GMonit Collector (java)
 ![java](./../screenshots/platform-java.png)
 
-### Метрики go приложения
+### Метрики NR Infrastructure Agent (go)
 ![go](./../screenshots/platform-go.png)
