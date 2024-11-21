@@ -17,7 +17,7 @@
   - [Браузерный мониторинг](modules/RUM.md)
   - [Мобильный мониторинг](modules/mobile.md)
   - [Инфраструктурный мониторинг](modules/infra.md)
-- [Дополнительные возможности GMonit](extra_features.md)
+- Дополнительные возможности GMonit
   - [Поддержка протокола OpenTelemetry](extra_features/otel.md)
   - [Синтетический мониторинг](extra_features/synthetic_monitoring.md)
   - [Мониторинг 1С](extra_features/1s.md)
