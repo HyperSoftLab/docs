@@ -15,9 +15,9 @@ GMonit поддерживает из коробки мониторинг БД Or
 
 ## Поддерживаемые платформы
 
-- [Мониторинг хоста и Docker-контейнеров](./infra/docker.md)
-- [Мониторинг NGINX](./infra/nginx.md)
-- [Мониторинг СУБД](./infra/db.md)
-  - [Мониторинг PostgreSQL](./infra/postgres.md)
-  - [Мониторинг Redis](./infra/redis.md)
-  - [Мониторинг Elasticsearch](./infra/es.md)
+- [Мониторинг хоста и Docker-контейнеров](/modules/infra/docker.md)
+- [Мониторинг NGINX](/modules/infra/nginx.md)
+- [Мониторинг СУБД](/modules/infra/db.md)
+  - [Мониторинг PostgreSQL](/modules/infra/postgres.md)
+  - [Мониторинг Redis](/modules/infra/redis.md)
+  - [Мониторинг Elasticsearch](/modules/infra/es.md)
