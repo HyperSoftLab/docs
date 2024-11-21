@@ -15,23 +15,23 @@ GMonit поддерживает из коробки мониторинг БД Or
 
 Для перехода к дашбордам инфраструктурного мониторинга используем выпадающий список Infrastructure (в правом верхнем углу).
 
-![list](images/infra_list.png)
+![list](./screenshots/infra_list.png)
 
 На дашбордe **Containers** по каждому контейнеру можно посмотреть показатели использования ядер процессора (CPU usage Cores), загрузку процессора (CPU usage), использование памяти (Mem usage) и хранилища (Storage usage), количество перезапусков контейнера и статистику по сетевому трафику (Network traffic).
 
-![container](images/infra_containers.png)
+![container](./screenshots/infra_containers.png)
 
 Дашборд **Hosts** содержит сводные графики здоровья хоста: CPU usage, Mem usage, Storage usage, Network traffic. Load average - средние значения загрузки системы за определённый период времени (1, 5, 15 мин) и процессы запущенные в системе - Processes.
 
-![hosts](images/infra_hosts.png)
+![hosts](./screenshots/infra_hosts.png)
 
-![hosts](images/infra_hosts2.png)
+![hosts](./screenshots/infra_hosts2.png)
 
 ## Мониторинг NGINX:
 
 При переходе через меню мониторинга мы попадаем на дашборд с веб-серверами, на которые установлен агент. 
 
-![nginx](images/infra_nginx.png)
+![nginx](./screenshots/infra_nginx.png)
 
 Графики выводят следующие количественные метрики по запросам и соединениям:
 **Requests per minute** - показывает количество HTTP-запросов, обработанных сервером за минуту. 
@@ -66,9 +66,9 @@ GMonit поддерживает из коробки мониторинг БД Or
 
 ### Мониторинг PostgreSQL
 
-![psql](images/infra_psql.png)
+![psql](./screenshots/infra_psql.png)
 
-![psql2](images/infra_psql2.png)
+![psql2](./screenshots/infra_psql2.png)
 
 Ключевые метрики производительности:
 
@@ -100,9 +100,9 @@ GMonit поддерживает из коробки мониторинг БД Or
 
 Cобирает следующие метрики, которые помогают лучше понимать текущее состояние инстансов Redis и своевременно реагировать на потенциальные проблемы с производительностью или ресурсами:
 
-![redis](images/infra_redis.png)
+![redis](./screenshots/infra_redis.png)
 
-![redis2](images/infra_redis2.png)
+![redis2](./screenshots/infra_redis2.png)
 
 **Commands per second** - количество команд, обработанных в секунду. Высокое значение указывает на интенсивную активность, в то время как резкое падение может свидетельствовать о проблемах с задержкой или блокировками.
 
