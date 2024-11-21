@@ -18,6 +18,11 @@
   - [Мобильный мониторинг](modules/mobile.md)
   - [Инфраструктурный мониторинг](modules/infra.md)
 - [Дополнительные возможности GMonit](extra_features.md)
+  - [Поддержка протокола OpenTelemetry](extra_features/otel.md)
+  - [Мониторинг SAP](extra_features/sap.md)
+  - Синтетический мониторинг
+  - Мониторинг 1С
+  - Мониторинг Siebel
 - Сценарии использования
     - [Здоровье бизнеса](use_cases/business_health.md)
     - [Отладка проблем с производительностью](use_cases/performance_troubleshooting.md)
