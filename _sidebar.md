@@ -1,4 +1,3 @@
-- Быстрый старт
 - [Релизы GMonit](releases.md)
 - [Первоначальная настройка](README.md)
   - [Минимальные системные требования](system_requirements.md)
@@ -12,22 +11,19 @@
   - [Информационная безопасность](security.md)
 - Модули GMonit
   - [APM](modules/APM.md)
-  - [Карта сервисов](modules/service_map.md)
+  - Карта сервисов
   - [Распределенная трассировка](modules/distributed_tracing.md)
   - [Браузерный мониторинг](modules/RUM.md)
-  - [Мобильный мониторинг](modules/mobile.md)
+  - Мобильный мониторинг
   - [Инфраструктурный мониторинг](modules/infra.md)
 - Дополнительные возможности GMonit
   - [Поддержка протокола OpenTelemetry](extra_features/otel.md)
   - [Мониторинг SAP](extra_features/sap.md)
-  - Синтетический мониторинг
-  - Мониторинг 1С
-  - Мониторинг Siebel
 - Сценарии использования
-    - [Здоровье бизнеса](use_cases/business_health.md)
-    - [Отладка проблем с производительностью](use_cases/performance_troubleshooting.md)
-    - [Анализ высокой нагрузки на сервис](use_cases/workload_analysis.md)
-    - [Анализ ошибки работы приложения](use_cases/error_analysis.md)
+  - [Здоровье бизнеса](use_cases/business_health.md)
+  - [Отладка проблем с производительностью](use_cases/performance_troubleshooting.md)
+  - [Анализ высокой нагрузки на сервис](use_cases/workload_analysis.md)
+  - [Анализ ошибки работы приложения](use_cases/error_analysis.md)
 - [Модель данных GMonit](data_model.md)
   - [Метрики](data_model/metrics.md)
   - [События](data_model/events.md)
