@@ -28,11 +28,9 @@
     - [Отладка проблем с производительностью](use_cases/performance_troubleshooting.md)
     - [Анализ высокой нагрузки на сервис](use_cases/workload_analysis.md)
     - [Анализ ошибки работы приложения](use_cases/error_analysis.md)
-<!---
-    - [Здоровье инфраструктуры](use_cases/infrastructure_health.md)
+<!--- - [Здоровье инфраструктуры](use_cases/infrastructure_health.md)
     - [Настройка уведомлений об отказе](use_cases/alerts.md)
-    - [Поиск и анализ первопричин ошибки](use_cases/root_cause_analysis.md)
---->
+    - [Поиск и анализ первопричин ошибки](use_cases/root_cause_analysis.md) --->
 - [Модель данных GMonit](data_model.md)
   - [Метрики](data_model/metrics.md)
   - [События](data_model/events.md)
