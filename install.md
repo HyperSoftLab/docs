@@ -9,7 +9,7 @@
 
 2. [Установить Docker Compose](https://docs.docker.com/compose/install/)
 
-3. Запросить у команды GMonit `ключ` для доступа к `docker-репозиторию` и залогиниться выполнив на хосте команду:
+3. Запросить у команды GMonit `ключ` для доступа к `docker-репозиторию` и залогититься выполнив на хосте команду:
 
 ```bash
 cat key.json | docker login \
@@ -32,7 +32,7 @@ gmonit-collector.example.ru {
 }
 ```
 
-> если удалить строчки с подключением сертификатов, [Caddy сгенерирует их через Let's encrypt](https://caddyserver.com/docs/automatic-https).
+> если удалить строчки с подключением сертификатов, [Caddy сгенерирует их черех Let's encrypt](https://caddyserver.com/docs/automatic-https).
 
 >Все URL вида `*.example.ru` заменить на реальные адреса для Grafana и коллектора
 

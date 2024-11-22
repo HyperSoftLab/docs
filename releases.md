@@ -164,7 +164,7 @@ cr.yandex/c...j/grafana:v3-1740
 
 - Поддержан сбор метрик по протоколу OpenTelemetry:
   - GMonit можно указать в `exporters` otelcol-config.yml
-    ```yaml
+    ```
     receivers: ...
     processors:
       cumulativetodelta:
