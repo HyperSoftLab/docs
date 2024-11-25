@@ -23,7 +23,8 @@ cd ~/gmonit-lite
 ```sh
 cp .env.example .env
 ```
-4. Заполнить .env
+4. Заполнить .env. Пароли и токены можно сгенерировать помощью `openssl
+   rand -base64 <n>`, где `<n>` - длинна пароля/токена
 5. Запустить GMonit
 ```sh
 docker compose up -d
