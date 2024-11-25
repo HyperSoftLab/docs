@@ -13,6 +13,7 @@ services:
     <<: *logging
     restart: unless-stopped
     image: clickhouse/clickhouse-server:23.8
+    pull_policy: always
     environment:
       CLICKHOUSE_USER: gmonit
       CLICKHOUSE_PASSWORD: password
@@ -31,7 +32,8 @@ services:
   grafana:
     <<: *logging
     restart: unless-stopped
-    image: cr.yandex/crpih7d63vpcj5dfn8jj/grafana:${TAG:?no_tag}
+    image: cr.yandex/crpih7d63vpcj5dfn8jj/grafana:v3
+    pull_policy: always
     environment:
       GF_SERVER_ROOT_URL: https://${GRAFANA_DOMAIN}
 
@@ -58,7 +60,8 @@ services:
   collector:
     <<: *logging
     restart: unless-stopped
-    image: cr.yandex/crpih7d63vpcj5dfn8jj/collector:${TAG:?no_tag}
+    image: cr.yandex/crpih7d63vpcj5dfn8jj/collector:v3
+    pull_policy: always
     environment:
       NEW_RELIC_LOG:         stdout
       NEW_RELIC_LICENSE_KEY: 0123456789-123456789-123456789-123456789
@@ -88,6 +91,7 @@ services:
     <<: *logging
     restart: unless-stopped
     image: umputun/nginx-le:v1.7.0
+    pull_policy: always
     volumes:
       - ./nginx/ssl:/etc/nginx/ssl
       - ./nginx/conf.d-le:/etc/nginx/conf.d-le
