@@ -32,6 +32,7 @@ services:
     <<: *logging
     restart: unless-stopped
     image: cr.yandex/crpih7d63vpcj5dfn8jj/grafana:v3
+    pull_policy: always
     environment:
       GF_SERVER_ROOT_URL: https://${GRAFANA_DOMAIN}
 
@@ -59,6 +60,7 @@ services:
     <<: *logging
     restart: unless-stopped
     image: cr.yandex/crpih7d63vpcj5dfn8jj/collector:v3
+    pull_policy: always
     environment:
       NEW_RELIC_LOG:         stdout
       NEW_RELIC_LICENSE_KEY: 0123456789-123456789-123456789-123456789
