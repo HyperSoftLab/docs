@@ -13,6 +13,7 @@ services:
     <<: *logging
     restart: unless-stopped
     image: clickhouse/clickhouse-server:23.8
+    pull_policy: always
     environment:
       CLICKHOUSE_USER: gmonit
       CLICKHOUSE_PASSWORD: password
@@ -90,6 +91,7 @@ services:
     <<: *logging
     restart: unless-stopped
     image: umputun/nginx-le:v1.7.0
+    pull_policy: always
     volumes:
       - ./nginx/ssl:/etc/nginx/ssl
       - ./nginx/conf.d-le:/etc/nginx/conf.d-le
