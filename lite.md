@@ -1,31 +1,59 @@
-# Инструкция по разворачиванию GMonit-Lite в Yandex.Cloud
+# Инструкция по установке GMonit-Lite в Yandex.Cloud
 ## Перед установкой
-1. Добавить 2 DNS записи на 2 под-домена (1 для графаны, 1 для
-   коллектора).
+1. Для установки необходимо наличие 2 доменных имен - для коллектора GMonit и для UI GMonit (Grafana).
 
-   Пример:
-   A - [Address Record](https://en.wikipedia.org/wiki/List_of_DNS_record_types)
+   **Пример**:
+
+   Коллетор GMonit
    ```
-   gmonit.your-company.ru IN A <vm-ip-address>
-   gmonit-collector.your-company.ru IN А <vm-ip-address>
+   gmonit-collector.your-company.ru
    ```
+   UI Gmonit (Grafana)
+   ```
+   gmonit-collector.your-company.ru
+   ```
+Где “your-company” - ваш домен второго уровня.
+
 
 ## Установка
-1. Залогиниться по SSH в виртуальную машину
+1. [Создайте ВМ](https://cloud.yandex.ru/docs/compute/operations/dsvm/quickstart) из публичного образа DSVM. Важно создать пользователя `gmonit` и подключаться с помощью него. Пользователь с этим логином содержит необходимые права для запуска.
+2. [Подключитесь к ВМ](https://cloud.yandex.ru/docs/compute/operations/dsvm/quickstart#first-login) по SSH.
 ```sh
 ssh gmonit@<vm-ip-address>
 ```
-2. Зайти в каталог с GMonit
-```sh
-cd ~/gmonit-lite
-```
-3. Скопировать `.env.example` как `.env`
+3. Перейдите в каталог с образом GMonit
+ ```sh
+ cd /home/gmonit/gmonit-lite
+ ```
+4. Скопируйте `.env.example` как `.env`
 ```sh
 cp .env.example .env
 ```
-4. Заполнить .env. Пароли и токены можно сгенерировать с помощью
-   `openssl rand -base64 <n>`, где `<n>` - длинна пароля/токена
-5. Запустить GMonit
+5. Заполните файл `.env`
+- SECRET_TOKEN - случайная строка длиной 32 символа. Используйте свой вариант или сгенерируйте случайно командой
+   ```
+   openssl rand -base64 24 | head -c 32
+   ```
+- GRAFANA_DOMAIN - домен для UI GMonit (Grafana)
+   Пример: 
+   ```
+   gmonit.your-company.ru
+   ```
+- COLLECTOR_DOMAIN - домен для коллектора GMonit
+   Пример:
+   ```
+   gmonit-collector.your-company.ru
+   ```
+- GRAFANA_ADMIN_PASSWORD - пароль для логина `admin` в Grafana. Используйте свой вариант или сгенерируйте случайно, например, командой
+   ```
+   openssl rand -base64 15 | head -c 20
+   ```
+- BASIC_AUTH_PASS - пароль для авторизации Grafana в коллекторе. Используйте свой вариант или сгенерируйте случайно, например, командой
+   ```
+   openssl rand -base64 15 | head -c 20
+   ```
+- LETSENCRYPT_EMAIL - email для получения сообщений о проблемах с сертификатами letsencrypt.
+7. Запустите GMonit
 ```sh
 docker compose up -d
 ```
