@@ -27,7 +27,7 @@ cr.yandex/c...j/grafana:v3-1740
 
 ## Release notes
 
-### `v3-2969` 29 ноября 2024
+### `v3-3132` 2 декабря 2024
 - Новая документация доступна на [docs.gmonit.ru](https://docs.gmonit.ru).
 - Добавлена поддержка мониторинга для Flutter на iOS, Android и браузерах.
 - Поддержка [ktranslate](https://github.com/kentik/ktranslate) для приема SNMP данных.
