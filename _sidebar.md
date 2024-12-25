@@ -4,11 +4,17 @@
   - [Масштабирование системы](scale.md)
   - [Инструкция по разворачиванию GMonit](install.md)
   - [Инструкция по миграции GMonit с версии 2 на версию 3](migration_v3.md)
-  - [Мониторинг производительности приложений (APM)](apm_agents_install.md)
-  - [Мониторинг инфраструктуры](infra_install.md)
-  - [Мобильный мониторинг](mobile_monitoring.md)
   - [Хранение данных](data_ttl.md)
   - [Информационная безопасность](security.md)
+- [Инструкции по установке агентов](agent_installation_guide)
+  - [Мониторинг производительности приложений (APM)](agent_installation_guide/apm_agents_install.md)
+    - [Java](agent_installation_guide/APM/java.md)
+    - [PHP](agent_installation_guide/APM/php.md)
+  - [Мониторинг инфраструктуры](agent_installation_guide/Infra/infra_install.md)
+  <!---
+  - [Мониторинг браузера (web)](agent_installation_guide/RUM/real_user_monitoring.md)
+  -->
+  - [Мобильный мониторинг](agent_installation_guide/Mobile/mobile_monitoring.md)
 - Модули GMonit
   - [APM](modules/APM.md)
   - Карта сервисов
