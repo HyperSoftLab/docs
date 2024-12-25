@@ -6,7 +6,7 @@
   - [Инструкция по миграции GMonit с версии 2 на версию 3](migration_v3.md)
   - [Хранение данных](data_ttl.md)
   - [Информационная безопасность](security.md)
-- [Инструкции по установке агентов](agent_installation_guide)
+- Инструкции по установке агентов
   - [Мониторинг производительности приложений (APM)](agent_installation_guide/apm_agents_install.md)
     - [Java](agent_installation_guide/APM/java.md)
     - [PHP](agent_installation_guide/APM/php.md)
