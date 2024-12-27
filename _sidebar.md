@@ -10,6 +10,7 @@
   - [Мониторинг производительности приложений (APM)](agent_installation_guide/apm_agents_install.md)
     - [Java](agent_installation_guide/APM/java.md)
     - [PHP](agent_installation_guide/APM/php.md)
+    - [Node.js](agent_installation_guide/APM/nodejs.md)
   - [Мониторинг инфраструктуры](agent_installation_guide/Infra/infra_install.md)
   - [Мониторинг браузера (web)](agent_installation_guide/RUM/real_user_monitoring.md)
   - [Мобильный мониторинг](agent_installation_guide/Mobile/mobile_monitoring.md)
