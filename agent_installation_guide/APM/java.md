@@ -36,7 +36,7 @@ sudo unzip newrelic-java.zip -d /opt/newrelic
    NEW_RELIC_LOG=stdout #Логирование агента в stdout
    NEW_RELIC_LICENSE_KEY=0123456789-123456789-123456789-123456789 #Ключ(заглушка, не меняем)
    NEW_RELIC_HOST=gmonit-collector.<DOMAIN>.ru #Домен коллектора GMonit
-   NEW_RELIC_APP_NAME="MY_AWESOME_APP" #Название приложения
+   NEW_RELIC_APP_NAME="MY_AWESOME_APP" #Название приложения - замените на своё
    ```
 
 2. **Если используются самоподписанные сертификаты**  
@@ -78,3 +78,72 @@ java -javaagent:/opt/newrelic/newrelic.jar -jar my-app.jar
 
 ### 6. **Подробнее**
 Для более детальной информации о конфигурации и настройке агента обратитесь к [официальной документации New Relic](https://docs.newrelic.com/docs/apm/agents/java-agent/configuration/java-agent-configuration-config-file/).
+
+
+# Установка APM-агента для Java в K8S
+
+Для интеграции агента New Relic в Java-приложение, работающее в Kubernetes, выполните следующие шаги:
+
+---
+
+### Шаг 1: Загрузка и распаковка агента New Relic
+
+1. **Скачать Java-агент**:
+   ```bash
+   curl -O https://download.newrelic.com/newrelic/java-agent/newrelic-agent/current/newrelic-java.zip
+   ```
+
+2. **Распаковать агент**:
+   ```bash
+   unzip newrelic-java.zip -d /opt/newrelic
+   ```
+   Агент Java нужно распаковать в директорию внутри контейнера, которая будет доступна во время выполнения приложения.
+
+   > **Важно**: Если агент будет расположен в другом месте, убедитесь, что `.jar` файлы агента **не находятся** в директориях, указанных в `java.endorsed.dirs` или в пути к классам.
+
+---
+
+### Шаг 2: Настройка агента New Relic
+
+1. **Откройте файл `newrelic.yml`** и внесите следующие изменения:
+
+   ```yaml
+   common: &default_settings
+     license_key: '0123456789-123456789-123456789-123456789' #Ключ(заглушка, не меняем)
+     app_name: "MY_AWESOME_APP" #Название приложения - замените на своё
+     host: "gmonit-collector.<DOMAIN>.ru" #Домен коллектора GMonit
+     agent_enabled: true
+     log_level: info
+     log_file_path: stdout #Логирование агента в stdout
+   ```
+
+2. Если используются самоподписанные сертификаты, убедитесь, что путь к бандлу сертификатов добавлен в настройки (см. предыдущие разделы).
+
+---
+
+### Шаг 3: Подготовка Docker-образа с агентом
+
+1. **Обновите `Dockerfile`** для вашего Java-приложения. Пример конфигурации:
+
+   ```dockerfile
+   FROM openjdk:11-jre-slim
+   COPY opt/newrelic/ /opt/newrelic/ #Копируем агента New Relic в контейнер
+   COPY out/ /app                     #Копируем ваше Java-приложение в контейнер
+   WORKDIR /app
+   ENTRYPOINT ["java", "-javaagent:/opt/newrelic/newrelic.jar", "com.example.HelloWorldServer"]
+   ```
+
+2. **Пересоберите Docker-образ**:
+   ```bash
+   docker build -t my-java-app-with-newrelic:latest .
+   ```
+
+3. **Загрузите Docker-образ в кластер Kubernetes**. Пример для использования с `kind`:
+   ```bash
+   kind load docker-image my-java-app-with-newrelic:latest
+   ```
+
+---
+
+После выполнения этих шагов ваш Docker-образ с интегрированным APM-агентом готов для развертывания в Kubernetes. Убедитесь, что поды с приложением запускаются корректно, а метрики появляются в интерфейсе GMonit.
+```
