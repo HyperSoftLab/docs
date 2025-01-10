@@ -2,8 +2,6 @@
 - [Первоначальная настройка](README.md)
   - [Минимальные системные требования](system_requirements.md)
   - [Масштабирование системы](scale.md)
-  - [Инструкция по разворачиванию GMonit](install.md)
-  - [Инструкция по миграции GMonit с версии 2 на версию 3](migration_v3.md)
   - [Хранение данных](data_ttl.md)
   - [Информационная безопасность](security.md)
 - Инструкции по установке агентов
@@ -35,6 +33,11 @@
   - [События](data_model/events.md)
   - [Трейсы](data_model/traces.md)
   - [Логи](data_model/logs.md)
+
+<!---
+  - [Инструкция по разворачиванию GMonit](install.md)
+  - [Инструкция по миграции GMonit с версии 2 на версию 3](migration_v3.md)
+-->
 
 <!---
     - [Мониторинг браузера (web)](agent_installation_guide/RUM/real_user_monitoring.md)
