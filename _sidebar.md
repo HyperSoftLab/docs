@@ -14,6 +14,9 @@
     - [MySQL](agent_installation_guide/Infra/database_monitoring/mysql_agents_install.md)
     - [PostgreSQL](agent_installation_guide/Infra/database_monitoring/postgresql_agents_install.md)
     - [Oracle Database](agent_installation_guide/Infra/database_monitoring/oracle_database.md)
+    - [Nginx](agent_installation_guide/Infra/database_monitoring/nginx_agents_install.md)
+    - [RabbitMQ](agent_installation_guide/Infra/database_monitoring/rabbitmq_agents_install.md)
+    - [Redis](agent_installation_guide/Infra/database_monitoring/redis_agents_install.md)
   - [Мониторинг браузера (web)](agent_installation_guide/RUM/real_user_monitoring.md)
   - [Мобильный мониторинг](agent_installation_guide/Mobile/mobile_monitoring.md)
 - Модули GMonit
