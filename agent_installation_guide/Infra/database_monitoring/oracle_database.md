@@ -4,7 +4,7 @@
 
 ---
 
-## Шаг 1: Установка агента инфраструктуры
+### Шаг 1: Установка агента инфраструктуры
 
 Убедитесь, что ваш сервер работает на поддерживаемой версии Linux. Инструкции для установки инфраструктурного агента можно найти [здесь](https://docs.newrelic.com/docs/infrastructure/host-integrations/installation/install-infrastructure-host-integrations/#tarball).
 
@@ -15,7 +15,7 @@ sudo yum install newrelic-infra -y
 
 ---
 
-## Шаг 2: Установка Oracle Instant Client
+### Шаг 2: Установка Oracle Instant Client
 
 Для работы интеграции необходим Oracle Instant Client. Пример для Linux x64:
 
@@ -38,7 +38,7 @@ sudo yum install newrelic-infra -y
 
 ---
 
-## Шаг 3: Настройка базы данных Oracle
+### Шаг 3: Настройка базы данных Oracle
 
 1. **Создайте пользователя с необходимыми привилегиями**:
    - Для автономной базы данных:
@@ -67,7 +67,7 @@ sudo yum install newrelic-infra -y
 
 ---
 
-## Шаг 4: Установка и активация интеграции OracleDB
+### Шаг 4: Установка и активация интеграции OracleDB
 
 1. Установите интеграцию:
    ```bash
@@ -103,7 +103,7 @@ sudo yum install newrelic-infra -y
 
 ---
 
-## Шаг 5: Проверка
+### Шаг 5: Проверка
 
 После успешной настройки в логах агента появится следующая запись:
 ```
@@ -114,7 +114,7 @@ time="YYYY-MM-DDTHH:MM:SS+03:00" level=info msg="Integration health check finish
 
 ---
 
-## Дополнительная информация
+### Дополнительная информация
 
 - Подробная документация по настройке и устранению неполадок: [New Relic OracleDB Integration](https://docs.newrelic.com/docs/infrastructure/host-integrations/host-integrations-list/oracle-database/oracle-database-integration/).
 - Обратите внимание на безопасность при хранении паролей, используя переменные окружения вместо прямой записи в конфигурации.
