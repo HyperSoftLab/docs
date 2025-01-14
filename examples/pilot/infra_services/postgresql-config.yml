@@ -4,7 +4,7 @@ integrations:
     # The username for the postgres instance. Required.
     USERNAME: postgres
     # The password for the postgres instance. Required.
-    PASSWORD: hVUDY2TYfZFw8CQg
+    PASSWORD: {{POSTGRES_PASSWORD}}
 
     # The hostname for the postgres instance. Defaults to localhost.
     HOSTNAME: postgres
