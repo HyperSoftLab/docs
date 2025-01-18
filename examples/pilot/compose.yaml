@@ -118,7 +118,7 @@ services:
         condition: service_healthy
     volumes:
       - ./ssl:/gmonit/ssl
-      - ./***.mmdb:/gmonit/geoip.mmdb
+      - ./geoip.mmdb:/gmonit/geoip.mmdb
     <<: *logging
 
   collector:
@@ -174,7 +174,7 @@ services:
     restart: unless-stopped
     image: umputun/nginx-le:v1.7.0
     volumes:
-      - ./nginx/ssl:/etc/nginx/ssl
+      - ./ssl:/gmonit/ssl
       - ./nginx/conf.d-le:/etc/nginx/conf.d-le
       - ./nginx/templates:/etc/nginx/templates
     ports:
@@ -244,6 +244,7 @@ services:
       NRIA_IDENTITY_URL: https://${COLLECTOR_DOMAIN}/infra/identity-api
       NRIA_CA_BUNDLE_FILE: ${CA_FILE}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
       # не работает на самоподписанных сертификатах
       # NRIA_SELF_INSTRUMENTATION: newrelic
       # NRIA_SELF_INSTRUMENTATION_APM_HOST: ${COLLECTOR_DOMAIN}
