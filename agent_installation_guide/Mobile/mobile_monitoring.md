@@ -98,7 +98,9 @@ https://github.com/newrelic/newrelic-ios-agent-spm
 ```
 2. В файле `AppDelegate.m` добавьте этот вызов как первую строку метода `application:didFinishLaunchingWithOptions:`:
 ```objc
-[NewRelic startWithApplicationToken:@"<your_token>-NRMA"];
+[NewRelic startWithApplicationToken:@"<your_token>"
+                andCollectorAddress:@"<your_collector_adress>"
+           andCrashCollectorAddress:@"<your_collector_adress>"];
 ```
 ### 2.2 Конфигурация на Swift
 *Обновление файла `AppDelegate.swift`*
@@ -110,7 +112,11 @@ import NewRelic/NewRelic
 ```
 2. В файле `AppDelegate.swift` добавьте этот вызов как первую строку метода `application:didFinishLaunchingWithOptions`:
 ```swift
-NewRelic.start(withApplicationToken:"<your_token>-NRMA")
+NewRelic.start(
+    withApplicationToken: "<your_token>",
+    andCollectorAddress: "<your_collector_adress>",
+    andCrashCollectorAddress: "<your_collector_adress>"
+)
 ```
 
 ### 3. Автоматическая загрузка вашего файла dSYM
@@ -129,20 +135,13 @@ fi
 /bin/sh "${SCRIPT}" "<your_tokken>-NRMA"
 ```
 
-### 4. Инициализиция агента в приложении
-Для инициализации New Relic добавьте следующий фрагмент кода в метод `application()`
-```java
-withApplicationToken: "<your_token>-NRMA",
-andCollectorAddress: "<your_collector_adress>",
-andCrashCollectorAddress: "<your_crash_coollector_adress>"
-```
-### 5. Сборка и запуск вашего приложения
+### 4. Сборка и запуск вашего приложения
 
 Для начала работы с данными, выполните следующие шаги:
 1. Очистите ваш проект
 2. Запустите ваше приложение в эмуляторе или на устройстве, чтобы начать видеть данные.
 
-### 6. Начало работы
+### 5. Начало работы
 
 После установки агента в ваше приложение, в течение нескольких минут вы должны увидеть данные в вашем аккаунте GMonit.
 
@@ -251,7 +250,7 @@ NewRelic.withApplicationToken(
     "<your_token>-NRMA"
 )
 .usingCollectorAddress("<your_collector_adress>")
-.usingCrashCollectorAddress("<your_crash_collector_adress>")
+.usingCrashCollectorAddress("<your_collector_adress>")
 .start(this.getApplicationContext());
 ```
 
@@ -266,11 +265,9 @@ import com.newrelic.agent.android.NewRelic;
 2. Для инициализации New Relic добавьте следующий фрагмент кода в метод `onCreate()`
 
 ```kotlin
-NewRelic.withApplicationToken(
-    "<your_token>-NRMA"
-)
+NewRelic.withApplicationToken("<your_token>")
 .usingCollectorAddress("<your_collector_adress>")
-.usingCrashCollectorAddress("<your_crash_collector_adress>")
+.usingCrashCollectorAddress("<your_collector_adress>")
 .start(this.applicationContext);
 ```
 
