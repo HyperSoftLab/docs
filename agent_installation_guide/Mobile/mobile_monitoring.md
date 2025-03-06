@@ -93,47 +93,46 @@ https://github.com/newrelic/newrelic-ios-agent-spm
 Для интеграции агента необходимо внести изменения в файл `AppDelegate.m` вашего мобильного приложения.
 
 1. В начале файла `AppDelegate.m` добавьте следующий код для импорта необходимой библиотеки:
-```objc
-#import <NewRelic/NewRelic.h>
-```
+   ```objc
+   #import <NewRelic/NewRelic.h>
+   ```
 2. В файле `AppDelegate.m` добавьте этот вызов как первую строку метода `application:didFinishLaunchingWithOptions:`:
-```objc
-[NewRelic startWithApplicationToken:@"<your_app_name>"
-                andCollectorAddress:@"<your_collector_adress>"
-           andCrashCollectorAddress:@"<your_collector_adress>"];
-```
+   ```objc
+   [NewRelic startWithApplicationToken:@"<your_app_name>"
+                   andCollectorAddress:@"<your_collector_adress>"
+              andCrashCollectorAddress:@"<your_collector_adress>"];
+   ```
 ### 2.2 Конфигурация на Swift
 *Обновление файла `AppDelegate.swift`*
 
 Для интеграции агента необходимо внести изменения в файл `AppDelegate.swift` вашего мобильного приложения.
 1. В начале файла `AppDelegate.swift` добавьте следующий код для импорта необходимой библиотеки:
-```swift
-import NewRelic/NewRelic
-```
+   ```swift
+   import NewRelic/NewRelic
+   ```
 2. В файле `AppDelegate.swift` добавьте этот вызов как первую строку метода `application:didFinishLaunchingWithOptions`:
-```swift
-NewRelic.start(
-    withApplicationToken: "<your_app_name>",
-    andCollectorAddress: "<your_collector_adress>",
-    andCrashCollectorAddress: "<your_collector_adress>"
-)
-```
+   ```swift
+   NewRelic.start(
+       withApplicationToken: "<your_app_name>",
+       andCollectorAddress: "<your_collector_adress>",
+       andCrashCollectorAddress: "<your_collector_adress>"
+   )
+   ```
 
 ### 3. Автоматическая загрузка вашего файла dSYM
 1. В навигаторе XCode выберите ваш проект, затем кликните на целевое приложение (application target).
 2. Выберите вкладку "Build Phases" и добавьте новую фазу сборки скриптов ("New Run Script Build Phase").
 3. В текстовом поле скрипта (под строкой Shell) введите следующий скрипт:
-
-```bash
-#import <NewRelic/NewRelic.h>
-
-SCRIPT=`/usr/bin/find "${SRCROOT}" -name newrelic_postbuild.sh | head -n 1`
-if [ -z "${SCRIPT}"]; then
-ARTIFACT_DIR="${BUILD_DIR%Build/*}SourcePackages/artifacts"
-SCRIPT=`/usr/bin/find "${ARTIFACT_DIR}" -name newrelic_postbuild.sh | head -n 1`
-fi
-/bin/sh "${SCRIPT}" "<your_tokken>-NRMA"
-```
+   ```bash
+   #import <NewRelic/NewRelic.h>
+   
+   SCRIPT=`/usr/bin/find "${SRCROOT}" -name newrelic_postbuild.sh | head -n 1`
+   if [ -z "${SCRIPT}"]; then
+   ARTIFACT_DIR="${BUILD_DIR%Build/*}SourcePackages/artifacts"
+   SCRIPT=`/usr/bin/find "${ARTIFACT_DIR}" -name newrelic_postbuild.sh | head -n 1`
+   fi
+   /bin/sh "${SCRIPT}" "<your_tokken>-NRMA"
+   ```
 
 ### 4. Сборка и запуск вашего приложения
 
@@ -168,61 +167,57 @@ fi
 *Обновление файла `build.gradle`*
 
 1. Следующие изменения необходимо внести в файл `build.gradle` на уровне вашего проекта до применения плагинов:
-
-```groovy
-buildscript {
-
-  // Данная секция необходима только, если pluginManagement не используется в settings.gradle 
-  repositories {
-    mavenCentral()
-  }
-
-  dependencies {
-    classpath 'com.newrelic.agent.android:agent-gradle-plugin:7.2.0'
-  }
-}
-```
+   ```groovy
+   buildscript {
+   
+     // Данная секция необходима только, если pluginManagement не используется в settings.gradle 
+     repositories {
+       mavenCentral()
+     }
+   
+     dependencies {
+       classpath 'com.newrelic.agent.android:agent-gradle-plugin:7.2.0'
+     }
+   }
+   ```
 
 2. Добавьте или дополните следующие строки в файл build.gradle вашего модуля:
-
-```groovy
-plugins {
-  id 'newrelic'
-}
-
-dependencies {
-  implementation 'com.newrelic.agent.android:android-agent:7.2.0'
-}
-```
+   ```groovy
+   plugins {
+     id 'newrelic'
+   }
+   
+   dependencies {
+     implementation 'com.newrelic.agent.android:android-agent:7.2.0'
+   }
+   ```
 
 ### 1.2 Kotlin
 *Обновление файла `build.gradle.kts`*
 
 1. Добавьте или дополните следующие строки в файл `build.gradle.kts` на уровне вашего проекта перед применением плагинов:
-
-```kotlin
-buildscript {
-  // Данная секция необходима только, если pluginManagement не используется в settings.gradle 
-  repositories {
-    mavenCentral()
-  }
-  dependencies {
-    classpath("com.newrelic.agent.android:agent-gradle-plugin:7.2.0")
-  }
-}
-```
+    ```kotlin
+    buildscript {
+      // Данная секция необходима только, если pluginManagement не используется в settings.gradle 
+      repositories {
+        mavenCentral()
+      }
+      dependencies {
+        classpath("com.newrelic.agent.android:agent-gradle-plugin:7.2.0")
+      }
+    }
+    ```
 
 2. Добавьте или дополните следующие строки в файл build.gradle.kts вашего модуля:
-
-```kotlin
-plugins {
-  id("newrelic")
-}
-
-dependencies {
-  implementation("com.newrelic.agent.android:android-agent:7.2.0")
-}
-```
+    ```kotlin
+    plugins {
+      id("newrelic")
+    }
+    
+    dependencies {
+      implementation("com.newrelic.agent.android:android-agent:7.2.0")
+    }
+    ```
 
 ## 2. Настройка разрешений приложения
 
@@ -238,36 +233,32 @@ dependencies {
 ### 3.1 Конфигурация на Java
 
 1. Импортируйте класс NewRelic в ваш основной Activity :
+    ```java
+    import com.newrelic.agent.android.NewRelic;
+    ```
 
-```java
-import com.newrelic.agent.android.NewRelic;
-```
-
-2. Для инициализации New Relic добавьте следующий фрагмент кода в метод `onCreate()`
-
-```java
-NewRelic.withApplicationToken("<your_app_name>")
-.usingCollectorAddress("<your_collector_adress>")
-.usingCrashCollectorAddress("<your_collector_adress>")
-.start(this.getApplicationContext());
-```
+2. Для инициализации New Relic добавьте следующий фрагмент кода в метод `onCreate()` 
+    ```java
+    NewRelic.withApplicationToken("<your_app_name>")
+    .usingCollectorAddress("<your_collector_adress>")
+    .usingCrashCollectorAddress("<your_collector_adress>")
+    .start(this.getApplicationContext());
+    ```
 
 ### 3.2 Конфигурация на Kotlin
 
 1. Импортируйте класс NewRelic в ваш основной Activity :
-
-```kotlin
-import com.newrelic.agent.android.NewRelic;
-```
+    ```kotlin
+    import com.newrelic.agent.android.NewRelic;
+    ```
 
 2. Для инициализации New Relic добавьте следующий фрагмент кода в метод `onCreate()`
-
-```kotlin
-NewRelic.withApplicationToken("<your_app_name>")
-.usingCollectorAddress("<your_collector_adress>")
-.usingCrashCollectorAddress("<your_collector_adress>")
-.start(this.applicationContext);
-```
+    ```kotlin
+    NewRelic.withApplicationToken("<your_app_name>")
+    .usingCollectorAddress("<your_collector_adress>")
+    .usingCrashCollectorAddress("<your_collector_adress>")
+    .start(this.applicationContext);
+    ```
 
 ## 4. Сборка и запуск вашего приложения
 Для начала работы с данными, выполните следующие шаги:
