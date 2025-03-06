@@ -98,7 +98,7 @@ https://github.com/newrelic/newrelic-ios-agent-spm
 ```
 2. В файле `AppDelegate.m` добавьте этот вызов как первую строку метода `application:didFinishLaunchingWithOptions:`:
 ```objc
-[NewRelic startWithApplicationToken:@"<your_token>"
+[NewRelic startWithApplicationToken:@"<your_app_name>"
                 andCollectorAddress:@"<your_collector_adress>"
            andCrashCollectorAddress:@"<your_collector_adress>"];
 ```
@@ -113,7 +113,7 @@ import NewRelic/NewRelic
 2. В файле `AppDelegate.swift` добавьте этот вызов как первую строку метода `application:didFinishLaunchingWithOptions`:
 ```swift
 NewRelic.start(
-    withApplicationToken: "<your_token>",
+    withApplicationToken: "<your_app_name>",
     andCollectorAddress: "<your_collector_adress>",
     andCrashCollectorAddress: "<your_collector_adress>"
 )
@@ -246,9 +246,7 @@ import com.newrelic.agent.android.NewRelic;
 2. Для инициализации New Relic добавьте следующий фрагмент кода в метод `onCreate()`
 
 ```java
-NewRelic.withApplicationToken(
-    "<your_token>-NRMA"
-)
+NewRelic.withApplicationToken("<your_app_name>")
 .usingCollectorAddress("<your_collector_adress>")
 .usingCrashCollectorAddress("<your_collector_adress>")
 .start(this.getApplicationContext());
@@ -265,7 +263,7 @@ import com.newrelic.agent.android.NewRelic;
 2. Для инициализации New Relic добавьте следующий фрагмент кода в метод `onCreate()`
 
 ```kotlin
-NewRelic.withApplicationToken("<your_token>")
+NewRelic.withApplicationToken("<your_app_name>")
 .usingCollectorAddress("<your_collector_adress>")
 .usingCrashCollectorAddress("<your_collector_adress>")
 .start(this.applicationContext);
