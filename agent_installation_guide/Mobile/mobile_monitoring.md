@@ -99,14 +99,14 @@ https://github.com/newrelic/newrelic-ios-agent-spm
 2. В файле `AppDelegate.m` добавьте этот вызов как первую строку метода `application:didFinishLaunchingWithOptions:`:
    ```objc
    [NewRelic startWithApplicationToken:@"<your_app_name>"
-                   andCollectorAddress:@"<your_collector_adress>"
-              andCrashCollectorAddress:@"<your_collector_adress>"];
+                   andCollectorAddress:@"<your_collector_address>"
+              andCrashCollectorAddress:@"<your_collector_address>"];
    ```
 ### 2.2 Конфигурация на Swift
-*Обновление файла `AppDelegate.swift`*
+*Инициализация агента*
 
-Для интеграции агента необходимо внести изменения в файл `AppDelegate.swift` вашего мобильного приложения.
-1. В начале файла `AppDelegate.swift` добавьте следующий код для импорта необходимой библиотеки:
+Для интеграции агента необходимо внести изменения в класс `AppDelegate` вашего мобильного приложения.
+1. В класс `AppDelegate` добавьте следующий код для импорта необходимой библиотеки:
    ```swift
    import NewRelic/NewRelic
    ```
@@ -114,8 +114,8 @@ https://github.com/newrelic/newrelic-ios-agent-spm
    ```swift
    NewRelic.start(
        withApplicationToken: "<your_app_name>",
-       andCollectorAddress: "<your_collector_adress>",
-       andCrashCollectorAddress: "<your_collector_adress>"
+       andCollectorAddress: "<your_collector_address>",
+       andCrashCollectorAddress: "<your_collector_address>"
    )
    ```
 
@@ -131,7 +131,7 @@ https://github.com/newrelic/newrelic-ios-agent-spm
    ARTIFACT_DIR="${BUILD_DIR%Build/*}SourcePackages/artifacts"
    SCRIPT=`/usr/bin/find "${ARTIFACT_DIR}" -name newrelic_postbuild.sh | head -n 1`
    fi
-   /bin/sh "${SCRIPT}" "<your_tokken>-NRMA"
+   /bin/sh "${SCRIPT}" "<your_app_name>"
    ```
 
 ### 4. Сборка и запуск вашего приложения
@@ -240,8 +240,8 @@ https://github.com/newrelic/newrelic-ios-agent-spm
 2. Для инициализации New Relic добавьте следующий фрагмент кода в метод `onCreate()` 
     ```java
     NewRelic.withApplicationToken("<your_app_name>")
-    .usingCollectorAddress("<your_collector_adress>")
-    .usingCrashCollectorAddress("<your_collector_adress>")
+    .usingCollectorAddress("<your_collector_address>")
+    .usingCrashCollectorAddress("<your_collector_address>")
     .start(this.getApplicationContext());
     ```
 
@@ -255,8 +255,8 @@ https://github.com/newrelic/newrelic-ios-agent-spm
 2. Для инициализации New Relic добавьте следующий фрагмент кода в метод `onCreate()`
     ```kotlin
     NewRelic.withApplicationToken("<your_app_name>")
-    .usingCollectorAddress("<your_collector_adress>")
-    .usingCrashCollectorAddress("<your_collector_adress>")
+    .usingCollectorAddress("<your_collector_address>")
+    .usingCrashCollectorAddress("<your_collector_address>")
     .start(this.applicationContext);
     ```
 
