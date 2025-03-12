@@ -225,6 +225,7 @@ services:
 
       NRIA_SELF_INSTRUMENTATION: newrelic
       NRIA_SELF_INSTRUMENTATION_APM_HOST: ${COLLECTOR_DOMAIN}
+      NEW_RELIC_APP_NAME: '[GMonit] Infrastructure Agent'
     <<: *logging
 
   infra_services:
@@ -244,5 +245,7 @@ services:
 
       NRIA_SELF_INSTRUMENTATION: newrelic
       NRIA_SELF_INSTRUMENTATION_APM_HOST: ${COLLECTOR_DOMAIN}
+      NEW_RELIC_APP_NAME: '[GMonit] Infrastructure Agent'
+
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     <<: *logging
