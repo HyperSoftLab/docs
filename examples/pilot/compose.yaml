@@ -99,7 +99,7 @@ services:
       GMONIT_GRAFANA_COLLECTOR_PASSWORD: ${COLLECTOR_DATASOURCE_PASSWORD}
 
       #Браузерный мониторинг включен для веб-интерфейса GMonit. Это должен быть внешний URL.
-      GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL: https://${COLLECTOR_DOMAIN}/
+      GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL: https://${COLLECTOR_DOMAIN}
 
 
     healthcheck:
