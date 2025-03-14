@@ -100,7 +100,7 @@ services:
       GMONIT_GRAFANA_COLLECTOR_PASSWORD: ${COLLECTOR_DATASOURCE_PASSWORD}
 
       #Браузерный мониторинг включен для веб-интерфейса GMonit. Это должен быть внешний URL.
-      GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL: https://${COLLECTOR_DOMAIN}/
+      GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL: https://${COLLECTOR_DOMAIN}
 
       #Collector использует прогрев пулов с обновления v3-2205. Рекомендуется не менять, если нет проблем с производительностью.
       # USER_AGENT_PARSER_POOL_MAX_TOTAL: 3
