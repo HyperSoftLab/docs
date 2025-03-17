@@ -37,6 +37,14 @@ sudo unzip newrelic-java.zip -d /opt/newrelic
    NEW_RELIC_HOST=gmonit-collector.<DOMAIN>.ru #Домен коллектора GMonit
    NEW_RELIC_APP_NAME="MY_AWESOME_APP" #Название приложения - замените на своё
    ```
+   Или в `newrelic.yml` (блок common):
+
+   ```yaml
+   log_file_path: stdout
+   license_key: '0123456789-123456789-123456789-123456789'
+   app_name: MY_AWESOME_APP
+   host: gmonit-collector.<DOMAIN>.ru
+   ```
 
 2. **Если используются самоподписанные сертификаты**  
    Необходимо явно указать путь до бандла сертификатов (через `newrelic.yml` или переменную окружения):
@@ -44,7 +52,7 @@ sudo unzip newrelic-java.zip -d /opt/newrelic
    ```bash
    NEW_RELIC_CA_BUNDLE_PATH=/gmonit/ssl/rootCA.crt #Путь до файла с бандлом сертификатов
    ```
-   Или в `newrelic.yml`:
+   Или в `newrelic.yml` (блок common):
 
    ```yaml
    ca_bundle_path: /gmonit/ssl/rootCA.crt
