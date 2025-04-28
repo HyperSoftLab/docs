@@ -10,6 +10,7 @@
     - [PHP](agent_installation_guide/APM/php.md)
     - [Node.js](agent_installation_guide/APM/nodejs.md)
     - [Python](agent_installation_guide/APM/python.md)
+    - [GO](agent_installation_guide/APM/go.md)
   - [Мониторинг инфраструктуры](agent_installation_guide/Infra/infra_install.md)
     - [MySQL](agent_installation_guide/Infra/database_monitoring/mysql_agents_install.md)
     - [PostgreSQL](agent_installation_guide/Infra/database_monitoring/postgresql_agents_install.md)
