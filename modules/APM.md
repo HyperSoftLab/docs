@@ -11,4 +11,5 @@ APM модуль собирает данные через автоматичес
 - [Хранилища и базы данных](modules/APM/datastores.md)
 - [Масштабируемость](modules/APM/scalability.md)
 - [Обнаружение аномалий](modules/APM/anomaly_detection.md)
+- [Уязвимости зависимостей](modules/APM/dependency_check.md)
 - [Мониторинг платформы исполнения кода](modules/APM/platform.md)
