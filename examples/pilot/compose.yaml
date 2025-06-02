@@ -8,7 +8,7 @@ x-loggin: &logging
 services:
   clickhouse:
     restart: unless-stopped
-    image: clickhouse/clickhouse-server:25.5
+    image: clickhouse/clickhouse-server:25.3
     environment:
       CLICKHOUSE_USER: gmonit
       CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}

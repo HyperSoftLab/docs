@@ -12,7 +12,7 @@ services:
   clickhouse:
     <<: *logging
     restart: unless-stopped
-    image: clickhouse/clickhouse-server:25.5
+    image: clickhouse/clickhouse-server:25.3
     pull_policy: always
     environment:
       CLICKHOUSE_USER: gmonit
