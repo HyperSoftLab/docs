@@ -24,13 +24,13 @@
 - Порогу простоя
   
 мониторинг доступности систем
-![services](modules/urlcheck/screenshots/service-unavailability.png) 
+![services](urlcheck/screenshots/service-unavailability.png) 
 Верхняя секция отображает:
 
 Хронологию периодов недоступности с цветовой индикацией, таблица недоступности всех отслеживаемых систем
 
 аналитика производительности
-![codes](modules/urlcheck/screenshots/service-status-codes.png)
+![codes](urlcheck/screenshots/service-status-codes.png)
 
 Секция статус-кодов:
 
@@ -41,4 +41,4 @@
 Сравнительные графики времени ответа по разным сетевым маршрутам
 
 
-## [Настройка и запуск мониторинга доступности веб-систем](modules/urlcheck/setup.md)
+## [Настройка и запуск мониторинга доступности веб-систем](urlcheck/setup.md)
