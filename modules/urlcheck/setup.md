@@ -41,10 +41,28 @@ integrations:
       apis:
         - event_type: URLCheck
           commands:
-            - run: printf "${lf:network_path}~${lf:name}~${lf:url}~$(curl --connect-timeout 5 -s -o /dev/null -I -w "%{http_code}~%{time_total}" ${lf:url})"
+            - run: printf "${lf:network_path}~${lf:name}~${lf:url}~$(curl --connect-timeout 5 -s -o /dev/null -I -w "%{http_code}~%{time_total}~%{url_effective}~%{content_type}~%{size_download}~%{size_upload}~%{speed_download}~%{speed_upload}~%{time_connect}~%{time_namelookup}~%{time_pretransfer}~%{time_redirect}~%{num_connects}~%{num_redirects}~%{ssl_verify_result}~%{redirect_url} ${lf:url})"
               split_by: "~"
               split: horizontal
-              set_header: [urlcheck.networkPath,urlcheck.targetName,urlcheck.targetURL,urlcheck.httpResponseCode,urlcheck.totalTimeSec]
+              set_header: [
+                urlcheck.targetURL,
+                urlcheck.httpResponseCode,
+                urlcheck.totalTimeSec,
+                urlcheck.urlEffective,
+                urlcheck.contentType,
+                urlcheck.sizeDownload,
+                urlcheck.sizeUpload,
+                urlcheck.speedDownload,
+                urlcheck.speedUpload,
+                urlcheck.timeConnectSec,
+                urlcheck.timeNamelookupSec,
+                urlcheck.timePretransferSec,
+                urlcheck.timeRedirectSec,
+                urlcheck.numConnects,
+                urlcheck.numRedirects,
+                urlcheck.sslVerifyResult,
+                urlcheck.redirectURL
+              ]
 ```
 
 ## 4. Для запуска выполните команду
