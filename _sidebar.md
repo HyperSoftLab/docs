@@ -27,7 +27,7 @@
   - [Браузерный мониторинг](modules/RUM.md)
   - Мобильный мониторинг
   - [Инфраструктурный мониторинг](modules/infra.md)
-    - [Доступность веб-сервисов](modules/urlcheck.md)
+    - [Доступность веб-сервисов](modules/infra/urlcheck.md)
 - Дополнительные возможности GMonit
   - [Поддержка протокола OpenTelemetry](extra_features/otel.md)
   - [Мониторинг SAP](extra_features/sap.md)
