@@ -4,6 +4,8 @@
   - [Масштабирование системы](scale.md)
   - [Хранение данных](data_ttl.md)
   - [Информационная безопасность](security.md)
+- Поддержка
+  - [Обновление GMonit до актуальной версии](gmonit_update_guide.md)
 - Инструкции по установке агентов
   - [Мониторинг производительности приложений (APM)](agent_installation_guide/apm_agents_install.md)
     - [Java](agent_installation_guide/APM/java.md)
