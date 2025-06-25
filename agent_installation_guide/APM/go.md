@@ -27,9 +27,9 @@ import "github.com/newrelic/go-agent/v3/newrelic"
 
 ```go
 app, err := newrelic.NewApplication(
-    newrelic.ConfigAppName("MY_AWESOME_APP"),                   // название вашего приложения
-    newrelic.ConfigLicense("0123456789-123456789-123456789-123456789"), // заглушка, не изменять
-    newrelic.ConfigHost("gmonit-collector.<DOMAIN>.ru"),       // адрес коллектора GMonit
+    newrelic.ConfigAppName("MY_AWESOME_APP"), // Название приложения - замените на своё
+    newrelic.ConfigLicense("0123456789-123456789-123456789-123456789"), // Ключ(заглушка, не меняем)
+    newrelic.ConfigHost("gmonit-collector.<DOMAIN>.ru"), // Домен коллектора GMonit
 )
 
 if err != nil {
