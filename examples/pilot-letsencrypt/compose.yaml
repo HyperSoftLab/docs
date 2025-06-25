@@ -32,13 +32,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-    volumes:
-      - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     <<: *logging
 
   redis:
     restart: unless-stopped
-    image: redis:6
+    image: redis:7.2
     healthcheck:
       test: redis-cli ping
       interval: 10s
@@ -46,35 +44,12 @@ services:
       retries: 10
     <<: *logging
 
-  transactor:
-    restart: unless-stopped
-    image: cr.yandex/crpih7d63vpcj5dfn8jj/transactor:1.0.7180-11
-    environment:
-      HOST: transactor
-      PORT: 4334
-
-      SQL_URL: "jdbc:postgresql://postgres:5432/datomic?user=postgres&password=${POSTGRES_PASSWORD}"
-
-      NEW_RELIC_LICENSE_KEY: 0123456789-123456789-123456789-123456789
-      NEW_RELIC_HOST: ${COLLECTOR_DOMAIN}
-      NEW_RELIC_LOG: stdout
-      NEW_RELIC_APP_NAME: "[GMonit] Transactor"
-    healthcheck:
-      test: curl -f localhost:9999/health
-      interval: 10s
-      timeout: 5s
-      retries: 10
-    volumes:
-      - ./ssl:/gmonit/ssl
-    depends_on:
-      postgres:
-        condition: service_healthy
-    <<: *logging
-
   grafana:
     restart: unless-stopped
     image: cr.yandex/crpih7d63vpcj5dfn8jj/grafana:${TAG:?no_tag}
     environment:
+      GMONIT_LICENSE: ${LICENSE_KEY}
+
       GF_SERVER_ROOT_URL: https://${GRAFANA_DOMAIN}
 
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
@@ -141,8 +116,6 @@ services:
       CLICKHOUSE_DB:      default
       # CLICKHOUSE_CA_PATH: /gmonit/ssl/...
 
-      DATOMIC_URI: "datomic:sql://base?jdbc:postgresql://postgres:5432/datomic?user=postgres&password=${POSTGRES_PASSWORD}"
-
       REDIS_HOST: redis
       REDIS_PORT: 6379
       # REDIS_PASSWORD:    # optional
@@ -163,8 +136,6 @@ services:
       clickhouse:
         condition: service_healthy
       redis:
-        condition: service_healthy
-      transactor:
         condition: service_healthy
     volumes:
       - ./ssl:/gmonit/ssl
