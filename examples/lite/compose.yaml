@@ -60,7 +60,7 @@ services:
   collector:
     <<: *logging
     restart: unless-stopped
-    image: cr.yandex/crpih7d63vpcj5dfn8jj/collector:v3
+    image: cr.yandex/crpih7d63vpcj5dfn8jj/collector:v4
     pull_policy: always
     environment:
       NEW_RELIC_LOG:         stdout
