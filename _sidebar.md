@@ -31,6 +31,9 @@
 - Дополнительные возможности GMonit
   - [Поддержка протокола OpenTelemetry](extra_features/otel.md)
   - [Мониторинг SAP](extra_features/sap.md)
+- Администрирование системы
+ - [Обновление GMonit](administration/update_guide.md)
+ - [Обновление лицензионного ключа GMonit](administration/license_management.md)
 - Сценарии использования
   - [Здоровье бизнеса](use_cases/business_health.md)
   - [Отладка проблем с производительностью](use_cases/performance_troubleshooting.md)
