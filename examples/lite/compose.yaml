@@ -5,12 +5,16 @@ x-loggin: &logging
       max-size: 100m
       max-file: 5
 
+x-labels: &labels
+  labels:
+    environment: "gmonit"
+
 volumes:
   grafana_data:
 
 services:
   clickhouse:
-    <<: *logging
+    <<: [*logging, *labels]
     restart: unless-stopped
     image: clickhouse/clickhouse-server:25.3
     pull_policy: always
@@ -30,7 +34,7 @@ services:
     #   - CAP_SYS_NICE # https://github.com/ClickHouse/ClickHouse/issues/68747
 
   grafana:
-    <<: *logging
+    <<: [*logging, *labels]
     restart: unless-stopped
     image: cr.yandex/crpih7d63vpcj5dfn8jj/grafana:v3
     pull_policy: always
@@ -58,7 +62,7 @@ services:
       - grafana_data:/var/lib/grafana
 
   collector:
-    <<: *logging
+    <<: [*logging, *labels]
     restart: unless-stopped
     image: cr.yandex/crpih7d63vpcj5dfn8jj/collector:v4
     pull_policy: always
@@ -88,7 +92,7 @@ services:
         condition: service_healthy
 
   nginx:
-    <<: *logging
+    <<: [*logging, *labels]
     restart: unless-stopped
     image: umputun/nginx-le:v1.7.0
     pull_policy: always

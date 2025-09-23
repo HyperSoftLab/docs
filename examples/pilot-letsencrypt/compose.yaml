@@ -5,6 +5,10 @@ x-loggin: &logging
       max-size: 100m
       max-file: 5
 
+x-labels: &labels
+  labels:
+    environment: "gmonit"
+
 services:
   clickhouse:
     restart: unless-stopped
@@ -20,7 +24,7 @@ services:
     volumes:
        - ./clickhouse/gmonit.xml:/etc/clickhouse-server/config.d/gmonit.xml
        - ./clickhouse/gmonit_system_tables_conf.xml:/etc/clickhouse-server/config.d/gmonit_system_tables_conf.xml
-    <<: *logging
+    <<: [*logging, *labels]
 
   postgres:
     restart: unless-stopped
@@ -32,7 +36,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-    <<: *logging
+    <<: [*logging, *labels]
 
   redis:
     restart: unless-stopped
@@ -42,7 +46,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-    <<: *logging
+    <<: [*logging, *labels]
 
   grafana:
     restart: unless-stopped
@@ -93,7 +97,7 @@ services:
         condition: service_healthy
     volumes:
       - ./ssl:/gmonit/ssl
-    <<: *logging
+    <<: [*logging, *labels]
 
   collector:
     env_file:
@@ -140,7 +144,7 @@ services:
     volumes:
       - ./ssl:/gmonit/ssl
       - ./***.mmdb:/gmonit/geoip.mmdb
-    <<: *logging
+    <<: [*logging, *labels]
 
   nginx:
     restart: unless-stopped
@@ -165,7 +169,7 @@ services:
         aliases:
           - ${GRAFANA_DOMAIN}
           - ${COLLECTOR_DOMAIN}
-    <<: *logging
+    <<: [*logging, *labels]
 
   infra_host:
     restart: unless-stopped
@@ -198,7 +202,7 @@ services:
       NRIA_SELF_INSTRUMENTATION: newrelic
       NRIA_SELF_INSTRUMENTATION_APM_HOST: ${COLLECTOR_DOMAIN}
       NEW_RELIC_APP_NAME: '[GMonit] Infrastructure Agent'
-    <<: *logging
+    <<: [*logging, *labels]
 
   infra_services:
     restart: unless-stopped
@@ -220,4 +224,4 @@ services:
       NEW_RELIC_APP_NAME: '[GMonit] Infrastructure Agent'
 
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    <<: *logging
+    <<: [*logging, *labels]
