@@ -48,17 +48,19 @@ services:
     restart: unless-stopped
     image: cr.yandex/crpih7d63vpcj5dfn8jj/grafana:${TAG:?no_tag}
     environment:
+      VIRTUAL_HOST: ${GRAFANA_DOMAIN}
+      VIRTUAL_PORT: 3000
+
       GMONIT_LICENSE: ${LICENSE_KEY}
-
-      GF_SERVER_ROOT_URL: https://${GRAFANA_DOMAIN}
-
-      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
 
       GMONIT_GRAFANA_CLICKHOUSE_DATASOURCE_URL: http://clickhouse:8123
       GMONIT_GRAFANA_CLICKHOUSE_DATABASE: default
       GMONIT_GRAFANA_CLICKHOUSE_USER: gmonit
       GMONIT_GRAFANA_CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
       # GMONIT_GRAFANA_CLICKHOUSE_CA_CERT__FILE: /gmonit/ssl/...
+
+      GF_SERVER_ROOT_URL: https://${GRAFANA_DOMAIN}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
 
       GF_DATABASE_TYPE: postgres
       GF_DATABASE_HOST: postgres:5432
@@ -74,8 +76,6 @@ services:
 
       #Браузерный мониторинг включен для веб-интерфейса GMonit. Это должен быть внешний URL.
       GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL: https://${COLLECTOR_DOMAIN}
-
-
     healthcheck:
       test: wget --spider -q localhost:3000/api/health
       interval: 10s
@@ -96,6 +96,9 @@ services:
     restart: unless-stopped
     image: cr.yandex/crpih7d63vpcj5dfn8jj/collector:${TAG:?no_tag}
     environment:
+      VIRTUAL_HOST: ${COLLECTOR_DOMAIN}
+      VIRTUAL_PORT: 8080
+
       NEW_RELIC_LOG: stdout
       # NEW_RELIC_LOG_LEVEL: debug
       NEW_RELIC_LICENSE_KEY: 0123456789-123456789-123456789-123456789
@@ -125,7 +128,7 @@ services:
       #Collector использует прогрев пулов с обновления v3-2205. Рекомендуется не менять, если нет проблем с производительностью.
       # USER_AGENT_PARSER_POOL_MAX_TOTAL: 3
       # USER_AGENT_PARSER_POOL_MIN_IDLE: 1
-      GEOIP_DB_PATH: '/gmonit/geoip.mmdb'
+      # GEOIP_DB_PATH: '/gmonit/geoip.mmdb'
     healthcheck:
       test: curl -f localhost:8080/health
       interval: 10s
@@ -138,32 +141,7 @@ services:
         condition: service_healthy
     volumes:
       - ./ssl:/gmonit/ssl
-      - ./geoip.mmdb:/gmonit/geoip.mmdb
-    <<: *logging
-
-  nginx:
-    restart: unless-stopped
-    image: umputun/nginx-le:v1.7.0
-    volumes:
-      - ./nginx/ssl:/etc/nginx/ssl
-      - ./nginx/conf.d-le:/etc/nginx/conf.d-le
-      - ./nginx/templates:/etc/nginx/templates
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-    ports:
-      - 80:80
-      - 443:443
-    environment:
-      GRAFANA_DOMAIN: ${GRAFANA_DOMAIN}
-      COLLECTOR_DOMAIN: ${COLLECTOR_DOMAIN}
-      TZ: UTC
-      SSL_CERT: ${CERT_FILE}
-      SSL_KEY: ${KEY_FILE}
-      SSL_CHAIN_CERT: ${CA_FILE}
-    networks:
-      default:
-        aliases:
-          - ${GRAFANA_DOMAIN}
-          - ${COLLECTOR_DOMAIN}
+      # - ./geoip.mmdb:/gmonit/geoip.mmdb
     <<: *logging
 
   infra_host:
@@ -220,3 +198,87 @@ services:
       # NRIA_SELF_INSTRUMENTATION: newrelic
       # NRIA_SELF_INSTRUMENTATION_APM_HOST: ${COLLECTOR_DOMAIN}
     <<: *logging
+
+
+  nginx-proxy:
+    <<: *logging
+    restart: unless-stopped
+    image: nginx:1.29-alpine
+    container_name: nginx-proxy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      # The vhost volume is only required if you
+      # plan to obtain standalone certificates
+      # - vhost:/etc/nginx/vhost.d
+
+      - conf:/etc/nginx/conf.d
+      - html:/usr/share/nginx/html
+      # - certs:/etc/nginx/certs:ro
+
+
+      # server.{crt,key} выпущены сразу для двух доменов
+
+      # надо подумать как это сделать
+      # оно конфликтует с CERT_FILE и KEY_FILE
+
+      # https://github.com/nginx-proxy/nginx-proxy/tree/main/docs#san-certificates
+      # CERT_NAME=server прописать графане и коллектору
+
+      - ./ssl/server.crt:/etc/nginx/certs/${GRAFANA_DOMAIN}.crt
+      - ./ssl/server.key:/etc/nginx/certs/${GRAFANA_DOMAIN}.key
+      - ./ssl/server.crt:/etc/nginx/certs/${COLLECTOR_DOMAIN}.crt
+      - ./ssl/server.key:/etc/nginx/certs/${COLLECTOR_DOMAIN}.key
+
+
+    networks:
+      default:
+        aliases:
+          - ${GRAFANA_DOMAIN}
+          - ${COLLECTOR_DOMAIN}
+
+  docker-gen:
+    <<: *logging
+    restart: unless-stopped
+    image: nginxproxy/docker-gen:0.15
+    container_name: nginx-proxy-gen
+    command: -notify-sighup nginx-proxy -watch -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - ./nginx/nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    labels:
+      - "com.github.nginx-proxy.docker-gen"
+
+  # nginx:
+  #   restart: unless-stopped
+  #   image: umputun/nginx-le:v1.7.0
+  #   volumes:
+  #     - ./nginx/ssl:/etc/nginx/ssl
+  #     - ./nginx/conf.d-le:/etc/nginx/conf.d-le
+  #     - ./nginx/templates:/etc/nginx/templates
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   environment:
+  #     GRAFANA_DOMAIN: ${GRAFANA_DOMAIN}
+  #     COLLECTOR_DOMAIN: ${COLLECTOR_DOMAIN}
+  #     TZ: UTC
+  #     SSL_CERT: ${CERT_FILE}
+  #     SSL_KEY: ${KEY_FILE}
+  #     SSL_CHAIN_CERT: ${CA_FILE}
+  #   networks:
+  #     default:
+  #       aliases:
+  #         - ${GRAFANA_DOMAIN}
+  #         - ${COLLECTOR_DOMAIN}
+  #   <<: *logging
+
+volumes:
+  # vhost:
+  conf:
+  html:
+  # certs:
