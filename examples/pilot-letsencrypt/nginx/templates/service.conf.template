@@ -11,7 +11,7 @@ server {
     # Docker embedded DNS is used by default. It's guaranteed to remain constant and won’t change.
     # https://serverfault.com/a/593003
     # https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_pass
-    resolver 127.0.0.11;
+    resolver 127.0.0.11 valid=10s;
 
     ssl_certificate         SSL_CERT;
     ssl_certificate_key     SSL_KEY;
