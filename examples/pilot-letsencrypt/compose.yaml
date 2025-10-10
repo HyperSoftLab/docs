@@ -149,7 +149,6 @@ services:
     image: umputun/nginx-le:v1.7.0
     volumes:
       - ./nginx/ssl:/etc/nginx/ssl
-      - ./nginx/conf.d-le:/etc/nginx/conf.d-le
       - ./nginx/templates:/etc/nginx/templates
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     ports:
