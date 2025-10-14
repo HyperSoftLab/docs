@@ -35,7 +35,6 @@ self_instrumentation_apm_host: gmonit-collector.<<DOMAIN>>.com
 
 # указать путь к сертификатам SSL
 ca_bundle_file: %path_to_ssl%
-
 ```
 Более подробную информацию о настройке ротации можно найти в [официальной документации](https://docs.newrelic.com/docs/infrastructure/infrastructure-agent/configuration/infrastructure-agent-configuration-settings/#rotate).
 
@@ -86,7 +85,6 @@ NRIA_LOG_ROTATE_COMPRESSION_ENABLED=true
 
 # Шаблон имени архивного лог-файла
 NRIA_LOG_ROTATE_FILE_PATTERN="YYYY-MM-DD_hh-mm-ss.log"
-
 ```
 
 
