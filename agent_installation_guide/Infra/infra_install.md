@@ -36,11 +36,6 @@ self_instrumentation_apm_host: gmonit-collector.<<DOMAIN>>.com
 # указать путь к сертификатам SSL
 ca_bundle_file: %path_to_ssl%
 
-# (При наличии модуля мониторинга 1С и только на машинах с БД и приложениями 1С)
-# (Добавить в существующую секцию custom_attributes или создать её)
-custom_attributes:
-  # Указывать нужно только те кластеры, к которым относится данный хост (обычно он будет только один)
-  one_c.cluster_names: <<ИМЯ КЛАСТЕРА 1>>===<<ИМЯ КЛАСТЕРА 2>>===<<ИМЯ КЛАСТЕРА 3>>
 ```
 Более подробную информацию о настройке ротации можно найти в [официальной документации](https://docs.newrelic.com/docs/infrastructure/infrastructure-agent/configuration/infrastructure-agent-configuration-settings/#rotate).
 
@@ -92,11 +87,6 @@ NRIA_LOG_ROTATE_COMPRESSION_ENABLED=true
 # Шаблон имени архивного лог-файла
 NRIA_LOG_ROTATE_FILE_PATTERN="YYYY-MM-DD_hh-mm-ss.log"
 
-
-# (При наличии модуля мониторинга 1С и только на машинах с БД и приложениями 1С)
-# (Если переменная NRIA_CUSTOM_ATTRIBUTES уже объявлена, то важно на перезаписать её, а добавить в неё новое значение)
-# Указывать нужно только те кластеры, к которым относится данный хост (обычно он будет только один)
-NRIA_CUSTOM_ATTRIBUTES='{"one_c.cluster_names":"<<ИМЯ КЛАСТЕРА 1>>===<<ИМЯ КЛАСТЕРА 2>>===<<ИМЯ КЛАСТЕРА 3>>"}'
 ```
 
 
