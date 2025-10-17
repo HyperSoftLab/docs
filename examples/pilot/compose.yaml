@@ -217,7 +217,10 @@ services:
       NRIA_IDENTITY_URL: https://${COLLECTOR_DOMAIN}/infra/identity-api
       NRIA_CA_BUNDLE_FILE: ${CA_FILE}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      # не работает на самоподписанных сертификатах
-      # NRIA_SELF_INSTRUMENTATION: newrelic
-      # NRIA_SELF_INSTRUMENTATION_APM_HOST: ${COLLECTOR_DOMAIN}
+
+      NRIA_SELF_INSTRUMENTATION: newrelic
+      NRIA_SELF_INSTRUMENTATION_APM_HOST: ${COLLECTOR_DOMAIN}
+      NEW_RELIC_APP_NAME: '[GMonit] Infrastructure Agent'
+      NEW_RELIC_LABELS: "environment:gmonit"
+      SSL_CERT_FILE: ${CA_FILE}
     <<: *logging
