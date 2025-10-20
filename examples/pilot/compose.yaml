@@ -204,6 +204,8 @@ services:
       NRIA_IDENTITY_URL:        https://${COLLECTOR_DOMAIN}/infra2/identity-api
       NRIA_CA_BUNDLE_FILE: ${CA_FILE}
 
+      NEW_RELIC_APP_NAME: '[GMonit] Infrastructure Agent'
+      NEW_RELIC_LABELS: "environment:gmonit"
       NRIA_SELF_INSTRUMENTATION: newrelic
       NRIA_SELF_INSTRUMENTATION_APM_HOST: ${COLLECTOR_DOMAIN}
       SSL_CERT_FILE: ${CA_FILE}
