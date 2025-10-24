@@ -1,6 +1,6 @@
 map $host $backend {
     ${GRAFANA_DOMAIN} grafana:3000;
-    ${COLLECTOR_DOMAIN} collector:8080;
+    ${COLLECTOR_DOMAIN} unix:/gmonit/sockets/collector.sock;
 }
 
 server {
