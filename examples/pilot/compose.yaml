@@ -110,6 +110,7 @@ services:
       LICENSE_KEY: ${LICENSE_KEY}
 
       PORT:               8080
+      UNIX_SOCKET: /gmonit/sockets/collector.sock
       CLICKHOUSE_URL:     http://clickhouse:8123
       CLICKHOUSE_USER:    gmonit
       CLICKHOUSE_KEY:     ${CLICKHOUSE_PASSWORD}
@@ -145,6 +146,7 @@ services:
       - type: image
         source: cr.yandex/crpih7d63vpcj5dfn8jj/geoip-db:latest
         target: /gmonit/geoip
+      - sockets:/gmonit/sockets
     <<: *logging
 
   nginx:
@@ -154,6 +156,7 @@ services:
       - ./ssl:/gmonit/ssl
       - ./nginx/templates:/etc/nginx/templates
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - sockets:/gmonit/sockets
     ports:
       - 80:80
       - 443:443
@@ -210,3 +213,5 @@ services:
       NRIA_SELF_INSTRUMENTATION_APM_HOST: ${COLLECTOR_DOMAIN}
       SSL_CERT_FILE: ${CA_FILE}
     <<: *logging
+volumes:
+  sockets:
