@@ -150,7 +150,11 @@ services:
 
   nginx:
     restart: unless-stopped
-    image: umputun/nginx-le:v1.7.0
+    # image: umputun/nginx-le:v1.7.0
+    build:
+      context: ./nginx
+
+
     volumes:
       - ./nginx/ssl:/etc/nginx/ssl
       - ./nginx/templates:/etc/nginx/templates
