@@ -7,7 +7,7 @@ integrations:
     PASSWORD: {{POSTGRES_PASSWORD}}
 
     # The hostname for the postgres instance. Defaults to localhost.
-    HOSTNAME: postgres
+    HOSTNAME: localhost
 
     # The database to connect to on the postgres instance. Defaults to postgres.
     DATABASE: postgres

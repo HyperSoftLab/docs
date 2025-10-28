@@ -32,6 +32,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    ports:
+      - 127.0.0.1:5432:5432
     <<: *logging
 
   redis:
@@ -42,6 +44,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    ports:
+      - 127.0.0.1:6379:6379
     <<: *logging
 
   grafana:
@@ -154,6 +158,7 @@ services:
     ports:
       - 80:80
       - 443:443
+      - 127.0.0.1:8080:8080
     environment:
       GRAFANA_DOMAIN: ${GRAFANA_DOMAIN}
       COLLECTOR_DOMAIN: ${COLLECTOR_DOMAIN}
@@ -168,7 +173,7 @@ services:
           - ${COLLECTOR_DOMAIN}
     <<: *logging
 
-  infra_host:
+  infra:
     restart: unless-stopped
     container_name: newrelic-infra
     image: newrelic/infrastructure-bundle:latest
@@ -185,40 +190,23 @@ services:
     volumes:
       - "/:/host:ro"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - ./infra_host:/etc/newrelic-infra/integrations.d
+      - ./infra:/etc/newrelic-infra/integrations.d
       - ./ssl:/gmonit/ssl
     environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
       # NRIA_LOG_LEVEL: debug
+
       NRIA_ENABLE_PROCESS_METRICS: 'true'
 
       NRIA_LICENSE_KEY: "0123456789012345678901234567890123456789"
-      NRIA_COLLECTOR_URL: https://${COLLECTOR_DOMAIN}/infra/infra-api
-      NRIA_COMMAND_CHANNEL_URL: https://${COLLECTOR_DOMAIN}/infra/command-api
-      NRIA_IDENTITY_URL: https://${COLLECTOR_DOMAIN}/infra/identity-api
 
+      NRIA_COLLECTOR_URL:       https://${COLLECTOR_DOMAIN}/infra2/infra-api
+      NRIA_COMMAND_CHANNEL_URL: https://${COLLECTOR_DOMAIN}/infra2/command-api
+      NRIA_IDENTITY_URL:        https://${COLLECTOR_DOMAIN}/infra2/identity-api
+
+      NEW_RELIC_APP_NAME: '[GMonit] Infrastructure Agent'
+      NEW_RELIC_LABELS: "environment:gmonit"
       NRIA_SELF_INSTRUMENTATION: newrelic
       NRIA_SELF_INSTRUMENTATION_APM_HOST: ${COLLECTOR_DOMAIN}
-      NEW_RELIC_APP_NAME: '[GMonit] Infrastructure Agent'
-    <<: *logging
-
-  infra_services:
-    restart: unless-stopped
-    image: newrelic/infrastructure-bundle:latest
-    volumes:
-      - ./infra_services:/etc/newrelic-infra/integrations.d
-      - ./ssl:/gmonit/ssl
-    environment:
-      # NRIA_LOG_LEVEL: debug
-      NRIA_IS_FORWARD_ONLY: 'true'
-
-      NRIA_LICENSE_KEY: "0123456789012345678901234567890123456789"
-      NRIA_COLLECTOR_URL: https://${COLLECTOR_DOMAIN}/infra/infra-api
-      NRIA_COMMAND_CHANNEL_URL: https://${COLLECTOR_DOMAIN}/infra/command-api
-      NRIA_IDENTITY_URL: https://${COLLECTOR_DOMAIN}/infra/identity-api
-
-      NRIA_SELF_INSTRUMENTATION: newrelic
-      NRIA_SELF_INSTRUMENTATION_APM_HOST: ${COLLECTOR_DOMAIN}
-      NEW_RELIC_APP_NAME: '[GMonit] Infrastructure Agent'
-
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     <<: *logging

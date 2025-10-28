@@ -2,7 +2,7 @@ integrations:
   - name: nri-redis
     env:
       METRICS: true
-      HOSTNAME: redis
+      HOSTNAME: localhost
       PORT: 6379
       # KEYS: '{"0":["<KEY_1>"],"1":["<KEY_2>"]}'
 
@@ -48,7 +48,7 @@ integrations:
   - name: nri-redis
     env:
       INVENTORY: true
-      HOSTNAME: redis
+      HOSTNAME: localhost
       PORT: 6379
 
       # New users should leave this property as `true`, to identify the
