@@ -4,8 +4,8 @@
 # https://github.com/nginx/docker-nginx/pull/1007
 
 # пока нет готового образа собрал сам:
-# docker build . -t cr.yandex/crpih7d63vpcj5dfn8jj/nginx-1.29.3-alpine3.22-acme
-# docker push cr.yandex/crpih7d63vpcj5dfn8jj/nginx-1.29.3-alpine3.22-acme
+# docker build . -t cr.yandex/crpih7d63vpcj5dfn8jj/nginx:1.29.3-alpine3.22-acme
+# docker push cr.yandex/crpih7d63vpcj5dfn8jj/nginx:1.29.3-alpine3.22-acme
 
 FROM nginx:1.29.3-alpine3.22
 

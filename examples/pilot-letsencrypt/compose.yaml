@@ -150,7 +150,7 @@ services:
 
   nginx:
     restart: unless-stopped
-    image: cr.yandex/crpih7d63vpcj5dfn8jj/nginx-1.29.3-alpine3.22-acme
+    image: cr.yandex/crpih7d63vpcj5dfn8jj/nginx:1.29.3-alpine3.22-acme
     # build:
     #   context: ./nginx
     volumes:
