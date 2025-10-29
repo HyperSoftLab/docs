@@ -1,23 +1,23 @@
-map $host $backend {
-    ${GRAFANA_DOMAIN} grafana:3000;
-    ${COLLECTOR_DOMAIN} collector:8080;
-}
-
 server {
     listen 80 default_server;
     server_name _;
     return 301 https://$host$request_uri;
 }
 
+upstream collector {
+    zone collector 64k;
+    server collector:8080 resolve;
+    keepalive 128;
+}
+
+upstream grafana {
+    zone grafana 64k;
+    server grafana:3000 resolve;
+}
+
 server {
-    server_name reverseproxy;
-
+    server_name ${COLLECTOR_DOMAIN};
     listen 443 ssl;
-
-    # Docker embedded DNS is used by default. It's guaranteed to remain constant and won’t change.
-    # https://serverfault.com/a/593003
-    # https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_pass
-    resolver 127.0.0.11 valid=10s;
 
     ssl_certificate         ${SSL_CERT};
     ssl_certificate_key     ${SSL_KEY};
@@ -27,15 +27,39 @@ server {
     client_max_body_size 0;
 
     location / {
-         # websocket support
          proxy_http_version 1.1;
-         proxy_set_header   Upgrade $http_upgrade;
-         proxy_set_header   Connection "upgrade";
+         proxy_set_header   Connection "";
 
-         proxy_redirect     off;
-         proxy_set_header   X-Real-IP $remote_addr;
-         proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
          proxy_set_header   Host $host;
-         proxy_pass         http://$backend;
-     }
+         proxy_pass         http://collector;
+    }
+}
+
+# This is required to proxy Grafana Live WebSocket connections.
+map $http_upgrade $connection_upgrade {
+     default upgrade;
+     '' close;
+}
+
+server {
+    server_name ${GRAFANA_DOMAIN};
+    listen 443 ssl;
+
+    ssl_certificate         ${SSL_CERT};
+    ssl_certificate_key     ${SSL_KEY};
+    ssl_trusted_certificate ${SSL_CHAIN_CERT};
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_pass http://grafana;
+    }
+
+    # Proxy Grafana Live WebSocket connections.
+    location /api/live/ {
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_set_header Host $host;
+        proxy_pass http://grafana;
+    }
 }
