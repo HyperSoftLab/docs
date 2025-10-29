@@ -23,14 +23,12 @@ server {
 
 upstream collector {
     zone collector 64k;
-    resolver 127.0.0.11 valid=10s;
     server collector:8080 resolve;
     keepalive 128;
 }
 
 upstream grafana {
     zone grafana 64k;
-    resolver 127.0.0.11 valid=10s;
     server grafana:3000 resolve;
 }
 
