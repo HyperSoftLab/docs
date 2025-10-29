@@ -150,8 +150,9 @@ services:
 
   nginx:
     restart: unless-stopped
-    build:
-      context: ./nginx
+    image: cr.yandex/crpih7d63vpcj5dfn8jj/nginx-1.29.3-alpine3.22-acme
+    # build:
+    #   context: ./nginx
     volumes:
       - ./nginx/acme_letsencrypt:/var/cache/nginx/acme_letsencrypt
       - ./nginx/templates:/etc/nginx/templates
