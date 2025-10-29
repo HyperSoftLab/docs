@@ -150,13 +150,10 @@ services:
 
   nginx:
     restart: unless-stopped
-    # image: umputun/nginx-le:v1.7.0
     build:
       context: ./nginx
-
-
     volumes:
-      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/acme_letsencrypt:/var/cache/nginx/acme_letsencrypt
       - ./nginx/templates:/etc/nginx/templates
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     ports:
@@ -167,9 +164,7 @@ services:
       GRAFANA_DOMAIN: ${GRAFANA_DOMAIN}
       COLLECTOR_DOMAIN: ${COLLECTOR_DOMAIN}
       TZ: UTC
-      LETSENCRYPT: true
-      LE_EMAIL: ${LETSENCRYPT_EMAIL}
-      LE_FQDN: ${GRAFANA_DOMAIN},${COLLECTOR_DOMAIN}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
     networks:
       default:
         aliases:

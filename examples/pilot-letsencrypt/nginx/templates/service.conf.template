@@ -1,19 +1,8 @@
-# todo: name, наверное letsencrypt надо назвать
-acme_issuer example {
-    uri         https://acme-v02.api.letsencrypt.org/directory;
-    #contact     admin@example.test;
-
-
-    # Defines a directory for storing the module data that can be persisted across restarts. This can improve the load time by skipping some requests on startup, and avoid hitting request rate limits on the ACME server.
-    # The generated account keys are preserved across reloads, but will be lost on restart unless state_path is configured.
-
-
-    #state_path  /var/cache/nginx/acme-example; # наверное это должен быть вольюм?
+acme_issuer letsencrypt {
+    uri     https://acme-v02.api.letsencrypt.org/directory;
+    contact ${LETSENCRYPT_EMAIL};
     accept_terms_of_service;
 }
-
-# там дподходящие для нас дефолты
-# acme_shared_zone zone=ngx_acme_shared:1M;
 
 server {
     listen 80 default_server;
@@ -36,17 +25,9 @@ server {
     server_name ${COLLECTOR_DOMAIN};
     listen 443 ssl;
 
-    acme_certificate example;
+    acme_certificate      letsencrypt;
     ssl_certificate       $acme_certificate;
     ssl_certificate_key   $acme_certificate_key;
-
-    # надо разобраться нафига
-    # do not parse the certificate on each request
-    # ssl_certificate_cache max=2;
-
-    # ssl_certificate         ${SSL_CERT};
-    # ssl_certificate_key     ${SSL_KEY};
-    # ssl_trusted_certificate ${SSL_CHAIN_CERT};
 
     # in caddy it's also unlimited, leaving it as is for now
     client_max_body_size 0;
@@ -70,13 +51,9 @@ server {
     server_name ${GRAFANA_DOMAIN};
     listen 443 ssl;
 
-    acme_certificate example;
+    acme_certificate      letsencrypt;
     ssl_certificate       $acme_certificate;
     ssl_certificate_key   $acme_certificate_key;
-
-    # ssl_certificate         ${SSL_CERT};
-    # ssl_certificate_key     ${SSL_KEY};
-    # ssl_trusted_certificate ${SSL_CHAIN_CERT};
 
     location / {
         proxy_set_header Host $host;
