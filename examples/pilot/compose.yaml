@@ -34,6 +34,16 @@ services:
       retries: 10
     ports:
       - 127.0.0.1:5432:5432
+    volumes:
+      - ./docker-entrypoint-initdb.d/init-extensions.sql:/docker-entrypoint-initdb.d/init-extensions.sql:ro
+    command:
+        - "postgres"
+        - "-c"
+        - "shared_preload_libraries=pg_stat_statements"
+        - "-c"
+        - "pg_stat_statements.max=10000"
+        - "-c"
+        - "pg_stat_statements.track=all"
     <<: *logging
 
   redis:

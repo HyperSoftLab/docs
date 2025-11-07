@@ -28,6 +28,12 @@ integrations:
     COLLECTION_LIST: 'ALL'
     # COLLECTION_LIST: '["postgres"]'
 
+    # Enable query performance monitoring - Defaults to false
+    ENABLE_QUERY_MONITORING : "true"
+
+    # Threshold in milliseconds for query response time to fetch individual query performance metrics - Defaults to 1
+    QUERY_MONITORING_RESPONSE_TIME_THRESHOLD : "1"
+
     # JSON array of database names that will be ignored for metrics collection.
     # Typically useful for cases where COLLECTION_LIST is set to 'ALL' and some databases need to be ignored.
     # Defaults to empty '[]'.
