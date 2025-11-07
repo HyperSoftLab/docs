@@ -35,7 +35,7 @@ services:
     ports:
       - 127.0.0.1:5432:5432
     volumes:
-      - ./docker-entrypoint-initdb.d/init-extensions.sql:/docker-entrypoint-initdb.d/init-extensions.sql:ro
+      - ./postgres/docker-entrypoint-initdb.d/init-extensions.sql:/docker-entrypoint-initdb.d/init-extensions.sql:ro
     command:
         - "postgres"
         - "-c"
