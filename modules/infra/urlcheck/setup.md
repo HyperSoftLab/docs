@@ -11,9 +11,9 @@ services:
       - ./urlcheck.json:/etc/newrelic-infra/integrations.d/urlcheck.json
     environment:
       NRIA_LICENSE_KEY: "0123456789012345678901234567890123456789"
-      NRIA_COLLECTOR_URL: https://${COLLECTOR_DOMAIN}/infra/infra-api
-      NRIA_IDENTITY_URL: https://${COLLECTOR_DOMAIN}/infra/identity-api
-      NRIA_COMMAND_CHANNEL_URL: https://${COLLECTOR_DOMAIN}/infra/command-api
+      NRIA_COLLECTOR_URL: https://${COLLECTOR_DOMAIN}/infra2/infra-api
+      NRIA_IDENTITY_URL: https://${COLLECTOR_DOMAIN}/infra2/identity-api
+      NRIA_COMMAND_CHANNEL_URL: https://${COLLECTOR_DOMAIN}/infra2/command-api
 ```
 - Замените ${COLLECTOR_DOMAIN} на актуальный домен коллектора или используйте переменную окружения
 - Для существующих конфигураций достаточно добавить только volumes
