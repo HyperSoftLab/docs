@@ -25,10 +25,10 @@ log:
 license_key: "0123456789012345678901234567890123456789" #Ключ(заглушка, не меняем)
 
 # добавить значения:
-collector_url: https://gmonit-collector.<<DOMAIN>>.com/infra/infra-api
-identity_url: https://gmonit-collector.<<DOMAIN>>.com/infra/identity-api
+collector_url: https://gmonit-collector.<<DOMAIN>>.com/infra2/infra-api
+identity_url: https://gmonit-collector.<<DOMAIN>>.com/infra2/identity-api
 metric_url: https://gmonit-collector.<<DOMAIN>>.com/metrics
-command_channel_url: https://gmonit-collector.<<DOMAIN>>.com/infra/command-api
+command_channel_url: https://gmonit-collector.<<DOMAIN>>.com/infra2/command-api
 
 self_instrumentation: newrelic
 self_instrumentation_apm_host: gmonit-collector.<<DOMAIN>>.com
@@ -59,11 +59,11 @@ NRIA_LOG_LEVEL=info
 # Лицензионный ключ
 NRIA_LICENSE_KEY="0123456789012345678901234567890123456789" # Ключ (заглушка, не меняем)
 
-# URL-адреса для взаимодействия с GMonit
-NRIA_COLLECTOR_URL="https://gmonit-collector.<<DOMAIN>>.com/infra/infra-api"
-NRIA_IDENTITY_URL="https://gmonit-collector.<<DOMAIN>>.com/infra/identity-api"
+# URL-адреса для взаимодействия с GMonit (infra2 - новая схема хранения инфраструктурных метрик)
+NRIA_COLLECTOR_URL="https://gmonit-collector.<<DOMAIN>>.com/infra2/infra-api"
+NRIA_IDENTITY_URL="https://gmonit-collector.<<DOMAIN>>.com/infra2/identity-api"
 NRIA_METRIC_URL="https://gmonit-collector.<<DOMAIN>>.com/metrics"
-NRIA_COMMAND_CHANNEL_URL="https://gmonit-collector.<<DOMAIN>>.com/infra/command-api"
+NRIA_COMMAND_CHANNEL_URL="https://gmonit-collector.<<DOMAIN>>.com/infra2/command-api"
 
 # Самоинструментация
 NRIA_SELF_INSTRUMENTATION="newrelic"
