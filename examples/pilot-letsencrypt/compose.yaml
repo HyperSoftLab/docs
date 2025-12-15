@@ -133,7 +133,7 @@ services:
       BASIC_AUTH_NAME: grafana-http-user
       BASIC_AUTH_PASS: ${COLLECTOR_DATASOURCE_PASSWORD}
 
-      GEOIP_DB_PATH: '/gmonit/geoip.mmdb'
+      GEOIP_DB_PATH: '/gmonit/geoip/dbip-city-lite.mmdb'
     healthcheck:
       test: curl -f localhost:8080/health
       interval: 10s
@@ -146,7 +146,9 @@ services:
         condition: service_healthy
     volumes:
       - ./ssl:/gmonit/ssl
-      - ./***.mmdb:/gmonit/geoip.mmdb
+      - type: image
+        source: cr.yandex/crpih7d63vpcj5dfn8jj/geoip-db:latest
+        target: /gmonit/geoip
     <<: *logging
 
   nginx:
