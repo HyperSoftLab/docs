@@ -132,7 +132,7 @@ services:
       #Collector использует прогрев пулов с обновления v3-2205. Рекомендуется не менять, если нет проблем с производительностью.
       # USER_AGENT_PARSER_POOL_MAX_TOTAL: 3
       # USER_AGENT_PARSER_POOL_MIN_IDLE: 1
-      GEOIP_DB_PATH: '/gmonit/geoip/dbip-city-lite.mmdb'
+      GEOIP_DB_PATH: '/gmonit/geoip.mmdb'
     healthcheck:
       test: curl -f localhost:8080/health
       interval: 10s
@@ -145,9 +145,7 @@ services:
         condition: service_healthy
     volumes:
       - ./ssl:/gmonit/ssl
-      - type: image
-        source: cr.yandex/crpih7d63vpcj5dfn8jj/geoip-db:latest
-        target: /gmonit/geoip
+      - ./geoip.mmdb:/gmonit/geoip.mmdb
     <<: *logging
 
   nginx:
