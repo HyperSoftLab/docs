@@ -151,9 +151,8 @@ services:
 
   nginx:
     restart: unless-stopped
-    image: cr.yandex/crpih7d63vpcj5dfn8jj/nginx:1.29.3-alpine3.22-acme
-    # build:
-    #   context: ./nginx
+    # https://github.com/nginx/docker-nginx/issues/999#issuecomment-3730183706
+    image: nginx:1.29.4
     volumes:
       - ./nginx/acme_letsencrypt:/var/cache/nginx/acme_letsencrypt
       - ./nginx/templates:/etc/nginx/templates
