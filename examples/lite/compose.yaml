@@ -23,6 +23,7 @@ services:
       timeout: 5s
       retries: 10
     volumes:
+       - ./clickhouse/data:/var/lib/clickhouse
        - ./clickhouse/gmonit.xml:/etc/clickhouse-server/config.d/gmonit.xml
        - ./clickhouse/gmonit_system_tables_conf.xml:/etc/clickhouse-server/config.d/gmonit_system_tables_conf.xml
     # FIXME: it's not needed in 23.8, uncomment after upgrading to 24.8
