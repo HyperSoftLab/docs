@@ -53,7 +53,7 @@ services:
 
   grafana:
     restart: unless-stopped
-    image: cr.yandex/crpih7d63vpcj5dfn8jj/grafana:${TAG:?no_tag}
+    image: cr.yandex/gmonit.ru/grafana:${TAG:?no_tag}
     environment:
       GMONIT_LICENSE: ${LICENSE_KEY}
 
@@ -102,7 +102,7 @@ services:
     env_file:
       - ttl.env
     restart: unless-stopped
-    image: cr.yandex/crpih7d63vpcj5dfn8jj/collector:${TAG:?no_tag}
+    image: cr.yandex/gmonit.ru/collector:${TAG:?no_tag}
     environment:
       NEW_RELIC_LOG: stdout
       # NEW_RELIC_LOG_LEVEL: debug
@@ -147,7 +147,7 @@ services:
     volumes:
       - ./ssl:/gmonit/ssl
       - type: image
-        source: cr.yandex/crpih7d63vpcj5dfn8jj/geoip-db:latest
+        source: cr.yandex/gmonit.ru/geoip-db:latest
         target: /gmonit/geoip
     <<: *logging
 
