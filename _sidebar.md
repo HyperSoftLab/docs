@@ -26,6 +26,9 @@
   - [Распределенная трассировка](modules/distributed_tracing.md)
   - [Браузерный мониторинг](modules/RUM.md)
   - Мобильный мониторинг
+  - [Инциденты](modules/incidents.md)
+    - [Настройка](modules/incidents/setup.md)
+    - [Использование](modules/incidents/guide.md)
   - [Инфраструктурный мониторинг](modules/infra.md)
     - [Доступность веб-сервисов](modules/infra/urlcheck.md)
 - Дополнительные возможности GMonit
