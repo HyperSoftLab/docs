@@ -12,4 +12,4 @@ APM модуль собирает данные через автоматичес
 - [Масштабируемость](modules/APM/scalability.md)
 - [Обнаружение аномалий](modules/APM/anomaly_detection.md)
 - [Уязвимости зависимостей](modules/APM/dependency_check.md)
-- [Мониторинг платформы исполнения кода](modules/APM/platform.md)
+- [Мониторинг платформы исполнения кода](/modules/APM/platform.md)
