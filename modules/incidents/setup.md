@@ -40,7 +40,7 @@
 | `ANOMALY_CORRELATION_STATIC_ENGINE_ENABLED` | Включить статический движок | `true` |
 | `UNIFIED_ENGINE_MAX_INTERVAL_MINUTE` | Макс. интервал между алертами/выбросами для группировки (мин) | `10` |
 | `UNIFIED_ENGINE_BFS_DEPTH` | Глубина обхода графа связности сервисов | `0` |
-| `UNIFIED_ENGINE_TOP_OUTLIERS` | Кол-во топ-выбросов как начальных точек группировки | `20` |
+| `UNIFIED_ENGINE_TOP_OUTLIERS` | Кол-во самых сильных выбросов, используемых как ядро корреляции инцидента | `20` |
 
 <!-- STEP_GUIDE:END -->
 
