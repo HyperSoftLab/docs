@@ -31,6 +31,8 @@
     - [Использование](modules/incidents/guide.md)
   - [Инфраструктурный мониторинг](modules/infra.md)
     - [Доступность веб-сервисов](modules/infra/urlcheck.md)
+  - [SLO](modules/slo.md)
+    - [Использование](modules/slo/guide.md)
   - [Настройки](modules/settings.md)
     - [Настройка](modules/settings/setup.md)
     - [Использование](modules/settings/guide.md)
