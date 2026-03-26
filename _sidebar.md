@@ -31,6 +31,9 @@
     - [Использование](modules/incidents/guide.md)
   - [Инфраструктурный мониторинг](modules/infra.md)
     - [Доступность веб-сервисов](modules/infra/urlcheck.md)
+  - [Настройки](modules/settings.md)
+    - [Настройка](modules/settings/setup.md)
+    - [Использование](modules/settings/guide.md)
 - Дополнительные возможности GMonit
   - [Поддержка протокола OpenTelemetry](extra_features/otel.md)
   - [Мониторинг SAP](extra_features/sap.md)
