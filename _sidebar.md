@@ -26,8 +26,16 @@
   - [Распределенная трассировка](modules/distributed_tracing.md)
   - [Браузерный мониторинг](modules/RUM.md)
   - Мобильный мониторинг
+  - [Инциденты](modules/incidents.md)
+    - [Настройка](modules/incidents/setup.md)
+    - [Использование](modules/incidents/guide.md)
   - [Инфраструктурный мониторинг](modules/infra.md)
     - [Доступность веб-сервисов](modules/infra/urlcheck.md)
+  - [SLO](modules/slo.md)
+    - [Использование](modules/slo/guide.md)
+  - [Настройки](modules/settings.md)
+    - [Настройка](modules/settings/setup.md)
+    - [Использование](modules/settings/guide.md)
 - Дополнительные возможности GMonit
   - [Поддержка протокола OpenTelemetry](extra_features/otel.md)
   - [Мониторинг SAP](extra_features/sap.md)
