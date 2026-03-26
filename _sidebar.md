@@ -33,6 +33,8 @@
     - [Доступность веб-сервисов](modules/infra/urlcheck.md)
   - [SLO](modules/slo.md)
     - [Использование](modules/slo/guide.md)
+  - [Пользовательские дашборды](modules/custom-dashboards.md)
+    - [Использование](modules/custom-dashboards/guide.md)
   - [Настройки](modules/settings.md)
     - [Настройка](modules/settings/setup.md)
     - [Использование](modules/settings/guide.md)
