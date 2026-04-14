@@ -46,18 +46,120 @@
 
 ## ML-движок корреляции
 
-Для использования ML-алгоритма корреляции необходимо развернуть дополнительный сервис, который выполняет ML-логику.
+Для использования ML-алгоритма корреляции необходимо развернуть дополнительный сервис, который выполняет ML-логику. Сервис поставляется как Docker-образ и требует персистентного хранилища для сохранения параметров модели между перезапусками.
 
 <!-- STEP_GUIDE:START Развёртывание и настройка ML-сервиса корреляции: необходимый сервис, процесс деплоя, параметры коллектора. -->
 
-ML-движок — отдельный сервис, который разворачивается рядом с коллектором. Для развёртывания обратитесь в поддержку GMonit — мы поможем с установкой и настройкой под вашу инфраструктуру.
+### Развёртывание сервиса
+
+#### Docker compose
+
+Создать файл compose.yaml со следующим содержимым.
+
+```yaml
+services:
+  anomaly-correlation-ml-service:
+    image: cr.yandex/crpih7d63vpcj5dfn8jj/anomaly-correlation-ml-service:main
+    environment:
+      - PYTHONUNBUFFERED=1
+      - SERVICE_PARAMS_DIR=/data
+      - NEW_RELIC_HOST=gmonit-collector.<DOMAIN>.ru 
+      - NEW_RELIC_LICENSE_KEY=0123456789-123456789-123456789-123456789
+      - NEW_RELIC_LOG=stdout
+    volumes:
+      - data:/data
+    restart: unless-stopped
+
+  proxy:
+    image: nginx:alpine
+    ports:
+      - 1111:80
+    volumes:
+      - ./proxy/nginx.conf:/etc/nginx/nginx.conf
+      - ./proxy/htpasswd:/etc/nginx/htpasswd
+    depends_on:
+      - anomaly-correlation-ml-service
+    restart: unless-stopped
+
+volumes:
+  data:
+```
+
+#### nginx
+
+Создать файл proxy/nginx.conf со следующим содержимым.
+
+```conf
+worker_processes 1;
+events { worker_connections 1024; }
+
+http {
+    include mime.types;
+    default_type application/octet-stream;
+    client_max_body_size 100m;
+    sendfile on;
+    keepalive_timeout 600;
+    send_timeout 600;
+
+    server {
+        listen 80;
+        server_name localhost;
+        proxy_read_timeout 600;
+        proxy_connect_timeout 600;
+        proxy_send_timeout 600;
+
+        auth_basic           "Auth";
+        auth_basic_user_file /etc/nginx/htpasswd;
+
+        location / {
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_pass http://anomaly-correlation-ml-service:80;
+        }
+    }
+}
+```
+
+Создать файл с учётными данными для basic-авторизации:
+```bash
+# Сгенерировать htpasswd (пароль будет запрошен интерактивно)
+printf "<username>:$(openssl passwd -apr1)\n" > ./proxy/htpasswd
+```
+
+Закодировать `<username>:<password>` в base64:
+```bash
+echo -n '<username>:<password>' | base64
+```
+Полученную строку использовать как значение `ANOMALY_CORRELATION_API_AUTH` в формате `Basic <base64-строка>`.
+
+Сервис будет доступен на порту `1111`. Параметры модели сохраняются в именованный volume `data` и переживают перезапуски контейнера.
+
+> При первом запуске сервис инициализируется без обученных параметров. Первый вызов анализа запустит обучение, которое может занять до нескольких минут.
+
+### Проверка работоспособности
+
+```bash
+curl -u <username>:<password> http://<адрес-сервиса>:1111/healthcheck
+```
+
+Ожидаемый ответ:
+
+```json
+{"success": true, "data": null, "message": "ok"}
+```
+
+Если сервис недоступен — проверьте, запущен ли контейнер (`docker ps`).
+
+### Подключение к коллектору
 
 После развёртывания ML-сервиса задайте переменные окружения коллектора:
 
-| Переменная | Описание |
-|---|---|
-| `ANOMALY_CORRELATION_ML_ENGINE_ENABLED` | `true` — включить ML-движок |
-| `ANOMALY_CORRELATION_API_URL` | URL развёрнутого ML-сервиса (например, `http://anomaly-correlation-ml-service`) |
-| `ANOMALY_CORRELATION_API_AUTHORIZATION` | Заголовок авторизации, если настроен на ML-сервисе |
+| Переменная | Описание | Пример |
+|---|---|---|
+| `ANOMALY_CORRELATION_ML_ENGINE_ENABLED` | Включить ML-движок корреляции | `true` |
+| `ANOMALY_CORRELATION_API_URL` | URL развёрнутого ML-сервиса | `http://<адрес-сервиса>:1111` |
+| `ANOMALY_CORRELATION_API_AUTH` | Авторизация | `Basic <base64-строка>` |
 
 <!-- STEP_GUIDE:END -->
