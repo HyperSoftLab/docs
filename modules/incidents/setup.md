@@ -54,7 +54,7 @@
 
 #### Docker compose
 
-Создать файл docker-compose.yaml со следующим содержимым.
+Создать файл compose.yaml со следующим содержимым.
 
 ```yaml
 services:
@@ -63,7 +63,7 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - SERVICE_PARAMS_DIR=/data
-      - NEW_RELIC_HOST=collector.tseries.ru
+      - NEW_RELIC_HOST=gmonit-collector.<DOMAIN>.ru 
       - NEW_RELIC_LICENSE_KEY=0123456789-123456789-123456789-123456789
       - NEW_RELIC_LOG=stdout
     volumes:
@@ -71,14 +71,14 @@ services:
     restart: unless-stopped
 
   proxy:
-    image: nginx:1.13-alpine
+    image: nginx:alpine
     ports:
       - 1111:80
     volumes:
       - ./proxy/nginx.conf:/etc/nginx/nginx.conf
       - ./proxy/htpasswd:/etc/nginx/htpasswd
     depends_on:
-      - service
+      - anomaly-correlation-ml-service
     restart: unless-stopped
 
 volumes:
@@ -98,15 +98,15 @@ http {
     default_type application/octet-stream;
     client_max_body_size 100m;
     sendfile on;
-    keepalive_timeout 1800;
-    send_timeout 1800;
+    keepalive_timeout 600;
+    send_timeout 600;
 
     server {
         listen 80;
         server_name localhost;
-        proxy_read_timeout 1800;
-        proxy_connect_timeout 1800;
-        proxy_send_timeout 1800;
+        proxy_read_timeout 600;
+        proxy_connect_timeout 600;
+        proxy_send_timeout 600;
 
         auth_basic           "Auth";
         auth_basic_user_file /etc/nginx/htpasswd;
@@ -116,9 +116,6 @@ http {
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
-            add_header "Access-Control-Allow-Origin" *;
-            add_header "Access-Control-Allow-Methods" "GET, POST, DELETE, OPTIONS";
-            add_header "Access-Control-Allow-Headers" "Authorization";
             proxy_pass http://anomaly-correlation-ml-service:80;
         }
     }
@@ -135,6 +132,7 @@ printf "<username>:$(openssl passwd -apr1)\n" > ./proxy/htpasswd
 ```bash
 echo -n '<username>:<password>' | base64
 ```
+Полученную строку использовать как значение `ANOMALY_CORRELATION_API_AUTH` в формате `Basic <base64-строка>`.
 
 Сервис будет доступен на порту `1111`. Параметры модели сохраняются в именованный volume `data` и переживают перезапуски контейнера.
 
@@ -143,7 +141,7 @@ echo -n '<username>:<password>' | base64
 ### Проверка работоспособности
 
 ```bash
-curl http://<адрес-сервиса>/healthcheck
+curl -u <username>:<password> http://<адрес-сервиса>:1111/healthcheck
 ```
 
 Ожидаемый ответ:
@@ -152,7 +150,7 @@ curl http://<адрес-сервиса>/healthcheck
 {"success": true, "data": null, "message": "ok"}
 ```
 
-Если сервис недоступен — проверьте, запущен ли контейнер (`docker ps`) и правильно ли задан `ANOMALY_CORRELATION_API_URL`.
+Если сервис недоступен — проверьте, запущен ли контейнер (`docker ps`).
 
 ### Подключение к коллектору
 
@@ -161,7 +159,7 @@ curl http://<адрес-сервиса>/healthcheck
 | Переменная | Описание | Пример |
 |---|---|---|
 | `ANOMALY_CORRELATION_ML_ENGINE_ENABLED` | Включить ML-движок корреляции | `true` |
-| `ANOMALY_CORRELATION_API_URL` | URL развёрнутого ML-сервиса | `http://anomaly-correlation-ml-service:1111` |
-| `ANOMALY_CORRELATION_API_AUTH` | Авторизация (токен полученный на прошлых шагах) | `Basic <token>` |
+| `ANOMALY_CORRELATION_API_URL` | URL развёрнутого ML-сервиса | `http://<адрес-сервиса>:1111` |
+| `ANOMALY_CORRELATION_API_AUTH` | Авторизация | `Basic <base64-строка>` |
 
 <!-- STEP_GUIDE:END -->
