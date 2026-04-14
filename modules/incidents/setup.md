@@ -125,14 +125,16 @@ http {
 }
 ```
 
-Добавить пользователя для basic авторизации.
-Потребуется пакет apache2-utils (apt) или httpd-tools (yum).
-
+Создать файл с учётными данными для basic-авторизации:
 ```bash
-htpasswd -c ./proxy/htpasswd <username>
+# Сгенерировать htpasswd (пароль будет запрошен интерактивно)
+printf "<username>:$(openssl passwd -apr1)\n" > ./proxy/htpasswd
 ```
 
-Ввести пароли и далее закодировать <username>:<password> в base64 формат (можно с помощью любого online сервиса).
+Закодировать `<username>:<password>` в base64:
+```bash
+echo -n '<username>:<password>' | base64
+```
 
 Сервис будет доступен на порту `1111`. Параметры модели сохраняются в именованный volume `data` и переживают перезапуски контейнера.
 
