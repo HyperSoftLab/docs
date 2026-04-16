@@ -13,12 +13,12 @@
 | `GRAFANA_API_URL` | URL к Grafana API | `http://grafana:3000/api` |
 | `GRAFANA_API_AUTHORIZATION` | Заголовок авторизации | `Bearer glsa_xxxxxxxxxxxx` |
 
-Дополнительные параметры детектирования:
+Дополнительные параметры детектирования (менять не обязательно, значения по умолчанию подходят для большинства случаев):
 
 | Переменная | Описание | По умолчанию |
 |---|---|---|
-| `INCIDENT_MANAGER_DETECT_TIME_WINDOW_MINUTE` | Временное окно детектирования (мин) | `30` |
-| `INCIDENT_MANAGER_DETECT_TIME_WINDOW_SHIFT` | Сдвиг окна назад от момента алерта (мин) | `15` |
+| `INCIDENT_MANAGER_DETECT_TIME_WINDOW_MINUTE` | Ширина временного окна, в котором ищутся аномалии при срабатывании алерта (мин) | `30` |
+| `INCIDENT_MANAGER_DETECT_TIME_WINDOW_SHIFT` | На сколько минут сдвинуть окно в прошлое относительно момента алерта. Позволяет захватить аномалии, начавшиеся до срабатывания алерта | `15` |
 
 Для получения `GRAFANA_API_AUTHORIZATION`:
 
@@ -38,9 +38,9 @@
 | Переменная | Описание | По умолчанию |
 |---|---|---|
 | `ANOMALY_CORRELATION_STATIC_ENGINE_ENABLED` | Включить статический движок | `true` |
-| `UNIFIED_ENGINE_MAX_INTERVAL_MINUTE` | Макс. интервал между алертами/выбросами для группировки (мин) | `10` |
-| `UNIFIED_ENGINE_BFS_DEPTH` | Глубина обхода графа связности сервисов | `0` |
-| `UNIFIED_ENGINE_TOP_OUTLIERS` | Кол-во самых сильных выбросов, используемых как ядро корреляции инцидента | `20` |
+| `UNIFIED_ENGINE_MAX_INTERVAL_MINUTE` | Макс. интервал между алертами/выбросами для группировки в один инцидент (мин). Если два алерта произошли дальше друг от друга — они попадут в разные инциденты | `10` |
+| `UNIFIED_ENGINE_BFS_DEPTH` | Глубина обхода графа связности сервисов. `0` — только прямые связи, `1` — сервисы через одного соседа и т.д. | `0` |
+| `UNIFIED_ENGINE_TOP_OUTLIERS` | Сколько самых сильных выбросов использовать как ядро корреляции инцидента. Чем больше — тем шире охват, но больше шума | `20` |
 
 <!-- STEP_GUIDE:END -->
 
@@ -52,9 +52,13 @@
 
 ### Развёртывание сервиса
 
-#### Docker compose
+1. Создайте директорию для сервиса и перейдите в неё:
 
-Создать файл compose.yaml со следующим содержимым.
+```bash
+mkdir anomaly-correlation && cd anomaly-correlation
+```
+
+2. Создайте файл `compose.yaml`:
 
 ```yaml
 services:
@@ -63,7 +67,7 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - SERVICE_PARAMS_DIR=/data
-      - NEW_RELIC_HOST=gmonit-collector.<DOMAIN>.ru 
+      - NEW_RELIC_HOST=<адрес-коллектора-GMonit>  # например, gmonit-collector.example.ru
       - NEW_RELIC_LICENSE_KEY=0123456789-123456789-123456789-123456789
       - NEW_RELIC_LOG=stdout
     volumes:
@@ -71,7 +75,7 @@ services:
     restart: unless-stopped
 
   proxy:
-    image: nginx:alpine
+    image: nginx:latest
     ports:
       - 1111:80
     volumes:
@@ -85,9 +89,11 @@ volumes:
   data:
 ```
 
-#### nginx
+3. Создайте директорию для конфигурации прокси и файл `proxy/nginx.conf`:
 
-Создать файл proxy/nginx.conf со следующим содержимым.
+```bash
+mkdir proxy
+```
 
 ```conf
 worker_processes 1;
@@ -122,23 +128,32 @@ http {
 }
 ```
 
-Создать файл с учётными данными для basic-авторизации:
+4. Создайте файл с учётными данными для basic-авторизации:
+
 ```bash
 # Сгенерировать htpasswd (пароль будет запрошен интерактивно)
 printf "<username>:$(openssl passwd -apr1)\n" > ./proxy/htpasswd
 ```
 
-Закодировать `<username>:<password>` в base64:
+5. Закодируйте `<username>:<password>` в base64 — эта строка понадобится для подключения коллектора:
+
 ```bash
 echo -n '<username>:<password>' | base64
 ```
+
 Полученную строку использовать как значение `ANOMALY_CORRELATION_API_AUTH` в формате `Basic <base64-строка>`.
+
+6. Запустите сервис:
+
+```bash
+docker compose up -d
+```
 
 Сервис будет доступен на порту `1111`. Параметры модели сохраняются в именованный volume `data` и переживают перезапуски контейнера.
 
 > При первом запуске сервис инициализируется без обученных параметров. Первый вызов анализа запустит обучение, которое может занять до нескольких минут.
 
-### Проверка работоспособности
+7. Проверьте работоспособность:
 
 ```bash
 curl -u <username>:<password> http://<адрес-сервиса>:1111/healthcheck
@@ -154,7 +169,7 @@ curl -u <username>:<password> http://<адрес-сервиса>:1111/healthchec
 
 ### Подключение к коллектору
 
-После развёртывания ML-сервиса задайте переменные окружения коллектора:
+8. После развёртывания ML-сервиса задайте переменные окружения коллектора:
 
 | Переменная | Описание | Пример |
 |---|---|---|
