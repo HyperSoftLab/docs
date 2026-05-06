@@ -195,10 +195,10 @@ journalctl -u newrelic-infra -f | grep nri-oracledb
 grep "nri-oracledb" /var/log/messages | tail -n 20
 ```
 
-Признак успеха:
+После успешной настройки в логах агента появится следующая запись:
 
 ```
-level=info msg="Integration health check finished with success"
+time="YYYY-MM-DDTHH:MM:SS+03:00" level=info msg="Integration health check finished with success" component=integrations.runner.Runner environment=production integration_name=nri-oracledb runner_uid=
 ```
 
 2. Частые ошибки и решения
