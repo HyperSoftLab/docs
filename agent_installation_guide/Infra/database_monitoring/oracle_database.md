@@ -291,5 +291,5 @@ sudo systemctl restart newrelic-infra
 
 ### Дополнительная информация
 
-- Официальная документация New Relic по [OracleDB Integration](https://docs.newrelic.com/docs/infrastructure/host-integrations/host-integrations-list/oracle-database/oracle-database-integration/) (установка, конфигурация, какие метрики собираются).
+- Подробная документация по настройке и устранению неполадок: [New Relic OracleDB Integration](https://docs.newrelic.com/docs/infrastructure/host-integrations/host-integrations-list/oracle-database/oracle-database-integration/).
 - Обратите внимание на безопасность при хранении паролей, используя переменные окружения вместо прямой записи в конфигурации.
