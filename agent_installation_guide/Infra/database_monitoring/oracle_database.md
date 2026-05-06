@@ -120,22 +120,20 @@ lsnrctl status
 
 ### Шаг 4: Установка и активация интеграции OracleDB
 
-1. Установка пакета интеграции
+1. Установите интеграцию:
 
 ```bash
 sudo yum install nri-oracledb
 ```
 
-2. Создание конфигурации интеграции
-
-Скопируйте шаблон:
+2. Скопируйте шаблон конфигурационного файла или создайте новый файл:
 
 ```bash
 sudo cp /etc/newrelic-infra/integrations.d/oracledb-config.yml.sample \
         /etc/newrelic-infra/integrations.d/oracledb-config.yml
 ```
 
-Откройте `/etc/newrelic-infra/integrations.d/oracledb-config.yml` и заполните параметры:
+3. Откройте файл `/etc/newrelic-infra/integrations.d/oracledb-config.yml` и добавьте следующие настройки:
 
 ```yaml
 integrations:
@@ -171,7 +169,7 @@ integrations:
     inventory_source: config/oracledb
 ```
 
-3. Перезапуск агента
+4. Перезапустите агент:
 
 ```bash
 sudo systemctl restart newrelic-infra
