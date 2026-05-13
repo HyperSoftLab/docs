@@ -38,6 +38,9 @@
   - [Настройки](modules/settings.md)
     - [Настройка](modules/settings/setup.md)
     - [Использование](modules/settings/guide.md)
+  - [MCP](modules/mcp.md)
+    - [Настройка](modules/mcp/setup.md)
+    - [Использование](modules/mcp/guide.md)
 - Дополнительные возможности GMonit
   - [Поддержка протокола OpenTelemetry](extra_features/otel.md)
   - [Мониторинг SAP](extra_features/sap.md)
