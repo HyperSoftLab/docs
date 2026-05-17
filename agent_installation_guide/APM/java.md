@@ -136,3 +136,81 @@ java -javaagent:/opt/newrelic/newrelic.jar -jar my-app.jar
    ```
 
 После выполнения этих шагов ваш Docker-образ с интегрированным APM-агентом готов для развертывания в Kubernetes. Убедитесь, что поды с приложением запускаются корректно, а метрики появляются в интерфейсе GMonit.
+
+
+# Мониторинг Keycloak на Quarkus с использованием New Relic Java Agent
+
+Для настройки мониторинга Keycloak на Quarkus с использованием New Relic Java Agent выполните следующие шаги:
+
+
+### Шаг 1: Загрузка и установка агента
+
+1. Загрузите архив с агентом:
+   ```bash
+   curl -O https://download.newrelic.com/newrelic/java-agent/newrelic-agent/current/newrelic-java.zip
+   ```
+
+2. Распакуйте архив в директорию (например, `/opt/newrelic`):
+   ```bash
+   sudo mkdir -p /opt/newrelic
+   sudo unzip newrelic-java.zip -d /opt/newrelic
+   ```
+
+   > **Важно**: Если вы используете другую директорию, убедитесь, что `.jar` файлы агента **не находятся** в пути к классам или в каталогах, указанных в `java.endorsed.dirs`.
+
+
+### Шаг 2: Настройка агента
+
+1. Измените настройки в конфигурационном файле `newrelic.yml` или используйте переменные окружения:
+
+   **Через файл `newrelic.yml`**:
+   ```yaml
+   common: &default_settings
+     license_key: '0123456789-123456789-123456789-123456789' # Ключ (заглушка, не меняем)
+     app_name: "MY_AWESOME_APP" # Название приложения
+     host: "gmonit-collector.<<DOMAIN>>.ru" # Домен коллектора
+     log_file_path: stdout # Логирование агента в stdout
+   ```
+
+   **Через переменные окружения**:
+   ```bash
+   NEW_RELIC_LOG=stdout
+   NEW_RELIC_LICENSE_KEY=0123456789-123456789-123456789-123456789
+   NEW_RELIC_HOST=gmonit-collector.<<DOMAIN>>.ru
+   NEW_RELIC_APP_NAME="MY_AWESOME_APP"
+   ```
+
+2. Если используются самоподписанные сертификаты, явно укажите путь к бандлу сертификатов:
+
+   **Через файл `newrelic.yml`**:
+   ```yaml
+   ca_bundle_path: /gmonit/ssl/rootCA.crt
+   ```
+
+   **Через переменные окружения**:
+   ```bash
+   NEW_RELIC_CA_BUNDLE_PATH=/gmonit/ssl/rootCA.crt
+   ```
+
+
+### Шаг 3: Настройка запуска Keycloak с агентом New Relic
+
+1. Обновите параметры JVM для включения агента New Relic. Добавьте следующие строки в скрипт запуска Keycloak (`kc.sh`) перед запуском:
+   ```bash
+   export JAVA_OPTS="$JAVA_OPTS -javaagent:/opt/newrelic/newrelic.jar -Dnewrelic.config.file=/opt/newrelic/newrelic.yml"
+   ```
+
+2. Запустите Keycloak с обновлёнными параметрами JVM:
+   ```bash
+   bin/kc.sh start-dev
+   ```
+
+
+### Шаг 4: Проверка работы агента
+
+1. Убедитесь, что агент подключён, проверив логи Keycloak. В логах (`stdout`) должно появиться сообщение об успешном подключении агента New Relic.
+2. Перейдите в интерфейс мониторинга GMonit и проверьте, что метрики Keycloak отображаются.
+
+### Дополнительно
+
+Для получения более детальной информации о конфигурации агента ознакомьтесь с [официальной документацией New Relic Java Agent](https://docs.newrelic.com/docs/apm/agents/java-agent/configuration/java-agent-configuration-config-file/).
