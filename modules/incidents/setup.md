@@ -2,7 +2,7 @@
 
 ## Подключение алертов Grafana
 
-Для работы инцидентов коллектор GMonit должен получать алерты из Grafana. Это требует настройки подключения коллектора к Grafana.
+Для работы инцидентов коллектор GMONIT должен получать алерты из Grafana. Это требует настройки подключения коллектора к Grafana.
 
 <!-- STEP_GUIDE:START Настройка подключения коллектора к Grafana для получения алертов: необходимые параметры, получение токена. -->
 
@@ -67,7 +67,7 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - SERVICE_PARAMS_DIR=/data
-      - NEW_RELIC_HOST=<адрес-коллектора-GMonit>  # например, gmonit-collector.example.ru
+      - NEW_RELIC_HOST=<адрес-коллектора-GMONIT>  # например, gmonit-collector.example.ru
       - NEW_RELIC_LICENSE_KEY=0123456789-123456789-123456789-123456789
       - NEW_RELIC_LOG=stdout
     volumes:

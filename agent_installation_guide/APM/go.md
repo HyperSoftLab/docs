@@ -29,7 +29,7 @@ import "github.com/newrelic/go-agent/v3/newrelic"
 app, err := newrelic.NewApplication(
     newrelic.ConfigAppName("MY_AWESOME_APP"),                   // название вашего приложения
     newrelic.ConfigLicense("0123456789-123456789-123456789-123456789"), // заглушка, не изменять
-    newrelic.ConfigHost("gmonit-collector.<DOMAIN>.ru"),       // адрес коллектора GMonit
+    newrelic.ConfigHost("gmonit-collector.<DOMAIN>.ru"),       // адрес коллектора GMONIT
 )
 
 if err != nil {
@@ -68,7 +68,7 @@ go build -o myapp ./...
 
 После запуска приложения убедитесь, что агент успешно подключился:
 - Проверьте логи вашего приложения на наличие сообщений о подключении агента.
-- В интерфейсе мониторинга GMonit появятся метрики вашего приложения.
+- В интерфейсе мониторинга GMONIT появятся метрики вашего приложения.
 
 
 ### 7. **Дополнительная информация**

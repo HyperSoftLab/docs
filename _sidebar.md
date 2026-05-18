@@ -1,4 +1,4 @@
-- [Релизы GMonit](releases.md)
+- [Релизы GMONIT](releases.md)
 - Первоначальная настройка
   - [Минимальные системные требования](system_requirements.md)
   - [Масштабирование системы](scale.md)
@@ -20,7 +20,7 @@
     - [Redis](agent_installation_guide/Infra/database_monitoring/redis_agents_install.md)
   - [Мониторинг браузера (web)](agent_installation_guide/RUM/real_user_monitoring.md)
   - [Мобильный мониторинг](agent_installation_guide/Mobile/mobile_monitoring.md)
-- Модули GMonit
+- Модули GMONIT
   - [APM](modules/APM.md)
   - Карта сервисов
   - [Распределенная трассировка](modules/distributed_tracing.md)
@@ -41,7 +41,7 @@
   - [MCP](modules/mcp.md)
     - [Настройка](modules/mcp/setup.md)
     - [Использование](modules/mcp/guide.md)
-- Дополнительные возможности GMonit
+- Дополнительные возможности GMONIT
   - [Поддержка протокола OpenTelemetry](extra_features/otel.md)
   - [Мониторинг SAP](extra_features/sap.md)
 - Сценарии использования
@@ -49,15 +49,15 @@
   - [Отладка проблем с производительностью](use_cases/performance_troubleshooting.md)
   - [Анализ высокой нагрузки на сервис](use_cases/workload_analysis.md)
   - [Анализ ошибки работы приложения](use_cases/error_analysis.md)
-- [Модель данных GMonit](data_model.md)
+- [Модель данных GMONIT](data_model.md)
   - [Метрики](data_model/metrics.md)
   - [События](data_model/events.md)
   - [Трейсы](data_model/traces.md)
   - [Логи](data_model/logs.md)
 
 <!---
-  - [Инструкция по разворачиванию GMonit](install.md)
-  - [Инструкция по миграции GMonit с версии 2 на версию 3](migration_v3.md)
+  - [Инструкция по разворачиванию GMONIT](install.md)
+  - [Инструкция по миграции GMONIT с версии 2 на версию 3](migration_v3.md)
 -->
 
 <!---
@@ -69,7 +69,7 @@
     - [Поиск и анализ первопричин ошибки](use_cases/root_cause_analysis.md)
 -->
 <!---
-  - [Пользовательское расширение GMonit](customization.md)
+  - [Пользовательское расширение GMONIT](customization.md)
     - [Построение запросов](customization/writing_queries.md)
     - [Создание собственных визуализаций](customization/dashboards.md)
     - [Подключение внешних источников данных](customization/external_datasources.md)

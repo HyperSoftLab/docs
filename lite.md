@@ -1,4 +1,4 @@
-# Инструкция по разворачиванию GMonit-Lite в Yandex.Cloud
+# Инструкция по разворачиванию GMONIT-Lite в Yandex.Cloud
 ## Перед установкой
 1. Добавить 2 DNS записи на 2 под-домена (1 для графаны, 1 для
    коллектора).
@@ -15,7 +15,7 @@
 ```sh
 ssh gmonit@<vm-ip-address>
 ```
-2. Зайти в каталог с GMonit
+2. Зайти в каталог с GMONIT
 ```sh
 cd ~/gmonit-lite
 ```
@@ -25,7 +25,7 @@ cp .env.example .env
 ```
 4. Заполнить .env. Пароли и токены можно сгенерировать с помощью
    `openssl rand -base64 <n>`, где `<n>` - длинна пароля/токена
-5. Запустить GMonit
+5. Запустить GMONIT
 ```sh
 docker compose up -d
 ```

@@ -8,7 +8,7 @@
 - Информация о кешировании
 
 ## Примеры
-### Метрики GMonit Collector (java)
+### Метрики GMONIT Collector (java)
 ![java](./../screenshots/platform-java.png)
 
 ### Метрики NR Infrastructure Agent (go)

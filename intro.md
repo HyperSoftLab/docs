@@ -1,4 +1,4 @@
-GMonit использует [APM агенты NewRelic](https://docs.newrelic.com/docs/apm/new-relic-apm/getting-started/introduction-apm/).
+GMONIT использует [APM агенты NewRelic](https://docs.newrelic.com/docs/apm/new-relic-apm/getting-started/introduction-apm/).
 
 Нужно задать хост `NEW_RELIC_HOST=collector.tseries.ru` и
 ключ лицензии `NEW_RELIC_LICENSE_KEY=0123456789-123456789-123456789-123456789`.
