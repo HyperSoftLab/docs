@@ -80,7 +80,7 @@ services:
       GMONIT_GRAFANA_COLLECTOR_USER: grafana-http-user
       GMONIT_GRAFANA_COLLECTOR_PASSWORD: ${COLLECTOR_DATASOURCE_PASSWORD}
 
-      #Браузерный мониторинг включен для веб-интерфейса GMonit. Это должен быть внешний URL.
+      #Браузерный мониторинг включен для веб-интерфейса GMONIT. Это должен быть внешний URL.
       GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL: https://${COLLECTOR_DOMAIN}
 
 

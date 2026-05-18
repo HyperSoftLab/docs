@@ -1,5 +1,5 @@
-# Миграция GMonit с версии 2 на версию 3
-Переход с версии 2 на версию 3 является подготовительным этапом для запуска новой системы работы с конфигурациями в GMonit.
+# Миграция GMONIT с версии 2 на версию 3
+Переход с версии 2 на версию 3 является подготовительным этапом для запуска новой системы работы с конфигурациями в GMONIT.
 
 ## Инструкция по миграции:
 1. Cоздать в Postgres базу данных `datomic`
@@ -70,7 +70,7 @@ image: cr.yandex/crpih7d63vpcj5dfn8jj/grafana:v3
 ```yaml
 image: cr.yandex/crpih7d63vpcj5dfn8jj/collector:v3
 ```
-7. Если GMonit развернут через `docker-compose.yml`, добавить сервису `collector` зависимость от сервиса `transactor`
+7. Если GMONIT развернут через `docker-compose.yml`, добавить сервису `collector` зависимость от сервиса `transactor`
 ```yaml
   collector:
     depends_on:

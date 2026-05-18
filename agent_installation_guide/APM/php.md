@@ -2,7 +2,7 @@
 
 Агент мониторинга PHP от New Relic состоит из двух взаимодействующих частей:  
 1. **Расширение для PHP**, которое занимается сбором метрик и трейсов.  
-2. **Прокси-демон (`newrelic-daemon`)**, который отвечает за взаимодействие с бэкендом мониторинга (в данном случае — с GMonit).
+2. **Прокси-демон (`newrelic-daemon`)**, который отвечает за взаимодействие с бэкендом мониторинга (в данном случае — с GMONIT).
 
 Ниже собрана полная инструкция по установке и настройке данного агента в различных окружениях (Ubuntu/Debian, CentOS, контейнерные среды). Если требуется дополнительная информация, обращайтесь к [официальной документации](https://docs.newrelic.com/docs/apm/agents/php-agent/installation/php-agent-installation-overview).
 
@@ -13,7 +13,7 @@
 
 ```ini
 newrelic.license = 0123456789-123456789-123456789-123456789 #Ключ(заглушка, не меняем)
-newrelic.daemon.collector_host = gmonit-collector.<DOMAIN>.ru #Домен коллектора GMonit
+newrelic.daemon.collector_host = gmonit-collector.<DOMAIN>.ru #Домен коллектора GMONIT
 newrelic.appname = "MY_AWESOME_APP" #Название приложения
 newrelic.logfile = stdout #Логирование агента в stdout
 ```
@@ -21,7 +21,7 @@ newrelic.logfile = stdout #Логирование агента в stdout
 > Если вы настраиваете агент через переменные окружения, то эквивалентом будут:
 > ```bash
 > export NEW_RELIC_LICENSE_KEY=0123456789-123456789-123456789-123456789 #Ключ(заглушка, не меняем)
-> export NEW_RELIC_HOST=gmonit-collector.name.ru #Домен коллектора GMonit
+> export NEW_RELIC_HOST=gmonit-collector.name.ru #Домен коллектора GMONIT
 > export NEW_RELIC_APP_NAME="MY_AWESOME_APP" #Название приложения
 > export NEW_RELIC_LOG=stdout #Логирование агента в stdout
 > ```
@@ -65,7 +65,7 @@ newrelic.logfile = stdout #Логирование агента в stdout
    ```
 
 6. **Проверка работы**  
-   Сгенерируйте трафик к вашему приложению и проверьте метрики в интерфейсе GMonit.
+   Сгенерируйте трафик к вашему приложению и проверьте метрики в интерфейсе GMONIT.
 
 
 ### 2. Установка агента New Relic для PHP на CentOS
@@ -98,7 +98,7 @@ newrelic.logfile = stdout #Логирование агента в stdout
    ```
 
 6. **Проверка работы**  
-   Сгенерируйте трафик к вашему приложению и проверьте метрики в интерфейсе GMonit.
+   Сгенерируйте трафик к вашему приложению и проверьте метрики в интерфейсе GMONIT.
 
 
 ### 3. Установка агента New Relic для PHP в контейнерных средах (Docker и др.)
@@ -123,7 +123,7 @@ newrelic.logfile = stdout #Логирование агента в stdout
      2. Настройте параметры в `newrelic.ini` или через переменные окружения. Не забудьте добавить **обязательные**:
         ```ini
         newrelic.license = 0123456789-123456789-123456789-123456789 #Ключ(заглушка, не меняем)
-        newrelic.daemon.collector_host = gmonit-collector.<DOMAIN>.ru #Домен коллектора GMonit
+        newrelic.daemon.collector_host = gmonit-collector.<DOMAIN>.ru #Домен коллектора GMONIT
         newrelic.appname = "MY_AWESOME_APP" #Название приложения
         newrelic.logfile = stdout #Логирование агента в stdout
         ```
@@ -141,7 +141,7 @@ newrelic.logfile = stdout #Логирование агента в stdout
    ```
 
 4. **Проверка работы**  
-   Сгенерируйте трафик к вашему приложению и проверьте метрики в интерфейсе GMonit.
+   Сгенерируйте трафик к вашему приложению и проверьте метрики в интерфейсе GMONIT.
 
 
 ### Дополнительная информация
@@ -180,7 +180,7 @@ newrelic_add_custom_parameter(string $key, scalar $value)
 - Метки запросов
 - Прочие специфичные данные
 
-Эти параметры будут видны в трассировках транзакций в интерфейсе GMonit.
+Эти параметры будут видны в трассировках транзакций в интерфейсе GMONIT.
 
 #### Примечание
 Убедитесь, что расширение New Relic для PHP загружено в вашу среду (проверьте через `phpinfo()` или `php -m`).

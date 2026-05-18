@@ -10,13 +10,13 @@ head-based сэмплирования, где данные выбираются 
 фиксированной вероятностью. Этот подход специально оптимизирует хранение
 и анализ таких транзаций, как длительные процессы или ошибки.
 
-Для реализации Infinite Tracing в GMonit мы используем OpenTelemetry
+Для реализации Infinite Tracing в GMONIT мы используем OpenTelemetry
 Collector и специальный [tail_sampling
 процессор](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/tailsamplingprocessor/README.md).
 
 ### Настройка
-Помимо GMonit collector'а нам понадобится [дистрибутив otelcollector от
-GMonit](https://github.com/HyperSoftLab/opentelemetry-collector)
+Помимо GMONIT collector'а нам понадобится [дистрибутив otelcollector от
+GMONIT](https://github.com/HyperSoftLab/opentelemetry-collector)
 настроенный следующим образом:
 1. добавьте в `compose.yml` следующий сервис
 ```yaml
@@ -36,7 +36,7 @@ services:
 ```yaml
 receivers:
   nrinfinitetracing:
-    secret_token: ${SECRET_TOKEN} # тот же самый что и в GMonit collector
+    secret_token: ${SECRET_TOKEN} # тот же самый что и в GMONIT collector
     grpc:
       endpoint: "0.0.0.0:4317"
       transport: "tcp"

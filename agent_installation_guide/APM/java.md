@@ -34,7 +34,7 @@ sudo unzip newrelic-java.zip -d /opt/newrelic
    ```bash
    NEW_RELIC_LOG=stdout #Логирование агента в stdout
    NEW_RELIC_LICENSE_KEY=0123456789-123456789-123456789-123456789 #Ключ(заглушка, не меняем)
-   NEW_RELIC_HOST=gmonit-collector.<DOMAIN>.ru #Домен коллектора GMonit
+   NEW_RELIC_HOST=gmonit-collector.<DOMAIN>.ru #Домен коллектора GMONIT
    NEW_RELIC_APP_NAME="MY_AWESOME_APP" #Название приложения - замените на своё
    ```
 
@@ -68,7 +68,7 @@ java -javaagent:/opt/newrelic/newrelic.jar -jar my-app.jar
 ### 5. **Проверка работы агента**
 После запуска приложения убедитесь, что агент успешно подключился:
 - В логах агента (`stdout`) должно появиться сообщение об успешном подключении.
-- В интерфейсе мониторинга GMonit появятся метрики приложения.
+- В интерфейсе мониторинга GMONIT появятся метрики приложения.
 
 
 ### 6. **Подробнее**
@@ -104,7 +104,7 @@ java -javaagent:/opt/newrelic/newrelic.jar -jar my-app.jar
    common: &default_settings
      license_key: '0123456789-123456789-123456789-123456789' #Ключ(заглушка, не меняем)
      app_name: "MY_AWESOME_APP" #Название приложения - замените на своё
-     host: "gmonit-collector.<DOMAIN>.ru" #Домен коллектора GMonit
+     host: "gmonit-collector.<DOMAIN>.ru" #Домен коллектора GMONIT
      agent_enabled: true
      log_level: info
      log_file_path: stdout #Логирование агента в stdout
@@ -135,4 +135,4 @@ java -javaagent:/opt/newrelic/newrelic.jar -jar my-app.jar
    kind load docker-image my-java-app-with-newrelic:latest
    ```
 
-После выполнения этих шагов ваш Docker-образ с интегрированным APM-агентом готов для развертывания в Kubernetes. Убедитесь, что поды с приложением запускаются корректно, а метрики появляются в интерфейсе GMonit.
+После выполнения этих шагов ваш Docker-образ с интегрированным APM-агентом готов для развертывания в Kubernetes. Убедитесь, что поды с приложением запускаются корректно, а метрики появляются в интерфейсе GMONIT.

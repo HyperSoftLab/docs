@@ -1,7 +1,7 @@
-# Инструкция по разворачиванию GMonit
+# Инструкция по разворачиванию GMONIT
 
-## Разворачивание GMonit через Docker Compose
-С помощью [Docker Compose](https://docs.docker.com/compose/) можно просто и удобно разворачивать, настраивать и обновлять GMonit в рамках одного хоста.
+## Разворачивание GMONIT через Docker Compose
+С помощью [Docker Compose](https://docs.docker.com/compose/) можно просто и удобно разворачивать, настраивать и обновлять GMONIT в рамках одного хоста.
 
 Шаги установки:
 
@@ -9,7 +9,7 @@
 
 2. [Установить Docker Compose](https://docs.docker.com/compose/install/)
 
-3. Запросить у команды GMonit `ключ` для доступа к `docker-репозиторию` и залогиниться выполнив на хосте команду:
+3. Запросить у команды GMONIT `ключ` для доступа к `docker-репозиторию` и залогиниться выполнив на хосте команду:
 
 ```bash
 cat key.json | docker login \
@@ -119,7 +119,7 @@ services:
       NEW_RELIC_CA_BUNDLE_PATH: /gmonit/ssl/rootCA.crt
       NEW_RELIC_APP_NAME: "[GMonit] Collector"
 
-      LICENSE_KEY: <<YOUR_LICENSE_KEY>>  # указать актуальный ключ лицензии GMonit
+      LICENSE_KEY: <<YOUR_LICENSE_KEY>>  # указать актуальный ключ лицензии GMONIT
 
       PORT:               8080
       CLICKHOUSE_URL:     http://clickhouse:8123
@@ -197,4 +197,4 @@ volumes:
 
 - `docker volume create gmonit_caddy_data`
 
-6. Запросить у команды GMonit актуальный `лицензионный колюч`.
+6. Запросить у команды GMONIT актуальный `лицензионный колюч`.
