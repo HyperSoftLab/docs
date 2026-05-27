@@ -178,3 +178,122 @@ curl -u <username>:<password> http://<адрес-сервиса>:1111/healthchec
 | `ANOMALY_CORRELATION_API_AUTH` | Авторизация | `Basic <base64-строка>` |
 
 <!-- STEP_GUIDE:END -->
+
+## Materialized Outliers
+
+По умолчанию выбросы вычисляются «на лету» при каждом запросе — это тяжёлый запрос с агрегацией по всей истории метрик. Materialized Outliers переносит это вычисление в фоновый процесс: выбросы считаются при поступлении данных и сохраняются в отдельную таблицу. Запросы к инцидентам становятся быстрее, нагрузка на ClickHouse при детектировании снижается.
+
+Подсистема создаёт:
+- `nr_metric_quantiles_hourly` — почасовые квантили метрик (TTL 3 дня)
+- `nr_metric_quantiles_hourly_mv` — MV, заполняющий квантили из входящих метрик
+- `nr_metric_quantiles_dict` — словарь, кеширующий квантили (обновляется каждые 2–5 мин)
+- `nr_metric_outliers` — таблица предвычисленных выбросов (TTL 30 дней)
+- `nr_metric_outliers_mv` — MV, записывающий выбросы при поступлении метрик
+
+<!-- STEP_GUIDE:START Включение флага MATERIALIZED_OUTLIERS_ENABLED: переменная окружения, что происходит при включении. Бэкфил: зачем нужен, три запроса по порядку (квантили → перезагрузка словаря → выбросы). Поведение без бэкфила: MVs собирают только новые данные, когда появятся первые результаты. -->
+
+### Включение
+
+Задайте переменную окружения коллектора и перезапустите его:
+
+| Переменная | Значение |
+|---|---|
+| `MATERIALIZED_OUTLIERS_ENABLED` | `true` |
+
+При старте коллектор создаст все необходимые таблицы, MV, UDF и словарь. С этого момента новые метрики автоматически попадают в `nr_metric_outliers`.
+
+### Бэкфил
+
+Без бэкфила MV накапливают данные только с момента включения. Данных в словаре квантилей не будет несколько часов — выбросы не будут обнаруживаться, пока не накопится достаточная история.
+
+Чтобы заполнить таблицы историческими данными, выполните три запроса **по порядку** в ClickHouse.
+
+> Рекомендуемый период бэкфила — 1–2 дня. Этого достаточно для формирования базовой статистики квантилей. Если требуется заполнение за более длительный период — обратитесь к команде разработки.
+
+**1. Заполнить квантили:**
+
+```sql
+-- Задайте период бэкфила (не превышайте TTL таблицы — 3 дня).
+-- Если нужно, добавьте фильтр по account_id.
+INSERT INTO nr_metric_quantiles_hourly
+SELECT
+    account_id,
+    cityHash64(account_id, app_name, language, host, pid, name, scope) AS key,
+    toStartOfHour(start) AS hour,
+    quantilesState(0.25, 0.75, 0.5)(call_count) AS call_count_state,
+    quantilesState(0.25, 0.75, 0.5)(
+        toFloat32(if(call_count = 0, 0, total_call_time / call_count))
+    ) AS avg_state
+FROM nr_metric_data_by_name_by_minute_v2
+WHERE scope = ''
+  AND NOT (
+    startsWith(name, 'GMonit/')         OR
+    startsWith(name, 'Supportability/') OR
+    startsWith(name, 'Custom/')         OR
+    startsWith(name, 'Instrument/')
+  )
+  AND start >= '<BACKFILL_FROM>'  -- например: '2025-01-20 00:00:00'
+  AND start <  '<BACKFILL_TO>'    -- например: '2025-01-23 00:00:00'
+GROUP BY account_id, key, hour
+```
+
+**2. Перезагрузить словарь** (не ждать авто-обновления):
+
+```sql
+SYSTEM RELOAD DICTIONARY nr_metric_quantiles_dict
+```
+
+**3. Заполнить выбросы:**
+
+```sql
+-- Задайте тот же период, что и для квантилей (не превышайте TTL — 30 дней).
+-- Если нужно, добавьте фильтр по account_id.
+INSERT INTO nr_metric_outliers
+WITH
+    dictGet('nr_metric_quantiles_dict', 'call_count_qs',
+        cityHash64(account_id, app_name, language, host, pid, name, scope)) AS call_count_qs,
+    dictGet('nr_metric_quantiles_dict', 'avg_qs',
+        cityHash64(account_id, app_name, language, host, pid, name, scope)) AS avg_qs,
+    if(call_count = 0, 0, total_call_time / call_count) AS average
+SELECT
+    account_id, app_name, language, host, pid, name, scope, start,
+    outlier_check(
+        outlier_score(call_count, call_count_qs[1], call_count_qs[2]),
+        call_count, call_count_qs[3], 3, 0.1
+    ) AS call_count_score,
+    call_count                                                        AS call_count_value,
+    call_count_qs[2] + 3 * (call_count_qs[2] - call_count_qs[1])     AS call_count_threshold,
+    call_count_qs[1] - 3 * (call_count_qs[2] - call_count_qs[1])     AS call_count_threshold_lower,
+    outlier_check(
+        outlier_score(average, avg_qs[1], avg_qs[2]),
+        average, avg_qs[3], 3, 0.1
+    ) AS avg_score,
+    average                                                           AS avg_value,
+    avg_qs[2] + 3 * (avg_qs[2] - avg_qs[1])                          AS avg_threshold,
+    avg_qs[1] - 3 * (avg_qs[2] - avg_qs[1])                          AS avg_threshold_lower,
+    agent_version,
+    labels
+FROM nr_metric_data_null_v2
+WHERE start >= '<BACKFILL_FROM>'  -- например: '2025-01-20 00:00:00'
+  AND start <  '<BACKFILL_TO>'    -- например: '2025-01-23 00:00:00'
+  AND scope = ''
+  AND NOT (
+    startsWith(name, 'GMonit/')         OR
+    startsWith(name, 'Supportability/') OR
+    startsWith(name, 'Custom/')         OR
+    startsWith(name, 'Instrument/')
+  )
+  AND dictHas('nr_metric_quantiles_dict',
+        cityHash64(account_id, app_name, language, host, pid, name, scope))
+  AND (call_count_score > 0 OR avg_score > 0)
+SETTINGS allow_experimental_analyzer = 1
+```
+
+### Без бэкфила
+
+Если бэкфил не выполнялся:
+- Квантили накапливаются по мере поступления новых метрик — по одной записи на метрику в час
+- Словарь использует последние 48 часов квантилей; пока они не накопились, выбросы не обнаруживаются
+- Первые выбросы появятся через несколько часов после включения, стабильное качество — через 1–2 дня
+
+<!-- STEP_GUIDE:END -->
