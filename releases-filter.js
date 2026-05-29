@@ -8,39 +8,31 @@
 
   const STYLE = `
     .rn-filter {
-      display: flex;
+      display: inline-flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 12px 20px;
       margin: 16px 0 24px;
-    }
-    .rn-chip {
+      padding: 12px 16px;
       background: #f5f7fa;
-      border: 1px solid #d0d7de;
+      border: 1px solid #e1e4e8;
+      border-radius: 8px;
+      width: fit-content;
+      max-width: 100%;
+    }
+    .rn-check {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
       color: #24292f;
-      border-radius: 999px;
-      padding: 6px 14px;
-      font-size: 13px;
       cursor: pointer;
-      transition: background .15s, border-color .15s, color .15s;
+      user-select: none;
     }
-    .rn-chip:hover { background: #eaeef2; }
-    .rn-chip.active {
-      background: #42b983;
-      border-color: #42b983;
-      color: #fff;
+    .rn-check input {
+      margin: 0;
+      cursor: pointer;
     }
-    [data-rn-filter="new"]     li[data-rn-category]:not([data-rn-category="new"]),
-    [data-rn-filter="improve"] li[data-rn-category]:not([data-rn-category="improve"]),
-    [data-rn-filter="fix"]     li[data-rn-category]:not([data-rn-category="fix"]),
-    [data-rn-filter="perf"]    li[data-rn-category]:not([data-rn-category="perf"]) {
-      display: none;
-    }
-    [data-rn-filter="new"]     h3[data-rn-has]:not([data-rn-has~="new"]),
-    [data-rn-filter="improve"] h3[data-rn-has]:not([data-rn-has~="improve"]),
-    [data-rn-filter="fix"]     h3[data-rn-has]:not([data-rn-has~="fix"]),
-    [data-rn-filter="perf"]    h3[data-rn-has]:not([data-rn-has~="perf"]) {
-      display: none;
-    }
+    .rn-hidden { display: none !important; }
   `;
 
   function categorize(text) {
@@ -60,38 +52,59 @@
     let node = rnHeading.nextElementSibling;
     while (node && node.tagName !== 'H2') {
       if (node.tagName === 'H3') {
-        const cats = new Set();
+        node.dataset.rnSection = '1';
         let sub = node.nextElementSibling;
         while (sub && sub.tagName !== 'H3' && sub.tagName !== 'H2') {
           if (sub.tagName === 'UL') {
             sub.querySelectorAll(':scope > li').forEach((li) => {
-              const cat = categorize(li.textContent);
-              li.dataset.rnCategory = cat;
-              if (cat !== 'other') cats.add(cat);
+              li.dataset.rnCategory = categorize(li.textContent);
             });
           }
           sub = sub.nextElementSibling;
         }
-        node.dataset.rnHas = [...cats].join(' ');
       }
       node = node.nextElementSibling;
     }
   }
 
+  function applyFilter(content, active) {
+    content.querySelectorAll('li[data-rn-category]').forEach((li) => {
+      const cat = li.dataset.rnCategory;
+      const visible = cat === 'other' || active.has(cat);
+      li.classList.toggle('rn-hidden', !visible);
+    });
+    content.querySelectorAll('h3[data-rn-section]').forEach((h3) => {
+      let hasVisible = false;
+      let node = h3.nextElementSibling;
+      while (node && node.tagName !== 'H3' && node.tagName !== 'H2') {
+        if (node.tagName === 'UL') {
+          node.querySelectorAll(':scope > li').forEach((li) => {
+            if (!li.classList.contains('rn-hidden')) hasVisible = true;
+          });
+        }
+        node = node.nextElementSibling;
+      }
+      h3.classList.toggle('rn-hidden', !hasVisible);
+    });
+  }
+
   function buildToolbar(content) {
     const bar = document.createElement('div');
     bar.className = 'rn-filter';
-    bar.innerHTML = [
-      '<button class="rn-chip active" data-filter="all">Все</button>',
-      ...CATEGORIES.map(c =>
-        `<button class="rn-chip" data-filter="${c.key}">${c.emoji} ${c.label}</button>`
-      )
-    ].join('');
-    bar.addEventListener('click', (e) => {
-      const btn = e.target.closest('.rn-chip');
-      if (!btn) return;
-      bar.querySelectorAll('.rn-chip').forEach(b => b.classList.toggle('active', b === btn));
-      content.dataset.rnFilter = btn.dataset.filter;
+    bar.innerHTML = CATEGORIES.map(c => `
+      <label class="rn-check">
+        <input type="checkbox" checked data-cat="${c.key}">
+        <span>${c.emoji} ${c.label}</span>
+      </label>
+    `).join('');
+
+    const active = new Set(CATEGORIES.map(c => c.key));
+    bar.addEventListener('change', (e) => {
+      const cb = e.target.closest('input[type="checkbox"]');
+      if (!cb) return;
+      const cat = cb.dataset.cat;
+      if (cb.checked) active.add(cat); else active.delete(cat);
+      applyFilter(content, active);
     });
     return bar;
   }
@@ -111,7 +124,6 @@
     injectStyles();
     tagItems(rnHeading);
     rnHeading.insertAdjacentElement('afterend', buildToolbar(content));
-    content.dataset.rnFilter = 'all';
     content.dataset.rnEnhanced = '1';
   }
 
