@@ -157,23 +157,20 @@
     document.head.appendChild(el);
   }
 
-  function tagItems(rnHeading) {
-    let node = rnHeading.nextElementSibling;
-    while (node && node.tagName !== 'H2') {
-      if (node.tagName === 'H3') {
-        node.dataset.rnSection = '1';
-        let sub = node.nextElementSibling;
-        while (sub && sub.tagName !== 'H3' && sub.tagName !== 'H2') {
-          if (sub.tagName === 'UL') {
-            sub.querySelectorAll(':scope > li').forEach((li) => {
-              li.dataset.rnCategory = categorize(li.textContent);
-            });
-          }
-          sub = sub.nextElementSibling;
+  function tagItems(content) {
+    content.querySelectorAll('h3').forEach((h3) => {
+      if (h3.closest('details')) return;
+      h3.dataset.rnSection = '1';
+      let sub = h3.nextElementSibling;
+      while (sub && sub.tagName !== 'H3' && sub.tagName !== 'H2') {
+        if (sub.tagName === 'UL') {
+          sub.querySelectorAll(':scope > li').forEach((li) => {
+            li.dataset.rnCategory = categorize(li.textContent);
+          });
         }
+        sub = sub.nextElementSibling;
       }
-      node = node.nextElementSibling;
-    }
+    });
   }
 
   function ensureCount(h3) {
@@ -229,16 +226,11 @@
     return bar;
   }
 
-  function findLatestBuild(rnHeading) {
-    let node = rnHeading.nextElementSibling;
-    while (node && node.tagName !== 'H2') {
-      if (node.tagName === 'UL') {
-        for (const li of node.querySelectorAll(':scope > li')) {
-          const m = li.textContent.match(/v4-\d+/);
-          if (m) return m[0];
-        }
-      }
-      node = node.nextElementSibling;
+  function findLatestBuild(content) {
+    for (const li of content.querySelectorAll('ul > li')) {
+      if (li.closest('details')) continue;
+      const m = li.textContent.match(/v4-\d+/);
+      if (m) return m[0];
     }
     return null;
   }
@@ -300,7 +292,7 @@
 
     const toMove = [];
     let node = processH.nextElementSibling;
-    while (node && node.tagName !== 'H2') {
+    while (node && node.tagName !== 'H2' && node.tagName !== 'H3') {
       toMove.push(node);
       node = node.nextElementSibling;
     }
@@ -316,22 +308,22 @@
     if (!content) return;
     if (content.dataset.rnEnhanced) return;
 
-    const rnHeading = [...content.querySelectorAll('h2')]
-      .find(h => h.textContent.trim().startsWith('Release notes'));
-    if (!rnHeading) return;
-
     injectStyles();
-    tagItems(rnHeading);
     collapseProcess(content);
+    tagItems(content);
 
     const h1 = content.querySelector('h1');
-    const latest = findLatestBuild(rnHeading);
+    const latest = findLatestBuild(content);
     if (h1 && latest) {
       h1.insertAdjacentElement('afterend', buildLatestBanner(latest));
     }
 
-    const toolbar = buildToolbar(content);
-    rnHeading.insertAdjacentElement('afterend', toolbar);
+    const details = content.querySelector('details.rn-collapsible');
+    const anchor = details || h1;
+    if (anchor) {
+      anchor.insertAdjacentElement('afterend', buildToolbar(content));
+    }
+
     applyFilter(content, new Set(CATEGORIES.map(c => c.key)));
     content.dataset.rnEnhanced = '1';
   }
