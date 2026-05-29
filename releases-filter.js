@@ -33,6 +33,71 @@
       cursor: pointer;
     }
     .rn-hidden { display: none !important; }
+    .rn-latest {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 16px 0 24px;
+      padding: 14px 20px;
+      background: #eef7f1;
+      border: 1px solid #cce7d6;
+      border-radius: 8px;
+      color: #24292f;
+    }
+    .rn-latest-head {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .rn-latest-label { font-size: 14px; color: #57606a; }
+    .rn-latest-tag {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a7f4e;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .rn-latest-images {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .rn-latest-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .rn-latest-row code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 13px;
+      color: #24292f;
+      background: rgba(0,0,0,0.04);
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+    .rn-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      padding: 0;
+      background: transparent;
+      border: 1px solid #cce7d6;
+      border-radius: 4px;
+      color: #1a7f4e;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background .15s, color .15s, border-color .15s;
+    }
+    .rn-copy-btn:hover { background: rgba(26,127,78,0.12); }
+    .rn-copy-btn.rn-copied {
+      background: #1a7f4e;
+      color: #fff;
+      border-color: #1a7f4e;
+    }
+    .rn-copy-btn svg { display: block; }
   `;
 
   function categorize(text) {
@@ -109,6 +174,64 @@
     return bar;
   }
 
+  function findLatestBuild(rnHeading) {
+    let node = rnHeading.nextElementSibling;
+    while (node && node.tagName !== 'H2') {
+      if (node.tagName === 'UL') {
+        for (const li of node.querySelectorAll(':scope > li')) {
+          const m = li.textContent.match(/v4-\d+/);
+          if (m) return m[0];
+        }
+      }
+      node = node.nextElementSibling;
+    }
+    return null;
+  }
+
+  const ICON_COPY = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  const ICON_CHECK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+
+  function makeCopyButton(text) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'rn-copy-btn';
+    btn.setAttribute('aria-label', 'Копировать');
+    btn.title = 'Скопировать';
+    btn.innerHTML = ICON_COPY;
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.innerHTML = ICON_CHECK;
+        btn.classList.add('rn-copied');
+        setTimeout(() => {
+          btn.innerHTML = ICON_COPY;
+          btn.classList.remove('rn-copied');
+        }, 900);
+      } catch (_) {}
+    });
+    return btn;
+  }
+
+  function buildLatestBanner(tag) {
+    const div = document.createElement('div');
+    div.className = 'rn-latest';
+    div.innerHTML = `
+      <div class="rn-latest-head">
+        <span class="rn-latest-label">Последняя стабильная сборка:</span>
+        <code class="rn-latest-tag">${tag}</code>
+      </div>
+      <div class="rn-latest-images">
+        <div class="rn-latest-row"><code>cr.yandex/gmonit.ru/collector:${tag}</code></div>
+        <div class="rn-latest-row"><code>cr.yandex/gmonit.ru/grafana:${tag}</code></div>
+      </div>
+    `;
+    div.querySelector('.rn-latest-head').appendChild(makeCopyButton(tag));
+    div.querySelectorAll('.rn-latest-row').forEach((row) => {
+      row.appendChild(makeCopyButton(row.querySelector('code').textContent));
+    });
+    return div;
+  }
+
   function enhance() {
     const path = (window.location.hash || '').split('?')[0];
     if (!path.includes('releases')) return;
@@ -123,6 +246,13 @@
 
     injectStyles();
     tagItems(rnHeading);
+
+    const h1 = content.querySelector('h1');
+    const latest = findLatestBuild(rnHeading);
+    if (h1 && latest) {
+      h1.insertAdjacentElement('afterend', buildLatestBanner(latest));
+    }
+
     rnHeading.insertAdjacentElement('afterend', buildToolbar(content));
     content.dataset.rnEnhanced = '1';
   }

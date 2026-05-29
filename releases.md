@@ -14,10 +14,10 @@
 
 Например, релиз 31 июля 2025 имеет номер сборки 4590 и опубликован со следующими тегами:
 ```
-cr.yandex/c...j/collector:v4
-cr.yandex/c...j/collector:v4-4590
-cr.yandex/c...j/grafana:v4
-cr.yandex/c...j/grafana:v4-4590
+cr.yandex/gmonit.ru/collector:v4
+cr.yandex/gmonit.ru/collector:v4-4590
+cr.yandex/gmonit.ru/grafana:v4
+cr.yandex/gmonit.ru/grafana:v4-4590
 ```
 
 Номерной тег `v4-4590` всегда будет содержать один и тот же образ и никогда не будет изменен. Тег `v4` через некоторое время начнёт указывать уже на другую более свежую сборку, проходящую staging процесс.
