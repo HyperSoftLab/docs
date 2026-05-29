@@ -98,6 +98,49 @@
       border-color: #1a7f4e;
     }
     .rn-copy-btn svg { display: block; }
+    .rn-collapsible { margin: 16px 0 24px; }
+    .rn-collapsible > summary {
+      cursor: pointer;
+      list-style: none;
+      font-size: 1.5em;
+      font-weight: 600;
+      color: #2c3e50;
+      padding: 4px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .rn-collapsible > summary::-webkit-details-marker { display: none; }
+    .rn-collapsible > summary::before {
+      content: '';
+      display: inline-block;
+      width: 0; height: 0;
+      border-left: 6px solid #57606a;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      transition: transform .15s;
+    }
+    .rn-collapsible[open] > summary::before { transform: rotate(90deg); }
+    h3[data-rn-section] {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .rn-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 8px;
+      background: #42b983;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.6em;
+      border-radius: 999px;
+      line-height: 1;
+    }
+    .rn-count:empty { display: none; }
   `;
 
   function categorize(text) {
@@ -132,6 +175,16 @@
     }
   }
 
+  function ensureCount(h3) {
+    let span = h3.querySelector('.rn-count');
+    if (!span) {
+      span = document.createElement('span');
+      span.className = 'rn-count';
+      h3.appendChild(span);
+    }
+    return span;
+  }
+
   function applyFilter(content, active) {
     content.querySelectorAll('li[data-rn-category]').forEach((li) => {
       const cat = li.dataset.rnCategory;
@@ -139,17 +192,18 @@
       li.classList.toggle('rn-hidden', !visible);
     });
     content.querySelectorAll('h3[data-rn-section]').forEach((h3) => {
-      let hasVisible = false;
+      let count = 0;
       let node = h3.nextElementSibling;
       while (node && node.tagName !== 'H3' && node.tagName !== 'H2') {
         if (node.tagName === 'UL') {
           node.querySelectorAll(':scope > li').forEach((li) => {
-            if (!li.classList.contains('rn-hidden')) hasVisible = true;
+            if (!li.classList.contains('rn-hidden')) count++;
           });
         }
         node = node.nextElementSibling;
       }
-      h3.classList.toggle('rn-hidden', !hasVisible);
+      h3.classList.toggle('rn-hidden', count === 0);
+      ensureCount(h3).textContent = count ? String(count) : '';
     });
   }
 
@@ -232,6 +286,27 @@
     return div;
   }
 
+  function collapseProcess(content) {
+    const processH = [...content.querySelectorAll('h2')]
+      .find(h => h.textContent.trim() === 'Процесс');
+    if (!processH) return;
+
+    const details = document.createElement('details');
+    details.className = 'rn-collapsible';
+    const summary = document.createElement('summary');
+    summary.textContent = processH.textContent;
+    details.appendChild(summary);
+
+    const toMove = [];
+    let node = processH.nextElementSibling;
+    while (node && node.tagName !== 'H2') {
+      toMove.push(node);
+      node = node.nextElementSibling;
+    }
+    processH.replaceWith(details);
+    toMove.forEach(n => details.appendChild(n));
+  }
+
   function enhance() {
     const path = (window.location.hash || '').split('?')[0];
     if (!path.includes('releases')) return;
@@ -246,6 +321,7 @@
 
     injectStyles();
     tagItems(rnHeading);
+    collapseProcess(content);
 
     const h1 = content.querySelector('h1');
     const latest = findLatestBuild(rnHeading);
@@ -253,7 +329,9 @@
       h1.insertAdjacentElement('afterend', buildLatestBanner(latest));
     }
 
-    rnHeading.insertAdjacentElement('afterend', buildToolbar(content));
+    const toolbar = buildToolbar(content);
+    rnHeading.insertAdjacentElement('afterend', toolbar);
+    applyFilter(content, new Set(CATEGORIES.map(c => c.key)));
     content.dataset.rnEnhanced = '1';
   }
 
