@@ -31,6 +31,7 @@
     .rn-check input {
       margin: 0;
       cursor: pointer;
+      accent-color: #42b983;
     }
     .rn-hidden { display: none !important; }
     .rn-latest {
