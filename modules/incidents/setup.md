@@ -221,6 +221,8 @@ curl http://<адрес-сервиса>:1111/healthcheck
 Чтобы заполнить таблицы историческими данными, выполните три запроса **по порядку** в ClickHouse.
 
 > Рекомендуемый период бэкфила — 1–2 дня. Этого достаточно для формирования базовой статистики квантилей. Если требуется заполнение за более длительный период — обратитесь к команде разработки.
+>
+> Перед запуском бэкфила рекомендуется проконсультироваться с командой разработки по оценке объёма данных: большой период или высокая кардинальность метрик могут создать значительную нагрузку на ClickHouse.
 
 **1. Заполнить квантили:**
 
@@ -231,12 +233,12 @@ INSERT INTO nr_metric_quantiles_hourly
 SELECT
     account_id,
     cityHash64(account_id, app_name, language, host, pid, name, scope) AS key,
-    toStartOfHour(start) AS hour,
+    toStartOfHour(point) AS hour,
     quantilesState(0.25, 0.75, 0.5)(call_count) AS call_count_state,
     quantilesState(0.25, 0.75, 0.5)(
         toFloat32(if(call_count = 0, 0, total_call_time / call_count))
     ) AS avg_state
-FROM nr_metric_data_by_name_by_minute_v2
+FROM nr_metric_data_by_name_by_minute_v2 FINAL
 WHERE scope = ''
   AND NOT (
     startsWith(name, 'GMonit/')         OR
@@ -244,8 +246,8 @@ WHERE scope = ''
     startsWith(name, 'Custom/')         OR
     startsWith(name, 'Instrument/')
   )
-  AND start >= '<BACKFILL_FROM>'  -- например: '2025-01-20 00:00:00'
-  AND start <  '<BACKFILL_TO>'    -- например: '2025-01-23 00:00:00'
+  AND point >= '<BACKFILL_FROM>'  -- например: '2025-01-20 00:00:00'
+  AND point <  '<BACKFILL_TO>'    -- например: '2025-01-23 00:00:00'
 GROUP BY account_id, key, hour
 ```
 
@@ -266,9 +268,9 @@ WITH
         cityHash64(account_id, app_name, language, host, pid, name, scope)) AS call_count_qs,
     dictGet('nr_metric_quantiles_dict', 'avg_qs',
         cityHash64(account_id, app_name, language, host, pid, name, scope)) AS avg_qs,
-    if(call_count = 0, 0, total_call_time / call_count) AS average
+    toFloat32(if(call_count = 0, 0, total_call_time / call_count)) AS average
 SELECT
-    account_id, app_name, language, host, pid, name, scope, start,
+    account_id, app_name, language, host, pid, name, scope, point AS start,
     outlier_check(
         outlier_score(call_count, call_count_qs[1], call_count_qs[2]),
         call_count, call_count_qs[3], 3, 0.1
@@ -284,10 +286,10 @@ SELECT
     avg_qs[2] + 3 * (avg_qs[2] - avg_qs[1])                          AS avg_threshold,
     avg_qs[1] - 3 * (avg_qs[2] - avg_qs[1])                          AS avg_threshold_lower,
     agent_version,
-    labels
-FROM nr_metric_data_null_v2
-WHERE start >= '<BACKFILL_FROM>'  -- например: '2025-01-20 00:00:00'
-  AND start <  '<BACKFILL_TO>'    -- например: '2025-01-23 00:00:00'
+    CAST(labels, 'Map(String, String)') AS labels
+FROM nr_metric_data_by_name_by_minute_v2 FINAL
+WHERE point >= '<BACKFILL_FROM>'  -- например: '2025-01-20 00:00:00'
+  AND point <  '<BACKFILL_TO>'    -- например: '2025-01-23 00:00:00'
   AND scope = ''
   AND NOT (
     startsWith(name, 'GMonit/')         OR
