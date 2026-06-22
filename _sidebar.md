@@ -29,7 +29,7 @@
   - [Инциденты](modules/incidents.md)
     - [Настройка](modules/incidents/setup.md)
     - [Использование](modules/incidents/guide.md)
-  - [Коробочные алерты](modules/alert-pack.md)
+  - [Коробочные оповещения](modules/alert-pack.md)
     - [Настройка](modules/alert-pack/setup.md)
     - [Использование](modules/alert-pack/guide.md)
   - [Инфраструктурный мониторинг](modules/infra.md)
