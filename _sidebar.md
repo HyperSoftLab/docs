@@ -32,6 +32,7 @@
   - [Коробочные оповещения](modules/alert-pack.md)
     - [Настройка](modules/alert-pack/setup.md)
     - [Использование](modules/alert-pack/guide.md)
+    - [Заполнение таблицы активных оповещений](modules/alert-pack/alert-table-labels.md)
   - [Инфраструктурный мониторинг](modules/infra.md)
     - [Доступность веб-сервисов](modules/infra/urlcheck.md)
   - [SLO](modules/slo.md)
