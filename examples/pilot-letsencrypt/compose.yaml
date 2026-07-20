@@ -55,6 +55,7 @@ services:
   grafana:
     restart: unless-stopped
     image: cr.yandex/gmonit.ru/grafana:${TAG:?no_tag}
+    platform: linux/amd64
     environment:
       GMONIT_LICENSE: ${LICENSE_KEY}
 
@@ -109,6 +110,7 @@ services:
       - ttl.env
     restart: unless-stopped
     image: cr.yandex/gmonit.ru/collector:${TAG:?no_tag}
+    platform: linux/amd64
     environment:
       NEW_RELIC_LOG: stdout
       # NEW_RELIC_LOG_LEVEL: debug
