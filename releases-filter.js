@@ -1,8 +1,8 @@
 (function () {
   const CATEGORIES = [
-    { emoji: '🎁', key: 'release', label: 'Релизы' },
-    { emoji: '🔜', key: 'new',     label: 'Превью' },
-    { emoji: '🖥', key: 'improve', label: 'Улучшения интерфейса' },
+    { emoji: '🟢', key: 'release', label: 'Релизы' },
+    { emoji: '🟡', key: 'new',     label: 'Превью' },
+    { emoji: '🎨', key: 'improve', label: 'Улучшения интерфейса' },
     { emoji: '🔧', key: 'fix',     label: 'Исправления' },
     { emoji: '🚀', key: 'perf',    label: 'Производительность' },
   ];
