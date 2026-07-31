@@ -1,155 +1,330 @@
 # Установка агента New Relic для PHP
 
-Агент мониторинга PHP от New Relic состоит из двух взаимодействующих частей:  
-1. **Расширение для PHP**, которое занимается сбором метрик и трейсов.  
-2. **Прокси-демон (`newrelic-daemon`)**, который отвечает за взаимодействие с бэкендом мониторинга (в данном случае — с GMONIT).
+Вы получили архив `php-agent-offline.tar.gz`.
 
-Ниже собрана полная инструкция по установке и настройке данного агента в различных окружениях (Ubuntu/Debian, CentOS, контейнерные среды). Если требуется дополнительная информация, обращайтесь к [официальной документации](https://docs.newrelic.com/docs/apm/agents/php-agent/installation/php-agent-installation-overview).
+**Целевая среда:** PHP 8.x + Apache 2.4 + mod\_php.
 
+### 0\. Предварительные требования
 
-### Обязательные настройки агента
+*   **PHP 8.x** и **Apache 2** установлены. Если нет:
 
-Независимо от окружения, в файле `newrelic.ini` (обычно располагается в `/etc/php/7.x/mods-available/newrelic.ini`, `/etc/php.d/newrelic.ini` или `/etc/php/.../conf.d/newrelic.ini`) **обязательно** должны быть прописаны (или эквивалентно заданы в переменных окружения) следующие параметры:
+DEB-based (Ubuntu / Astra Linux / Debian):
 
-```ini
-newrelic.license = 0123456789-123456789-123456789-123456789 #Ключ(заглушка, не меняем)
-newrelic.daemon.collector_host = gmonit-collector.<DOMAIN>.ru #Домен коллектора GMONIT
-newrelic.appname = "MY_AWESOME_APP" #Название приложения
-newrelic.logfile = stdout #Логирование агента в stdout
+```
+sudo apt-get update
+sudo apt-get install -y php libapache2-mod-php apache2 php-cli
 ```
 
-> Если вы настраиваете агент через переменные окружения, то эквивалентом будут:
-> ```bash
-> export NEW_RELIC_LICENSE_KEY=0123456789-123456789-123456789-123456789 #Ключ(заглушка, не меняем)
-> export NEW_RELIC_HOST=gmonit-collector.name.ru #Домен коллектора GMONIT
-> export NEW_RELIC_APP_NAME="MY_AWESOME_APP" #Название приложения
-> export NEW_RELIC_LOG=stdout #Логирование агента в stdout
-> ```
+  
 
+RPM-based (ALT Server / CentOS / RHEL):
 
-### 1. Установка агента New Relic для PHP на Ubuntu и Debian
+```
+sudo yum install php php-common httpd
+```
 
-1. **Добавление репозитория New Relic**:
-   ```bash
-   echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | sudo tee /etc/apt/sources.list.d/newrelic.list
-   ```
-2. **Обновление списка пакетов**:
-   ```bash
-   sudo apt-get update
-   ```
-3. **Установка PHP-агента**:
-   ```bash
-   sudo apt-get install newrelic-php5
-   ```
-   > Если вы используете вместо `glibc` библиотеку `musl libc` (например, в **Alpine Linux**), необходимо скачать и установить актуальную версию агента с поддержкой `musl` по [ссылке](https://download.newrelic.com/php_agent/release/).
+  
 
-4. **Настройка конфигурации агента**:  
-   - Откройте файл `newrelic.ini` и пропишите **обязательные параметры**, указанные выше в разделе «Обязательные настройки агента».  
-   - Если используются самоподписанные сертификаты (или Let's Encrypt) для коллектора, необходимо явно указать это при конфигурации демона. Например, добавляя ключ к команде запуска `newrelic-daemon`:
-     ```bash
-     newrelic-daemon --cafile /etc/ssl/certs/ca-certificates.crt
-     ```
-     или в конфигурационном файле `newrelic.cfg`:
-     ```ini
-     ssl_ca_bundle = /etc/ssl/certs/ca-certificates.crt
-     ```
+*   Сетевой доступ от сервера до коллектора GMONIT по порту **443 (HTTPS)**. Проверьте:
+    
+    ```
+    curl -sk https://gmonit-collector.<<DOMAIN>>/health
+    ```
+    
+    `ok`.
+*   Утилита `tar` (входит в базовую установку).
 
-5. **Перезапуск веб-сервера**:
-   ```bash
-   # Для Apache
-   sudo systemctl restart apache2
+### 1\. Распаковка
 
-   # Для NGINX + PHP-FPM
-   sudo systemctl restart nginx
-   sudo systemctl restart php-fpm
-   ```
+Перенесите архив на целевой сервер (SCP/SFTP):
 
-6. **Проверка работы**  
-   Сгенерируйте трафик к вашему приложению и проверьте метрики в интерфейсе GMONIT.
+```
+tar -xzf php-agent-offline.tar.gz
+cd php-agent-bundle
+```
 
+### 2\. Установка пакета агента
 
-### 2. Установка агента New Relic для PHP на CentOS
+**DEB-based (Ubuntu / Astra Linux / Debian):**
 
-1. **Добавление репозитория New Relic**:
-   - Для 64-битных систем:
-     ```bash
-     sudo rpm -Uvh http://yum.newrelic.com/pub/newrelic/el5/x86_64/newrelic-repo-5-3.noarch.rpm
-     ```
-2. **Установка PHP-агента**:
-   ```bash
-   sudo yum install newrelic-php5
-   ```
-3. **Запуск скрипта установки**:
-   ```bash
-   sudo newrelic-install install
-   ```
-4. **Настройка конфигурации агента**:  
-   - Откройте файл `newrelic.ini` и пропишите **обязательные параметры**, указанные выше в разделе «Обязательные настройки агента».  
-   - Если используются самоподписанные сертификаты (или Let's Encrypt), укажите путь к сертификату в конфигурации `newrelic-daemon` или `newrelic.cfg` (аналогично Ubuntu/Debian).
+```
+sudo dpkg -i newrelic-php5_12.5.0.30_amd64.deb
+```
 
-5. **Перезапуск веб-сервера**:
-   ```bash
-   # Для Apache
-   sudo systemctl restart httpd
+**RPM-based (ALT Server / CentOS / RHEL):**
 
-   # Для NGINX + PHP-FPM
-   sudo systemctl restart nginx
-   sudo systemctl restart php-fpm
-   ```
+```
+sudo rpm -i newrelic-php5-12.5.0.30-1.x86_64.rpm
+```
 
-6. **Проверка работы**  
-   Сгенерируйте трафик к вашему приложению и проверьте метрики в интерфейсе GMONIT.
+Запустите скрипт установки:
 
+```
+sudo NR_INSTALL_SILENT=1 NR_INSTALL_KEY=0123456789012345678901234567890123456789 newrelic-install install
+```
 
-### 3. Установка агента New Relic для PHP в контейнерных средах (Docker и др.)
+**Проверка загрузки расширения:**
 
-1. **Выбор способа установки**:
-   - **Установка в разных контейнерах** (рекомендуется):
-     1. Настройте контейнер для демона:
-        Используйте образ `newrelic/php-daemon` из Docker Hub или аналогичный подход, где `newrelic-daemon` работает в отдельном контейнере.
-     2. Настройте контейнер для PHP-агента:
-        Установите PHP и агент в контейнере:
-        ```bash
-        sudo apt-get install newrelic-php5
-        sudo newrelic-install install
-        ```
-        Затем пропишите переменные окружения (или внесите настройки в `newrelic.ini`) при запуске контейнера или в Dockerfile. **Обязательные параметры** описаны в начале инструкции.
-   - **Установка в одном контейнере**:
-     1. Установите PHP и агент:
-        ```bash
-        sudo apt-get install newrelic-php5
-        sudo newrelic-install install
-        ```
-     2. Настройте параметры в `newrelic.ini` или через переменные окружения. Не забудьте добавить **обязательные**:
-        ```ini
-        newrelic.license = 0123456789-123456789-123456789-123456789 #Ключ(заглушка, не меняем)
-        newrelic.daemon.collector_host = gmonit-collector.<DOMAIN>.ru #Домен коллектора GMONIT
-        newrelic.appname = "MY_AWESOME_APP" #Название приложения
-        newrelic.logfile = stdout #Логирование агента в stdout
-        ```
-     3. При использовании самоподписанных сертификатов (или Let's Encrypt) обязательно укажите путь к сертификату в конфигурации демона (либо с помощью ключа `--cafile`, либо через `ssl_ca_bundle` в `newrelic.cfg`).
+```
+php -m | grep newrelic
+# newrelic
+```
 
-2. **Дополнительные действия для Alpine Linux**  
-   Если используется `musl libc` (в Alpine Linux), скачайте и установите версию агента для `musl` по [ссылке](https://download.newrelic.com/php_agent/release/).
+### 3\. Настройка конфигурации агента
 
-3. **Перезапуск веб-сервера**  
-   Убедитесь, что выбранный веб-сервер (Apache, NGINX, PHP-FPM) перезапущен после установки:
-   ```bash
-   sudo systemctl restart apache2 || sudo systemctl restart httpd
-   sudo systemctl restart nginx
-   sudo systemctl restart php-fpm
-   ```
+Найдите путь к конфигурационному файлу:
 
-4. **Проверка работы**  
-   Сгенерируйте трафик к вашему приложению и проверьте метрики в интерфейсе GMONIT.
+```
+find /etc/php -name 'newrelic.ini'
+# /etc/php/8.3/mods-available/newrelic.ini  (Ubuntu/Debian)
+```
 
+Или:
 
-### Дополнительная информация
+```
+php -i 2>/dev/null | grep 'Scan this dir'
+```
 
-- Подробная документация по установке и настройке агента для PHP:  
-  [PHP Agent Configuration — New Relic Documentation](https://docs.newrelic.com/docs/apm/agents/php-agent/installation/)
+Откройте файл и измените параметры. **Минимальная рабочая конфигурация:**
 
-- Если требуются более тонкие настройки агента и прокси-демона (`newrelic-daemon`), в том числе указание кастомного `cafile`, использование дополнительных сетевых параметров и т. д., обратитесь к [разделу конфигурации демона](https://docs.newrelic.com/docs/apm/agents/php-agent/configuration/proxy-daemon-newreliccfg-settings/#proxy-settings).
+```
+; ---------------------------------------------------------------------------
+; GMONIT APM — минимальная конфигурация PHP-агента
+; ---------------------------------------------------------------------------
+
+extension = "newrelic.so"
+
+; Лицензионный ключ (заглушка, не менять)
+newrelic.license = "0123456789012345678901234567890123456789"
+
+; Имя приложения (отображается в UI GMONIT)
+newrelic.appname = "My-PHP-App"
+
+; Включение агента
+newrelic.enabled = true
+
+; Адрес коллектора GMONIT (заменить <<DOMAIN>> на ваш домен)
+newrelic.daemon.collector_host = "gmonit-collector.<<DOMAIN>>"
+
+; Логирование агента
+newrelic.logfile = "/var/log/newrelic/php_agent.log"
+newrelic.loglevel = "info"
+
+; Логирование демона
+newrelic.daemon.logfile = "/var/log/newrelic/newrelic-daemon.log"
+newrelic.daemon.loglevel = "info"
+
+; Самоподписанный сертификат (раскомментировать при необходимости)
+; newrelic.daemon.ssl_ca_bundle = "/path/to/rootCA.crt"
+```
+
+Альтернативно — через `sed` (для автоматизации):
+
+```
+NR_INI=$(find /etc/php -name 'newrelic.ini' | head -1)
+
+sudo sed -i 's/newrelic.license = ""/newrelic.license = "0123456789012345678901234567890123456789"/' "$NR_INI"
+sudo sed -i 's/newrelic.appname = "PHP Application"/newrelic.appname = "My-PHP-App"/' "$NR_INI"
+sudo sed -i 's/;newrelic.daemon.collector_host = ""/newrelic.daemon.collector_host = "gmonit-collector.<<DOMAIN>>"/' "$NR_INI"
+```
+
+> **Важно:** Параметр `newrelic.daemon.collector_host` по умолчанию **закомментирован** (`;` в начале строки). Обязательно раскомментируйте его и укажите адрес коллектора.
+
+### 4\. Развёртывание приложения
+
+Скопируйте тестовое приложение (или ваше приложение) в DocumentRoot:
+
+```
+sudo mkdir -p /var/www/php-test
+sudo cp app/* /var/www/php-test/
+```
+
+Настройте VirtualHost Apache (если нужен отдельный порт):
+
+```
+sudo cp php-test.conf /etc/apache2/sites-available/
+sudo a2ensite php-test.conf
+```
+
+### 5\. Перезапуск Apache
+
+```
+sudo systemctl restart apache2
+```
+
+Для RPM-based систем:
+
+```
+sudo systemctl restart httpd
+```
+
+### 6\. Проверка
+
+**Проверка приложения:**
+
+```
+curl http://localhost:8083/
+# Hello from PHP APM Test App!
+
+curl http://localhost:8083/data.php
+# {"status":"ok","language":"php",...,"php_version":"8.3.6"}
+```
+
+**Проверка агента (daemon log):**
+
+```
+sudo cat /var/log/newrelic/newrelic-daemon.log | grep -i "gmonit\|connected"
+```
+
+**Критерии успеха:**
+
+1.  В логах демона есть `~~~~ GMonit APM ~~~~`.
+2.  В логах демона есть `app 'My-PHP-App' connected with run id`.
+3.  Нет ошибок SSL или соединения с коллектором.
+
+Ожидаемый вывод:
+
+```
+Info: ~~~~ GMonit APM ~~~~
+Info: app 'My-PHP-App' connected with run id '...'
+```
+
+**Проверка агента (PHP agent log):**
+
+```
+sudo cat /var/log/newrelic/php_agent.log | grep -i "New Relic\|attempt daemon"
+```
+
+Ожидаемый вывод:
+
+```
+info: New Relic 12.5.0.30 ("peridot" - "...") [daemon='@newrelic' php='8.3.6' ... sapi='apache2handler' ...]
+info: attempt daemon connection via '@newrelic'
+```
+
+**Типичные ошибки и решения:**
+
+| Ошибка в логах | Причина | Решение |
+| --- | --- | --- |
+| `ConnectException: Connection refused` | Нет сетевого доступа до коллектора (порт 443) | Проверить firewall: `curl -sk https://gmonit-collector.<<DOMAIN>>/health` |
+| `SSL_connect` / `certificate verify failed` | Самоподписанный сертификат коллектора | Добавить `newrelic.daemon.ssl_ca_bundle = "/path/to/rootCA.crt"` в `newrelic.ini` |
+| `collector_host` пустой / не задан | Параметр закомментирован | Раскомментировать строку `newrelic.daemon.collector_host` в `newrelic.ini` |
+| `A global default license has not been set` | Предупреждение при запуске PHP CLI | Некритичное — возникает только в CLI, агент через apache2handler работает |
+| `php -m` не показывает `newrelic` | Расширение не установлено | Повторить `newrelic-install install` или проверить путь к `newrelic.so` |
+| Нет файла логов `/var/log/newrelic/` | Директория не создана | `sudo mkdir -p /var/log/newrelic && sudo chown www-data:www-data /var/log/newrelic` |
+
+* * *
+
+## Часть 3: Docker
+
+### Вариант А: Загрузка готового образа
+
+Если в архиве есть готовый Docker-образ (`php-apache-apm.tar`):
+
+```
+docker load -i php-apache-apm.tar
+docker run -d --name php-apache-app -p 8083:80 --restart unless-stopped php-apache-apm:latest
+```
+
+### Вариант Б: Сборка из архива
+
+Если у клиента есть базовый образ `php:8.3-apache-bookworm` (загрузить из `php-8.3-apache-bookworm.tar`):
+
+```
+docker load -i php-8.3-apache-bookworm.tar
+```
+
+1.  Скорректируйте `<<DOMAIN>>` и имя приложения в `Dockerfile`:
+    
+    ```
+    sed -i 's/gmonit-collector.<<DOMAIN>>/gmonit-collector.your-domain.ru/' Dockerfile
+    sed -i 's/My-PHP-App/Your-App-Name/' Dockerfile
+    ```
+    
+      
+    
+2.  Соберите и запустите:
+    
+    ```
+    docker compose build
+    docker compose up -d
+    ```
+    
+      
+    
+3.  Проверьте:
+    
+    ```
+    curl http://localhost:8083/
+    # Hello from PHP APM Test App!
+    
+    docker exec php-apache-app cat /var/log/newrelic/newrelic-daemon.log | grep -i "gmonit\|connected"
+    ```
+    
+      
+    
+
+Ожидаемый вывод:
+
+```
+Info: ~~~~ GMonit APM ~~~~
+Info: app 'My-PHP-App' connected with run id '...'
+```
+
+  
+
+1.  Остановка:
+    
+    ```
+    docker compose down
+    ```
+    
+
+> **Важно:** Базовый образ должен быть `php:8.3-apache-bookworm` (Debian 12). Образ на Debian Trixie (`php:8.3-apache`) **не работает** — SHA1-подписи GPG отклоняются начиная с февраля 2026.
+
+* * *
+
+## Часть 4: Установка на CentOS / RHEL / ALT (RPM-based)
+
+Для RPM-based дистрибутивов процедура отличается на этапе установки пакета:
+
+### 1\. Установка
+
+```
+sudo rpm -i newrelic-php5-12.5.0.30-1.x86_64.rpm
+sudo NR_INSTALL_SILENT=1 NR_INSTALL_KEY=0123456789012345678901234567890123456789 newrelic-install install
+```
+
+### 2\. Настройка
+
+Конфиг расположен в `/etc/php.d/newrelic.ini` или `/etc/php.ini`. Параметры аналогичны Части 2, шаг 3.
+
+### 3\. Перезапуск
+
+```
+# Apache
+sudo systemctl restart httpd
+
+# Nginx + PHP-FPM
+sudo systemctl restart nginx
+sudo systemctl restart php-fpm
+```
+
+* * *
+
+## Часть 5: Контрольный чек-лист
+
+| Шаг | Действие | Проверка |
+| --- | --- | --- |
+| 1   | Распаковать архив | `ls newrelic-php5*.deb` или `ls newrelic-php5*.rpm` |
+| 2   | Установить пакет агента | `php -m \\| grep newrelic` |
+| 3   | Настроить `newrelic.ini` (collector\_host, appname) | `grep collector_host <path>/newrelic.ini` |
+| 4   | Развернуть приложение | `curl http://localhost:8083/` |
+| 5   | Перезапустить Apache | `sudo systemctl restart apache2` |
+| 6   | Проверить подключение к коллектору | `grep "GMonit APM" /var/log/newrelic/newrelic-daemon.log` |
+| 7   | Проверить приложение в UI GMONIT | UI → APM → приложение |
+
+* * *
 
 
 # Добавление кастомного параметра
