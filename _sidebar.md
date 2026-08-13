@@ -12,6 +12,7 @@
     - [Python](agent_installation_guide/APM/python.md)
     - [GO](agent_installation_guide/APM/go.md)
   - [Мониторинг инфраструктуры](agent_installation_guide/Infra/infra_install.md)
+    - [MSSQL](agent_installation_guide/Infra/database_monitoring/mssql.md)
     - [MySQL](agent_installation_guide/Infra/database_monitoring/mysql_agents_install.md)
     - [PostgreSQL](agent_installation_guide/Infra/database_monitoring/postgresql_agents_install.md)
     - [Oracle Database](agent_installation_guide/Infra/database_monitoring/oracle_database.md)
