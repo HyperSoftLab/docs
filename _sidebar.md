@@ -20,6 +20,13 @@
     - [Redis](agent_installation_guide/Infra/database_monitoring/redis_agents_install.md)
   - [Мониторинг браузера (web)](agent_installation_guide/RUM/real_user_monitoring.md)
   - [Мобильный мониторинг](agent_installation_guide/Mobile/mobile_monitoring.md)
+  - [Инструкции по установке агентов 1C](agent_installation_guide/1C.md)
+    - [Оглавление](agent_installation_guide/1C/contents.md)
+    - [Агент для ЖР](agent_installation_guide/1C/rj_agent.md)
+    - [Агент для ТЖ](agent_installation_guide/1C/tj_agent.md)
+    - [Агент для кластера 1С](agent_installation_guide/1C/1C_cluster_agent.md)
+    - [Агент для MSSQL](agent_installation_guide/1C/MSSQL_agent.md)
+    - [Инфраструктурный агент для Windows сервера](agent_installation_guide/1C/win_server_infra_agent.md)
 - Модули GMONIT
   - [APM](modules/APM.md)
   - Карта сервисов
