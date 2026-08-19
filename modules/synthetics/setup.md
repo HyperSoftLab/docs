@@ -71,7 +71,7 @@ cd synthetics-checker && docker build -t gmonit-ssl-checker .
 ```yaml
 services:
   ssl-checker:
-    image: gmonit-ssl-checker
+    image: cr.yandex/gmonit.ru/nri-cert-checker:main
     restart: unless-stopped
     environment:
       COLLECTOR_URL: https://collector.example.ru
