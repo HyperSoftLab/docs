@@ -1,6 +1,8 @@
 name: Main
 on:
   push:
+    branches:
+      - master
 
 env:
   LANG: 'C.UTF-8'
@@ -13,9 +15,10 @@ jobs:
       run:
         shell: bash
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
+      # оно всегда перезаливает все из-за сброса mtime
       - run: >
-          aws s3 sync --delete . s3://docs.gmonit.ru
+          aws s3 sync --delete --exclude ".*" . s3://docs.gmonit.ru
         env:
           AWS_ACCESS_KEY_ID:     ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
