@@ -16,6 +16,7 @@ GMONIT поддерживает из коробки мониторинг БД Or
 ## Поддерживаемые платформы
 
 - [Мониторинг хоста и Docker-контейнеров](/modules/infra/docker.md)
+- [Мониторинг Kubernetes](/modules/kubernetes.md)
 - [Мониторинг NGINX](/modules/infra/nginx.md)
 - [Мониторинг СУБД](/modules/infra/db.md)
   - [Мониторинг PostgreSQL](/modules/infra/postgres.md)
