@@ -21,7 +21,7 @@
 
 Общий порядок установки через Helm описан в [документации New Relic](https://docs.newrelic.com/install/kubernetes/?dropdown1=helm). Ниже — то, что специфично для GMONIT. Проверено на `nri-bundle` 8.0.x.
 
-**1. Создайте пространство имён, секрет с ключом и ConfigMap с именем APM-приложения:**
+**1. Создайте пространство имён, секрет с ключом и ConfigMap с метками APM-приложения:**
 
 ```bash
 kubectl create namespace newrelic
@@ -30,7 +30,6 @@ kubectl -n newrelic create secret generic newrelic-license \
   --from-literal=licenseKey=0123456789012345678901234567890123456789
 
 kubectl -n newrelic create configmap agent-apm-config \
-  --from-literal=NEW_RELIC_APP_NAME='[GMonit] Infrastructure Agent' \
   --from-literal=NEW_RELIC_LABELS=environment:gmonit
 ```
 
@@ -54,16 +53,17 @@ newrelic-infrastructure:
       self_instrumentation: newrelic
       self_instrumentation_apm_host: collector.example.ru
       enable_process_metrics: true
-  # Имя APM-приложения и метки — из ConfigMap, созданного выше.
   kubelet:
+    extraEnv:
+    - name: NEW_RELIC_APP_NAME
+      value: '[GMonit] Infrastructure Agent (kubelet)'
     extraEnvFrom:
     - configMapRef:
         name: agent-apm-config
   ksm:
-    extraEnvFrom:
-    - configMapRef:
-        name: agent-apm-config
-  controlPlane:
+    env:
+    - name: NEW_RELIC_APP_NAME
+      value: '[GMonit] Infrastructure Agent (ksm)'
     extraEnvFrom:
     - configMapRef:
         name: agent-apm-config
