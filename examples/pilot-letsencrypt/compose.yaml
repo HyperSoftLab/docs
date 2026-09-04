@@ -217,4 +217,8 @@ services:
       NEW_RELIC_LABELS: "environment:gmonit"
       NRIA_SELF_INSTRUMENTATION: newrelic
       NRIA_SELF_INSTRUMENTATION_APM_HOST: ${COLLECTOR_DOMAIN}
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 524288
     <<: *logging
