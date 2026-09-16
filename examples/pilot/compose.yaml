@@ -1,4 +1,4 @@
-x-loggin: &logging
+x-logging: &logging
   logging:
     driver: json-file
     options:
