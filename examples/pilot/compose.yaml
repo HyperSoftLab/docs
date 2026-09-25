@@ -22,6 +22,8 @@ services:
        - ./clickhouse/gmonit.xml:/etc/clickhouse-server/config.d/gmonit.xml
        - ./clickhouse/gmonit_system_tables_conf.xml:/etc/clickhouse-server/config.d/gmonit_system_tables_conf.xml
        - ./clickhouse/keeper.xml:/etc/clickhouse-server/config.d/keeper.xml
+    labels:
+      environment: gmonit
     <<: *logging
 
   postgres:
@@ -39,6 +41,8 @@ services:
       - 127.0.0.1:5432:5432
     volumes:
       - ./postgres/data:/var/lib/postgresql/data
+    labels:
+      environment: gmonit
     <<: *logging
 
   redis:
@@ -51,6 +55,8 @@ services:
       retries: 10
     ports:
       - 127.0.0.1:6379:6379
+    labels:
+      environment: gmonit
     <<: *logging
 
   grafana:
@@ -68,7 +74,7 @@ services:
       GMONIT_GRAFANA_CLICKHOUSE_DATABASE: default
       GMONIT_GRAFANA_CLICKHOUSE_USER: gmonit
       GMONIT_GRAFANA_CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
-      GMONIT_ENVIRONMENT_FILTER_DEFAULTS: 'production,empty'
+      GMONIT_ENVIRONMENT_FILTER_DEFAULTS: 'production,gmonit,empty'
       # GMONIT_GRAFANA_CLICKHOUSE_CA_CERT__FILE: /gmonit/ssl/...
 
       GF_DATABASE_TYPE: postgres
@@ -99,6 +105,8 @@ services:
         condition: service_healthy
     volumes:
       - ./ssl:/gmonit/ssl
+    labels:
+      environment: gmonit
     <<: *logging
 
   collector:
@@ -154,6 +162,8 @@ services:
       - type: image
         source: cr.yandex/gmonit.ru/geoip-db:latest
         target: /gmonit/geoip
+    labels:
+      environment: gmonit
     <<: *logging
 
   nginx:
@@ -183,6 +193,8 @@ services:
       nofile:
         soft: 65536
         hard: 524288
+    labels:
+      environment: gmonit
     <<: *logging
 
   infra:
@@ -219,7 +231,10 @@ services:
 
       NEW_RELIC_APP_NAME: '[GMonit] Infrastructure Agent'
       NEW_RELIC_LABELS: "environment:gmonit"
+      NRIA_CUSTOM_ATTRIBUTES: '{"label.environment":"gmonit"}'
       NRIA_SELF_INSTRUMENTATION: newrelic
       NRIA_SELF_INSTRUMENTATION_APM_HOST: ${COLLECTOR_DOMAIN}
       SSL_CERT_FILE: ${CA_FILE}
+    labels:
+      environment: gmonit
     <<: *logging

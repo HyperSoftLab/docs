@@ -22,6 +22,8 @@ services:
        - ./clickhouse/gmonit.xml:/etc/clickhouse-server/config.d/gmonit.xml
        - ./clickhouse/gmonit_system_tables_conf.xml:/etc/clickhouse-server/config.d/gmonit_system_tables_conf.xml
        - ./clickhouse/keeper.xml:/etc/clickhouse-server/config.d/keeper.xml
+    labels:
+      environment: gmonit
     <<: *logging
 
   postgres:
@@ -39,6 +41,8 @@ services:
       - 127.0.0.1:5432:5432
     volumes:
       - ./postgres/data:/var/lib/postgresql/data
+    labels:
+      environment: gmonit
     <<: *logging
 
   redis:
@@ -51,6 +55,8 @@ services:
       retries: 10
     ports:
       - 127.0.0.1:6379:6379
+    labels:
+      environment: gmonit
     <<: *logging
 
   grafana:
@@ -83,7 +89,7 @@ services:
       GMONIT_GRAFANA_COLLECTOR_URL: http://collector:8080/grafana
       GMONIT_GRAFANA_COLLECTOR_USER: grafana-http-user
       GMONIT_GRAFANA_COLLECTOR_PASSWORD: ${COLLECTOR_DATASOURCE_PASSWORD}
-      GMONIT_ENVIRONMENT_FILTER_DEFAULTS: 'production,empty'
+      GMONIT_ENVIRONMENT_FILTER_DEFAULTS: 'production,gmonit,empty'
 
       #Браузерный мониторинг включен для веб-интерфейса GMONIT. Это должен быть внешний URL.
       GMONIT_GRAFANA_BROWSER_AGENT_COLLECTOR_URL: https://${COLLECTOR_DOMAIN}
@@ -104,6 +110,8 @@ services:
         condition: service_healthy
     volumes:
       - ./ssl:/gmonit/ssl
+    labels:
+      environment: gmonit
     <<: *logging
 
   collector:
@@ -155,6 +163,8 @@ services:
       - type: image
         source: cr.yandex/gmonit.ru/geoip-db:latest
         target: /gmonit/geoip
+    labels:
+      environment: gmonit
     <<: *logging
 
   nginx:
@@ -179,6 +189,8 @@ services:
         aliases:
           - ${GRAFANA_DOMAIN}
           - ${COLLECTOR_DOMAIN}
+    labels:
+      environment: gmonit
     <<: *logging
 
   infra:
@@ -215,10 +227,13 @@ services:
 
       NEW_RELIC_APP_NAME: '[GMonit] Infrastructure Agent'
       NEW_RELIC_LABELS: "environment:gmonit"
+      NRIA_CUSTOM_ATTRIBUTES: '{"label.environment":"gmonit"}'
       NRIA_SELF_INSTRUMENTATION: newrelic
       NRIA_SELF_INSTRUMENTATION_APM_HOST: ${COLLECTOR_DOMAIN}
     ulimits:
       nofile:
         soft: 65536
         hard: 524288
+    labels:
+      environment: gmonit
     <<: *logging
