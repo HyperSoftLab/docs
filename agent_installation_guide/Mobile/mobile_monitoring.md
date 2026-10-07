@@ -1,25 +1,27 @@
 # Требования к Совместимости Мобильного агента для iOS
 
-- **Операционная система:** iOS 10 или выше.
-- **API/SDK:** Поддержка NSURLConnection и AFNetworking, ограниченная поддержка NSURLSession.
+- **Операционная система:** iOS 15.0 или выше.
+- **API/SDK:** NSURLSession, NSURLConnection, WKWebView. Библиотеки поверх NSURLSession, например AFNetworking, покрываются автоматически.
 - **Языки программирования:** Objective-C и Swift.
 - **Устройства:** Совместимость с iOS-устройствами.
 - **Размер файла:** Добавляет 2-12 МБ к приложению.
 - **Архитектура:** ARM 64-бит.
+- **Системные зависимости:** фреймворки CoreTelephony и SystemConfiguration, библиотеки libz и libc++. Через CocoaPods подключаются автоматически, при ручной установке xcframework их нужно добавить в Link Binary With Libraries, иначе сборка упадёт на линковке.
 - **SHA-2:** Требуется поддержка SHA-2 (256-бит) на сервере приложения.
 - **Xcode:** Рекомендуется использовать последнюю версию.
 - **CocoaPods:** Версия 1.10.1 или выше.
-- **tvOS:** Поддержка приложений tvOS.
+- **tvOS:** Поддержка приложений tvOS, 15.0 и выше
+- **Privacy manifest:** агент содержит PrivacyInfo.xcprivacy. Трекинга нет, собираются идентификатор пользователя, данные производительности, краши, взаимодействие с продуктом и прочая диагностика, используются время старта системы, объём свободного места на диске и UserDefaults. Это нужно отразить в карточке App Privacy при публикации в App Store.
 
 Полный список и подробности доступны в [официальной документации](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-ios/get-started/new-relic-ios-compatibility-requirements/) 
 
 # Требования к Совместимости Мобильного агента для Android
 
-- **Операционная система:** Android 7.0 или выше.
-- **API/SDK:** Поддержка HttpURLConnection, OkHttp2 (кроме версий 2.0 и 2.4), OkHttp (версии 2.8, 3.5+, 4.0+), OkIO (версия 1.11), AndroidHttpClient, Volley (версия 1.0.0) и Apache HTTP Client.
+- **Операционная система:** Android 7.0 или выше (minSdkVersion 24).
+- **API/SDK:** Поддержка HttpURLConnection и HttpsURLConnection, OkHttp 2.x, OkHttp 3.x и 4.x (включая WebSocket), Retrofit, Apache HttpClient, WebView, SQLite, JSONObject и JSONArray, Gson, AsyncTask, BitmapFactory, навигация AndroidX Navigation и Jetpack Compose.
 - **Языки программирования:** Java 1.7 до Java 9, JDK 11 поддерживается в версии 6.2.0 и выше, JDK 17 - в версии 7.0.0 и выше.
 - **Устройства:** Любые совместимые с Android устройства (смартфоны, планшеты, Android TV, Amazon Fire и т.д.).
-- **Размер файла:** Агент добавляет менее 500 КБ к вашему релизному APK.
+- **Размер файла:** Cам агент это чистый JVM-байткод, около 1.3 МБ классов до минификации, итоговый прирост зависит от R8 и измеряется на конкретном приложении. При включённом нативном сообщении о крашах добавляется отдельный артефакт agent-ndk с нативной библиотекой: 838 КБ для arm64-v8a, 493 КБ для armeabi-v7a, 870 КБ для x86, 920 КБ для x86_64.
 - **Архитектура:** ARM, Intel Atom.
 - **Поддержка Gradle и Android Studio:** Требуется соответствующая версия Gradle и Android Studio в зависимости от версии агента.
 Полный список и подробности доступны в [официальной документации](https://docs.newrelic.com/docs/mobile-monitoring/new-relic-mobile-android/get-started/new-relic-android-compatibility-requirements/) 
