@@ -230,7 +230,7 @@
   function findLatestBuild(content) {
     for (const li of content.querySelectorAll('ul > li')) {
       if (li.closest('details')) continue;
-      const m = li.textContent.match(/v4-\d+/);
+      const m = li.textContent.match(/v\d+-\d+/);
       if (m) return m[0];
     }
     return null;
