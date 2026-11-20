@@ -64,8 +64,6 @@ services:
     image: cr.yandex/gmonit.ru/grafana:${TAG:?no_tag}
     platform: linux/amd64
     environment:
-      # v4 читает GMONIT_LICENSE, v5 — GMONIT_LICENSE_KEY
-      GMONIT_LICENSE: ${LICENSE_KEY}
       GMONIT_LICENSE_KEY: ${GMONIT_LICENSE_KEY}
 
       GF_SERVER_ROOT_URL: https://${GRAFANA_DOMAIN}
@@ -125,8 +123,6 @@ services:
       NEW_RELIC_CA_BUNDLE_PATH: ${CA_FILE}
       NEW_RELIC_APP_NAME: "[GMonit] Collector"
 
-      # v4 читает LICENSE_KEY, v5 — GMONIT_LICENSE_KEY
-      LICENSE_KEY: ${LICENSE_KEY}
       GMONIT_LICENSE_KEY: ${GMONIT_LICENSE_KEY}
 
       PORT:               8080

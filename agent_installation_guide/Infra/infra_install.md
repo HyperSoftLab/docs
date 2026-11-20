@@ -59,7 +59,7 @@ NRIA_LOG_LEVEL=info
 # Лицензионный ключ
 NRIA_LICENSE_KEY="0123456789012345678901234567890123456789" # Ключ (заглушка, не меняем)
 
-# URL-адреса для взаимодействия с GMONIT (infra2 - новая схема хранения инфраструктурных метрик)
+# URL-адреса для взаимодействия с GMONIT (префиксы /infra и /infra2 равнозначны)
 NRIA_COLLECTOR_URL="https://gmonit-collector.<<DOMAIN>>.com/infra2/infra-api"
 NRIA_IDENTITY_URL="https://gmonit-collector.<<DOMAIN>>.com/infra2/identity-api"
 NRIA_METRIC_URL="https://gmonit-collector.<<DOMAIN>>.com/metrics"
